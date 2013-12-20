@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<project name="anet-java-sdk" default="compile" basedir=".">
+	<property name="version" value="1.4.6" />
+	<property name="dirs.base" value="${basedir}" />
+	<property name="src.dir" value="${basedir}/src/main/java" />
+	<property name="javadocs.dir" value="${basedir}/docs/javadocs" />
+	<property name="build.dir" value="${basedir}/target" />
+	<property name="classes.dir" value="${basedir}/target/classes" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="src.tests" value="${basedir}/src/test/java" />
+	<property name="resources.dir" value="${basedir}/resources" />
+	<property name="reports.tests" value="${src.tests}/reports" />
+	<!-- build.properties related info -->
+	<property file="${user.home}/build.properties" />
+	<property file="${user.home}/${ant.project.name}.properties" />
+	<property name="prop.message" value="must be defined, preferably in ${user.home}/build.properties or ${user.home}/${ant.project.name}.properties" />
+	<fail message="api.login.id ${prop.message}" unless="api.login.id" />
+	<fail message="transaction.key ${prop.message}" unless="transaction.key" />
+	<fail message="cp.api.login.id ${prop.message}" unless="cp.api.login.id" />
+	<fail message="cp.transaction.key ${prop.message}" unless="cp.transaction.key" />
+	<fail message="md5.hash.key ${prop.message}" unless="md5.hash.key" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<path id="junit-classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<pathelement path="${classes.dir}" />
+		<pathelement path="${resources.dir}" />
+	</path>
+
+	<target name="clean">
+		<fileset dir="${build.dir}" includes="**/*.jar" />
+		<delete dir="${classes.dir}" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="${classes.dir}" />
+		<javac target="1.5" srcdir="${src.dir}" destdir="${classes.dir}" debug="true" optimize="true" includes="**/*.java" classpathref="classpath" />
+	</target>
+
+	<target name="compile-test" depends="compile">
+		<mkdir dir="${classes.dir}" />
+		<javac target="1.5" srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" />
+	</target>
+
+	<target name="jar" depends="compile, compile-test">
+		<mkdir dir="${classes.dir}" />
+		<jar jarfile="${build.dir}/${ant.project.name}-${version}.jar">
+			<fileset dir="${classes.dir}">
+				<include name="**/*.class" />
+				<exclude name="**/test/*.class" />
+			</fileset>
+		</jar>
+		<jar jarfile="${build.dir}/${ant.project.name}-test.jar">
+			<fileset dir="${classes.dir}">
+				<include name="**/test/*.class" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="unit-test" depends="jar">
+		<delete dir="${reports.tests}" />
+		<mkdir dir="${reports.tests}" />
+
+		<junit printsummary="yes" failureProperty="test.failure">
+			<classpath>
+				<path refid="junit-classpath" />
+			</classpath>
+			<sysproperty key="API_LOGIN_ID" value="${api.login.id}" />
+			<sysproperty key="TRANSACTION_KEY" value="${transaction.key}" />
+			<sysproperty key="CP_API_LOGIN_ID" value="${cp.api.login.id}" />
+			<sysproperty key="CP_TRANSACTION_KEY" value="${cp.transaction.key}" />
+			<sysproperty key="MD5_HASH_KEY" value="${md5.hash.key}" />
+			<formatter type="plain" />
+			<batchtest fork="yes" todir="${reports.tests}">
+				<fileset dir="${classes.dir}">
+					<include name="**/*Test*.class" />
+					<exclude name="**/UnitTestData.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail message="test failed" if="test.failure" />
+	</target>
+
+	<target name="javadoc" description="Create javadocs for all files">
+		<delete dir="${javadocs.dir}" />
+		<mkdir dir="${javadocs.dir}" />
+		<javadoc destdir="${javadocs.dir}" author="true" version="true" use="true" windowtitle="Authorize.Net Java SDK" verbose="off" serialwarn="off">
+
+			<classpath>
+				<fileset id="libFiles" dir="lib">
+					<include name="**/**/*.jar" />
+				</fileset>
+			</classpath>
+
+			<fileset dir="${src.dir}">
+				<include name="**" />
+				<exclude name="**Test**" />
+				<exclude name="**/README" />
+			</fileset>
+
+			<doctitle>
+				<![CDATA[<h1>Authorize.Net Java SDK</h1>]]></doctitle>
+	</javadoc>
+</target>
+
+</project>
+

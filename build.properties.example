@@ -1,0 +1,8 @@
+# populate this file and put it into your home directory either named as
+# anet_java_sdk.properties or build.properties
+api.login.id=API_LOGIN_ID
+transaction.key=TRANSACTION_KEY
+# card present transactions currently require different credentials.
+cp.api.login.id=API_LOGIN_ID
+cp.transaction.key=TRANSACTION_KEY
+md5.hash.key=MD5_HASH_KEY
