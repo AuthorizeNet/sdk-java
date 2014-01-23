@@ -353,7 +353,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				shipToAddress.setState(getElementText(address_el, AuthNetField.ELEMENT_STATE.getFieldName()));
 				shipToAddress.setZipPostalCode(getElementText(address_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
 				shipToAddress.setCountry(getElementText(address_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
-				customer.setShipTo(shipToAddress);
+				customer.setShipTo(billToAddress);
 			}
 			transactionDetails.setCustomer(customer);
 		}
