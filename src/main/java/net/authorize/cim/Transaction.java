@@ -324,6 +324,10 @@ public class Transaction extends net.authorize.Transaction {
 			cc_exp_el.appendChild(document.getDocument().createTextNode(net.authorize.util.DateUtil.getFormattedDate(credit_card.getExpirationDate(),
 					CreditCard.ARB_EXPIRY_DATE_FORMAT)));
 			cc_el.appendChild(cc_exp_el);
+			
+			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
+			card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));
+			cc_el.appendChild(card_code_el);
 
 			payment_el.appendChild(cc_el);
 		}

@@ -198,7 +198,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		customerProfile.setMerchantCustomerId(getElementText(profile_el, AuthNetField.ELEMENT_MERCHANT_CUSTOMER_ID.getFieldName()));
 		customerProfile.setDescription(getElementText(profile_el, AuthNetField.ELEMENT_DESCRIPTION.getFieldName()));
 		customerProfile.setEmail(getElementText(profile_el, AuthNetField.ELEMENT_EMAIL.getFieldName()));
-		customerProfile.setCustomerProfileId(getElementText(profile_el, AuthNetField.ELEMENT_CUSTOMER_PAYMENT_PROFILE_ID.getFieldName()));
+		customerProfile.setCustomerProfileId(getElementText(profile_el, AuthNetField.ELEMENT_CUSTOMER_PROFILE_ID.getFieldName()));
 		// payment profiles
 		importPaymentProfiles(profile_el);
 		importShipToList(profile_el, customerProfile);
@@ -317,6 +317,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			billTo.setState(getElementText(bill_to_el, AuthNetField.ELEMENT_STATE.getFieldName()));
 			billTo.setZipPostalCode(getElementText(bill_to_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
 			billTo.setCountry(getElementText(bill_to_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
+			billTo.setPhoneNumber(getElementText(bill_to_el, AuthNetField.ELEMENT_PHONE_NUMBER.getFieldName()));;
 			paymentProfile.setBillTo(billTo);
 		}
 	}
@@ -355,6 +356,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			bankAccount.setBankAccountNumber(getElementText(bank_account_el, AuthNetField.ELEMENT_ACCOUNT_NUMBER.getFieldName()));
 			bankAccount.setBankAccountName(getElementText(bank_account_el, AuthNetField.ELEMENT_NAME_ON_ACCOUNT.getFieldName()));
 			bankAccount.setBankName(getElementText(bank_account_el, AuthNetField.ELEMENT_BANK_NAME.getFieldName()));
+			paymentProfile.addPayment(Payment.createPayment(bankAccount));
 		}
 	}
 

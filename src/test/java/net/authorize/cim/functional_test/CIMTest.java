@@ -15,6 +15,7 @@ import net.authorize.data.ShippingCharges;
 import net.authorize.data.cim.CustomerProfile;
 import net.authorize.data.cim.PaymentProfile;
 import net.authorize.data.cim.PaymentTransaction;
+import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.BankAccountType;
 import net.authorize.data.echeck.ECheckType;
@@ -62,6 +63,8 @@ public class CIMTest extends UnitTestData {
 		creditCard = CreditCard.createCreditCard();
 		creditCard.setCreditCardNumber(creditCardNumber);
 		creditCard.setExpirationDate("2029-07");
+		creditCard.setCardCode("123");
+		creditCard.setAvsCode(AVSCode.Z);
 
 		// Create a bank account
 		bankAccount = BankAccount.createBankAccount();
@@ -116,6 +119,7 @@ public class CIMTest extends UnitTestData {
 		// add info
 		paymentProfile.setBillTo(billingInfo);
 		paymentProfile.addPayment(Payment.createPayment(creditCard));
+		paymentProfile.addPayment(Payment.createPayment(bankAccount));
 		paymentProfile.setCustomerType(CustomerType.INDIVIDUAL);
 
 		customerProfile = CustomerProfile.createCustomerProfile();
@@ -142,12 +146,13 @@ public class CIMTest extends UnitTestData {
 		orderItem.setItemTaxable(false);
 		order.addOrderItem(orderItem);
 
-		for(int i = 0; i <= 2; i++) {
+		for (int i = 0; i <= 2; i++) {
 			order.addOrderItem(orderItem);
 		}
 
 		// shipping charges
-		ShippingCharges shippingCharges = ShippingCharges.createShippingCharges();
+		ShippingCharges shippingCharges = ShippingCharges
+				.createShippingCharges();
 		shippingCharges.setDutyAmount(dutyAmount);
 		shippingCharges.setDutyItemDescription(dutyItemDescription);
 		shippingCharges.setDutyItemName(dutyItemName);
@@ -171,14 +176,15 @@ public class CIMTest extends UnitTestData {
 	public void testCreateCustomerProfile() {
 
 		// Create a new customer profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfile(customerProfile);
 		transaction.addPaymentProfile(paymentProfile);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
@@ -186,8 +192,8 @@ public class CIMTest extends UnitTestData {
 		Assert.assertNotNull(result.getRefId());
 		Assert.assertNotNull(result.getCustomerProfileId());
 		Assert.assertNotNull(result.getCustomerPaymentProfileIdList());
-	    Assert.assertTrue(result.getCustomerPaymentProfileIdList().size() == 1);
-	    Assert.assertTrue(result.getDirectResponseList().size() == 1);
+		Assert.assertTrue(result.getCustomerPaymentProfileIdList().size() == 1);
+		Assert.assertTrue(result.getDirectResponseList().size() == 1);
 
 		customerProfileId = result.getCustomerProfileId();
 	}
@@ -196,15 +202,16 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testDeleteCustomerProfileRequest() {
 		// delete a customer profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.DELETE_CUSTOMER_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.DELETE_CUSTOMER_PROFILE);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 
@@ -216,37 +223,40 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testCreateCustomerPaymentProfileRequest() {
 		// Create a new customer payment profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PAYMENT_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PAYMENT_PROFILE);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.addPaymentProfile(paymentProfile);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 		Assert.assertTrue(result.getCustomerPaymentProfileIdList().size() > 0);
-	    Assert.assertEquals(1,result.getDirectResponseList().size());
+		Assert.assertEquals(1, result.getDirectResponseList().size());
 
-	    customerPaymentProfileId = result.getCustomerPaymentProfileIdList().get(0);
+		customerPaymentProfileId = result.getCustomerPaymentProfileIdList()
+				.get(0);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testDeleteCustomerPaymentProfileRequest() {
 		// delete a customer payment profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.DELETE_CUSTOMER_PAYMENT_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.DELETE_CUSTOMER_PAYMENT_PROFILE);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
@@ -261,115 +271,130 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testCreateCustomerShippingAddress() {
 		// Create a new shipping address profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_SHIPPING_ADDRESS);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_SHIPPING_ADDRESS);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setShipTo(shippingInfo);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 		Assert.assertTrue(result.getCustomerShippingAddressIdList().size() > 0);
-	    Assert.assertEquals(1,result.getCustomerShippingAddressIdList().size());
+		Assert.assertEquals(1, result.getCustomerShippingAddressIdList().size());
 
-	    customerShippingAddressId = result.getCustomerShippingAddressIdList().get(0);
+		customerShippingAddressId = result.getCustomerShippingAddressIdList()
+				.get(0);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testDeleteCustomerShippingAddress() {
 		// delete the shipping address
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.DELETE_CUSTOMER_SHIPPING_ADDRESS);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.DELETE_CUSTOMER_SHIPPING_ADDRESS);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 
-	    // recreate for next unit test
-	    testCreateCustomerShippingAddress();
+		// recreate for next unit test
+		testCreateCustomerShippingAddress();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_AuthOnly_NoCardCode() {
 		// Create an auth only txn request
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
-		paymentTransaction.setTransactionType(net.authorize.TransactionType.AUTH_ONLY);
+		paymentTransaction
+				.setTransactionType(net.authorize.TransactionType.AUTH_ONLY);
 		transaction.setPaymentTransaction(paymentTransaction);
 		transaction.setCardCode(null);
-		transaction.addExtraOption("ip_address","127.0.0.1");
+		transaction.addExtraOption("ip_address", "127.0.0.1");
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 		Assert.assertTrue(result.getDirectResponseList().size() > 0);
-		authCode = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.AUTHORIZATION_CODE);
-		splitTenderId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.SPLIT_TENDER_ID);
-		transactionId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
+		authCode = result.getDirectResponseList().get(0).getDirectResponseMap()
+				.get(ResponseField.AUTHORIZATION_CODE);
+		splitTenderId = result.getDirectResponseList().get(0)
+				.getDirectResponseMap().get(ResponseField.SPLIT_TENDER_ID);
+		transactionId = result.getDirectResponseList().get(0)
+				.getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_AuthOnly() {
 		// Create an auth only txn request
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
-		paymentTransaction.setTransactionType(net.authorize.TransactionType.AUTH_ONLY);
+		paymentTransaction
+				.setTransactionType(net.authorize.TransactionType.AUTH_ONLY);
 		transaction.setPaymentTransaction(paymentTransaction);
-		transaction.addExtraOption("ip_address","127.0.0.1");
+		transaction.addExtraOption("ip_address", "127.0.0.1");
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 		Assert.assertTrue(result.getDirectResponseList().size() > 0);
-		authCode = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.AUTHORIZATION_CODE);
-		splitTenderId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.SPLIT_TENDER_ID);
-		transactionId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
+		authCode = result.getDirectResponseList().get(0).getDirectResponseMap()
+				.get(ResponseField.AUTHORIZATION_CODE);
+		splitTenderId = result.getDirectResponseList().get(0)
+				.getDirectResponseMap().get(ResponseField.SPLIT_TENDER_ID);
+		transactionId = result.getDirectResponseList().get(0)
+				.getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_PriorAuthCapture() {
 		// Create an auth capture txn request
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
-		paymentTransaction.setTransactionType(net.authorize.TransactionType.PRIOR_AUTH_CAPTURE);
+		paymentTransaction
+				.setTransactionType(net.authorize.TransactionType.PRIOR_AUTH_CAPTURE);
 		paymentTransaction.setTransactionId(transactionId);
 		transaction.setPaymentTransaction(paymentTransaction);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
@@ -382,69 +407,78 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_AuthCapture() {
 		// Create an auth capture txn request
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
-		paymentTransaction.setTransactionType(net.authorize.TransactionType.AUTH_CAPTURE);
+		paymentTransaction
+				.setTransactionType(net.authorize.TransactionType.AUTH_CAPTURE);
 		transaction.setPaymentTransaction(paymentTransaction);
-		transaction.addExtraOption("ip_address","127.0.0.1");
+		transaction.addExtraOption("ip_address", "127.0.0.1");
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
-		transactionId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
+		transactionId = result.getDirectResponseList().get(0)
+				.getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
 		Assert.assertTrue(result.getDirectResponseList().size() > 0);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_CaptureOnly() {
-		testCreateCustomerProfileTransactionRequest_AuthOnly(); // get a new auth
+		testCreateCustomerProfileTransactionRequest_AuthOnly(); // get a new
+																// auth
 		// Create a capture only txn request
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
-		paymentTransaction.setTransactionType(net.authorize.TransactionType.CAPTURE_ONLY);
+		paymentTransaction
+				.setTransactionType(net.authorize.TransactionType.CAPTURE_ONLY);
 		paymentTransaction.setApprovalCode(authCode);
 		transaction.setPaymentTransaction(paymentTransaction);
-		transaction.addExtraOption("ip_address","127.0.0.1");
+		transaction.addExtraOption("ip_address", "127.0.0.1");
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 		Assert.assertTrue(result.getDirectResponseList().size() > 0);
-		transactionId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
+		transactionId = result.getDirectResponseList().get(0)
+				.getDirectResponseMap().get(ResponseField.TRANSACTION_ID);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_Void() {
 		// Create a void txn request
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
 		paymentTransaction.setOrder(null);
-		paymentTransaction.setTransactionType(net.authorize.TransactionType.VOID);
+		paymentTransaction
+				.setTransactionType(net.authorize.TransactionType.VOID);
 		paymentTransaction.setTransactionId(transactionId);
 		transaction.setPaymentTransaction(paymentTransaction);
-		transaction.addExtraOption("ip_address","127.0.0.1");
+		transaction.addExtraOption("ip_address", "127.0.0.1");
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
@@ -457,13 +491,14 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testGetCustomerProfileIdsRequest() {
 		// get customer profile ids
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE_IDS);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE_IDS);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertTrue(result.getCustomerProfileIdList().size() > 0);
 	}
@@ -472,23 +507,27 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testGetCustomerProfileRequest() {
 		// get a customer profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
 
-		transaction.setCustomerProfileId(customerProfileId);
+		// transaction.setCustomerProfileId(customerProfileId);
+		transaction.setCustomerProfileId("24431138");
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getCustomerProfileId());
 		Assert.assertNotNull(result.getCustomerProfile());
-		Assert.assertEquals(customerDescription, result.getCustomerProfile().getDescription());
+		Assert.assertEquals(customerDescription, result.getCustomerProfile()
+				.getDescription());
 		Assert.assertEquals(email, result.getCustomerProfile().getEmail());
 		Assert.assertNotNull(result.getCustomerProfile().getCustomerProfileId());
 		Assert.assertNotNull(result.getCustomerProfile().getShipToAddressList());
-		Assert.assertTrue(result.getCustomerProfile().getShipToAddressList().size() > 0);
+		Assert.assertTrue(result.getCustomerProfile().getShipToAddressList()
+				.size() > 0);
 		Assert.assertNotNull(result.getCustomerPaymentProfileIdList());
 		Assert.assertTrue(result.getCustomerPaymentProfileIdList().size() > 0);
 	}
@@ -497,16 +536,17 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testGetCustomerPaymentProfileRequest() {
 		// get a customer payment profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PAYMENT_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_PAYMENT_PROFILE);
 
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getCustomerPaymentProfile());
 	}
@@ -515,23 +555,27 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testGetCustomerShippingAddressRequest() {
 		// get a customer shipping address
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_SHIPPING_ADDRESS);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_SHIPPING_ADDRESS);
 
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getCustomerProfile());
 		Assert.assertNotNull(result.getCustomerProfile().getShipToAddressList());
-		Assert.assertEquals(1, result.getCustomerProfile().getShipToAddressList().size());
-		Address shippingAddress = result.getCustomerProfile().getShipToAddressList().get(0);
+		Assert.assertEquals(1, result.getCustomerProfile()
+				.getShipToAddressList().size());
+		Address shippingAddress = result.getCustomerProfile()
+				.getShipToAddressList().get(0);
 		Assert.assertNotNull(shippingAddress);
-		Assert.assertThat(shippingAddress.getFirstName(), JUnitMatchers.containsString(firstName));
+		Assert.assertThat(shippingAddress.getFirstName(),
+				JUnitMatchers.containsString(firstName));
 		Assert.assertEquals(lastName, shippingAddress.getLastName());
 		Assert.assertEquals(company, shippingAddress.getCompany());
 		Assert.assertEquals(address, shippingAddress.getAddress());
@@ -547,8 +591,8 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testUpdateCustomerProfileRequest() {
 		// update a customer profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.UPDATE_CUSTOMER_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.UPDATE_CUSTOMER_PROFILE);
 
 		customerProfile = CustomerProfile.createCustomerProfile();
 		customerProfile.setMerchantCustomerId(customerId);
@@ -559,24 +603,27 @@ public class CIMTest extends UnitTestData {
 		transaction.setCustomerProfile(customerProfile);
 		transaction.setCustomerProfileId(customerProfileId);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 
-		transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
+		transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
 
 		transaction.setCustomerProfileId(customerProfileId);
 
-		result = (Result<Transaction>)merchant.postTransaction(transaction);
+		result = (Result<Transaction>) merchant.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getCustomerProfileId());
 		Assert.assertNotNull(result.getCustomerProfile());
-		Assert.assertEquals(customerDescription2, result.getCustomerProfile().getDescription());
+		Assert.assertEquals(customerDescription2, result.getCustomerProfile()
+				.getDescription());
 		Assert.assertEquals(email2, result.getCustomerProfile().getEmail());
 	}
 
@@ -584,45 +631,48 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testUpdateCustomerPaymentProfileRequest() {
 		// update customer payment profile
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.UPDATE_CUSTOMER_PAYMENT_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.UPDATE_CUSTOMER_PAYMENT_PROFILE);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(customerProfileId);
 		String newCompanyName = company + System.currentTimeMillis();
 		billingInfo.setCompany(newCompanyName);
 		paymentProfile.setBillTo(billingInfo);
-		paymentProfile.setCustomerPaymentProfileId(customerPaymentProfileId);
+		paymentProfile.setCustomerPaymentProfileId(customerPaymentProfileId);		
 		transaction.addPaymentProfile(paymentProfile);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
-	    Assert.assertEquals(1,result.getDirectResponseList().size());
+		Assert.assertEquals(1, result.getDirectResponseList().size());
 
-	    // check if the new data was saved
-		transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PAYMENT_PROFILE);
+		// check if the new data was saved
+		transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_PAYMENT_PROFILE);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
 
-		result = (Result<Transaction>)merchant.postTransaction(transaction);
+		result = (Result<Transaction>) merchant.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getCustomerPaymentProfile());
-		Assert.assertEquals(newCompanyName, result.getCustomerPaymentProfile().getBillTo().getCompany());
+		Assert.assertEquals(newCompanyName, result.getCustomerPaymentProfile()
+				.getBillTo().getCompany());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testUpdateCustomerShippingAddressRequest() {
 		// update customer shipping address
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.UPDATE_CUSTOMER_SHIPPING_ADDRESS);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.UPDATE_CUSTOMER_SHIPPING_ADDRESS);
 		transaction.setRefId(refId);
 
 		String newCompanyName = company + System.currentTimeMillis();
@@ -633,26 +683,30 @@ public class CIMTest extends UnitTestData {
 
 		transaction.setCustomerProfile(customerProfile);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getRefId());
 
-	    // check if the new data was saved
-		transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_SHIPPING_ADDRESS);
+		// check if the new data was saved
+		transaction = merchant
+				.createCIMTransaction(TransactionType.GET_CUSTOMER_SHIPPING_ADDRESS);
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerShippingAddressId(customerShippingAddressId);
 
-		result = (Result<Transaction>)merchant.postTransaction(transaction);
+		result = (Result<Transaction>) merchant.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getCustomerProfile());
-		Assert.assertTrue(result.getCustomerProfile().getShipToAddressList().size() > 0);
-		Assert.assertEquals(newCompanyName,  result.getCustomerProfile().getShipToAddressList().get(0).getCompany());
+		Assert.assertTrue(result.getCustomerProfile().getShipToAddressList()
+				.size() > 0);
+		Assert.assertEquals(newCompanyName, result.getCustomerProfile()
+				.getShipToAddressList().get(0).getCompany());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -669,18 +723,21 @@ public class CIMTest extends UnitTestData {
 		}
 
 		// update split tender group
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.UPDATE_SPLIT_TENDER_GROUP);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.UPDATE_SPLIT_TENDER_GROUP);
 
-		PaymentTransaction splitTenderPaymentTransaction = PaymentTransaction.createPaymentTransaction();
+		PaymentTransaction splitTenderPaymentTransaction = PaymentTransaction
+				.createPaymentTransaction();
 		splitTenderPaymentTransaction.setSplitTenderId(splitTenderId);
-		splitTenderPaymentTransaction.setSplitTenderStatus(SplitTenderStatus.VOIDED);
+		splitTenderPaymentTransaction
+				.setSplitTenderStatus(SplitTenderStatus.VOIDED);
 
 		transaction.setPaymentTransaction(splitTenderPaymentTransaction);
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 	}
 
@@ -688,8 +745,8 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testValidateCustomerPaymentProfileRequest() {
 		// update split tender group
-		net.authorize.cim.Transaction transaction =
-		  merchant.createCIMTransaction(TransactionType.VALIDATE_CUSTOMER_PAYMENT_PROFILE);
+		net.authorize.cim.Transaction transaction = merchant
+				.createCIMTransaction(TransactionType.VALIDATE_CUSTOMER_PAYMENT_PROFILE);
 
 		transaction.setCustomerProfileId(customerProfileId);
 		transaction.setCustomerPaymentProfileId(customerPaymentProfileId);
@@ -697,10 +754,11 @@ public class CIMTest extends UnitTestData {
 		transaction.setCardCode(cardholderAuthenticationValue);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
-	    result.printMessages();
+		result.printMessages();
 		Assert.assertTrue(result.isOk());
 	}
 }

@@ -28,6 +28,7 @@ public enum AuthNetField {
 	ELEMENT__USER_REF("UserRef"),
 	ELEMENT_ACCOUNT_NUMBER("accountNumber"),
 	ELEMENT_ACCOUNT_TYPE("accountType"),
+	ELEMENT_CARD_TYPE("cardType"),
 	ELEMENT_ACTION("action"),
 	ELEMENT_ADDRESS("address"),
 	ELEMENT_AMOUNT("amount"),
