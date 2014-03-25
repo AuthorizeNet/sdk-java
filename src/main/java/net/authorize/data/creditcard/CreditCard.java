@@ -15,6 +15,7 @@ public class CreditCard implements Serializable {
 	/**
 	 *
 	 */
+	public static final String MASKED_EXPIRY_DATE = "XXXX";
 	private static final long serialVersionUID = 1L;
 
 	public static String ARB_EXPIRY_DATE_FORMAT = "yyyy-MM";
@@ -126,6 +127,7 @@ public class CreditCard implements Serializable {
 	 * @param expiration_date
 	 */
 	public void setExpirationDate(String expiration_date) {
+		
 		this.expirationDate = net.authorize.util.DateUtil.getDateFromFormattedDate(expiration_date, ARB_EXPIRY_DATE_FORMAT);
 		extractMonthYearFromExpiration();
 	}

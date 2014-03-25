@@ -7,20 +7,23 @@ import java.io.Serializable;
  *
  */
 public enum BankAccountType implements Serializable {
-	CHECKING("CHECKING"),
-	BUSINESSCHECKING("BUSINESSCHECKING"),
-	SAVINGS("SAVINGS"),
-	UNKNOWN("UNKNOWN");
+	CHECKING("CHECKING","checking"),
+	BUSINESSCHECKING("BUSINESSCHECKING","businessChecking"),
+	SAVINGS("SAVINGS","savings"),
+	UNKNOWN("UNKNOWN","unknown");
 
 	private final String value;
+	private final String value2;
 
-	private BankAccountType(String value) {
+	private BankAccountType(String value, String value2) {
 		this.value = value;
+		this.value2 = value2;
 	}
 
 	public static BankAccountType findByValue(String value) {
 		for(BankAccountType bankAccountType : values()) {
-			if(bankAccountType.value.equals(value)) {
+			if(bankAccountType.value.equals(value)|| 
+					bankAccountType.value2.equals(value)) {
 				return bankAccountType;
 			}
 		}
@@ -33,6 +36,13 @@ public enum BankAccountType implements Serializable {
 	 */
 	public String getValue() {
 		return value;
+	}
+	
+	/**
+	 * @return the value2
+	 */
+	public String getValue2() {
+		return value2;
 	}
 
 }

@@ -3,6 +3,7 @@ package net.authorize.cim;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -321,10 +322,16 @@ public class Transaction extends net.authorize.Transaction {
 			cc_el.appendChild(cc_num_el);
 
 			Element cc_exp_el = document.createElement(AuthNetField.ELEMENT_CREDIT_CARD_EXPIRY.getFieldName());
-			cc_exp_el.appendChild(document.getDocument().createTextNode(net.authorize.util.DateUtil.getFormattedDate(credit_card.getExpirationDate(),
-					CreditCard.ARB_EXPIRY_DATE_FORMAT)));
-			cc_el.appendChild(cc_exp_el);
+			if(credit_card.getExpirationDate()==null ||(credit_card.getExpirationDate().equals(new Date(0)))){
+				cc_exp_el.appendChild(document.getDocument().createTextNode(CreditCard.MASKED_EXPIRY_DATE));
+			}
+			else{
+				cc_exp_el.appendChild(document.getDocument().createTextNode(net.authorize.util.DateUtil.getFormattedDate(credit_card.getExpirationDate(),
+						CreditCard.ARB_EXPIRY_DATE_FORMAT)));
+			}			
 			
+			cc_el.appendChild(cc_exp_el);
+			                                                                 
 			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
 			card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));
 			cc_el.appendChild(card_code_el);
@@ -336,7 +343,7 @@ public class Transaction extends net.authorize.Transaction {
 
 			if(bank_account.getBankAccountType() != null) {
 				Element account_type_el = document.createElement(AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName());
-				account_type_el.appendChild(document.getDocument().createTextNode(bank_account.getBankAccountType().getValue().toLowerCase()));
+				account_type_el.appendChild(document.getDocument().createTextNode(bank_account.getBankAccountType().getValue2()));
 				bankacct_el.appendChild(account_type_el);
 			}
 

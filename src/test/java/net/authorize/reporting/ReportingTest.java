@@ -11,6 +11,7 @@ import net.authorize.data.OrderItem;
 import net.authorize.data.ShippingCharges;
 import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
+import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
@@ -398,5 +399,139 @@ public class ReportingTest extends UnitTestData {
 					transactionDetail.getSettleAmount());
 		}
 	}
+	
+	
+	@Test
+	public void getTransactionDetailsRequestRefundMock() {
+		String xml = "<?xml version=\"1.0\"?> <getTransactionDetailsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transaction> <transId>12345</transId> <refTransId>12345</refTransId> <splitTenderId>12345</splitTenderId> <submitTimeUTC>2010-08-30T17:49:20.757Z</submitTimeUTC> <submitTimeLocal>2010-08-30T13:49:20.757</submitTimeLocal> <transactionType>authOnlyTransaction</transactionType> <transactionStatus>settledSuccessfully</transactionStatus> <responseCode>1</responseCode> <responseReasonCode>1</responseReasonCode> <responseReasonDescription>Approval</responseReasonDescription> <authCode>000000</authCode> <AVSResponse>X</AVSResponse> <cardCodeResponse>M</cardCodeResponse> <CAVVResponse>2</CAVVResponse> <FDSFilterAction>authAndHold</FDSFilterAction> <FDSFilters> <FDSFilter> <name>Hourly Velocity Filter</name> <action>authAndHold</action> </FDSFilter> <FDSFilter> <name>Amount Filter</name> <action>report</action> </FDSFilter> </FDSFilters> <batch> <batchId>12345</batchId> <settlementTimeUTC>2010-08-30T17:49:20.757Z</settlementTimeUTC> <settlementTimeLocal>2010-08-30T13:49:20.757</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> </batch> <order> <invoiceNumber>INV00001</invoiceNumber> <description>some description</description> <purchaseOrderNumber>PO000001</purchaseOrderNumber> </order> <requestedAmount>5.00</requestedAmount> <authAmount>2.00</authAmount> <settleAmount>2.00</settleAmount> <tax> <amount>1.00</amount> <name>WA state sales tax</name> <description>Washington state sales tax</description> </tax> <shipping> <amount>2.00</amount> <name>ground based shipping</name> <description>Ground based 5 to 10 day shipping</description> </shipping> <duty> <amount>1.00</amount> </duty> <lineItems> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> </lineItems> <prepaidBalanceRemaining>30.00</prepaidBalanceRemaining> <taxExempt>false</taxExempt>  <payment>      <creditCard>        <cardNumber>XXXX1111</cardNumber>        <expirationDate>XXXX</expirationDate>        <cardType>Visa</cardType>      </creditCard>    </payment> <customer> <type>individual</type> <id>ABC00001</id> <email>mark@example.com</email> </customer> <billTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> <phoneNumber>000-000-0000</phoneNumber> <faxNumber/> </billTo> <shipTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> </shipTo> <recurringBilling>false</recurringBilling> <customerIP>0.0.0.0</customerIP> </transaction> </getTransactionDetailsResponse>";
+
+		BasicXmlDocument xmlResponse = new BasicXmlDocument();
+		xmlResponse.parseString(xml);
+
+		net.authorize.reporting.Transaction transaction = merchant
+				.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
+		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
+		reportingDetails.setTransactionId("12345");
+		transaction.setReportingDetails(reportingDetails);
+	
+
+		net.authorize.reporting.Result<net.authorize.reporting.Transaction> result =
+			(net.authorize.reporting.Result<net.authorize.reporting.Transaction>) net.authorize.reporting.Result.createResult(transaction, xmlResponse);
+		Assert.assertNotNull(result.getReportingDetails().getTransactionDetailList());
+		Assert.assertTrue(result.getReportingDetails().getTransactionDetailList().size() == 1);
+		TransactionDetails transactionDetail = result.getReportingDetails().getTransactionDetailList().get(0);
+		Assert.assertEquals("12345",transactionDetail.getTransId());
+		Assert.assertEquals("12345",transactionDetail.getRefTransId());
+		Assert.assertEquals("12345",transactionDetail.getSplitTenderId());
+		Assert.assertEquals("Mon Aug 30 17:49:20 PDT 2010",transactionDetail.getSubmitTimeUTC().toString());
+		Assert.assertEquals("Mon Aug 30 13:49:20 PDT 2010",transactionDetail.getSubmitTimeLocal().toString());
+		Assert.assertEquals(ReportingTransactionType.AUTH_ONLY,transactionDetail.getTransactionType());
+		Assert.assertEquals(TransactionStatusType.SETTLED_SUCCESSFULLY,transactionDetail.getTransactionStatus());
+		Assert.assertEquals(ResponseCode.APPROVED,transactionDetail.getResponseCode());
+		Assert.assertEquals(ResponseReasonCode.RRC_1_1,transactionDetail.getResponseReasonCode());
+		Assert.assertEquals("Approval", transactionDetail.getResponseReasonCode().getReasonText());
+		Assert.assertEquals("000000",transactionDetail.getAuthCode());
+		Assert.assertEquals(AVSCode.X,transactionDetail.getAvsResponse());
+		Assert.assertEquals(CardCodeResponseType.M,transactionDetail.getCardCodeResponse());
+		Assert.assertEquals(CAVVResponseType.CAVV_2,transactionDetail.getCAVVResponse());
+		Assert.assertEquals(FDSFilterActionType.AUTH_AND_HOLD,transactionDetail.getFDSFilterAction());
+		Assert.assertEquals(2, transactionDetail.getFDSFilterList().size());
+		// fds - 1
+		FDSFilter fdsFilter = transactionDetail.getFDSFilterList().get(0);
+		Assert.assertEquals("Hourly Velocity Filter", fdsFilter.getName());
+		Assert.assertEquals(FDSFilterActionType.AUTH_AND_HOLD, fdsFilter.getAction());
+		// fds - 2
+		fdsFilter = transactionDetail.getFDSFilterList().get(1);
+		Assert.assertEquals("Amount Filter", fdsFilter.getName());
+		Assert.assertEquals(FDSFilterActionType.REPORT, fdsFilter.getAction());
+		// batch
+		BatchDetails batch = transactionDetail.getBatch();
+		Assert.assertNotNull(batch);
+		Assert.assertEquals("12345", batch.getBatchId());
+		Assert.assertEquals("Mon Aug 30 17:49:20 PDT 2010", batch.getSettlementTimeUTC().toString());
+		Assert.assertEquals("Mon Aug 30 13:49:20 PDT 2010", batch.getSettlementTimeLocal().toString());
+		Assert.assertEquals(SettlementStateType.SETTLED_SUCCESSFULLY, batch.getSettlementState());
+		// order
+		Order order = transactionDetail.getOrder();
+		Assert.assertNotNull(order);
+		Assert.assertEquals("INV00001", order.getInvoiceNumber());
+		Assert.assertEquals("some description", order.getDescription());
+		Assert.assertEquals("PO000001", order.getPurchaseOrderNumber());
+		// requested amount
+		Assert.assertEquals(new BigDecimal(5.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), transactionDetail.getRequestedAmount());
+		// auth amount
+		Assert.assertEquals(new BigDecimal(2.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), transactionDetail.getAuthAmount());
+		// settle amount
+		Assert.assertEquals(new BigDecimal(2.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), transactionDetail.getSettleAmount());
+		ShippingCharges taxShipDutyCharges = order.getShippingCharges();
+		Assert.assertNotNull(taxShipDutyCharges);
+		// tax
+		Assert.assertEquals(new BigDecimal(1.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), taxShipDutyCharges.getTaxAmount());
+		Assert.assertEquals("WA state sales tax", taxShipDutyCharges.getTaxItemName());
+		Assert.assertEquals("Washington state sales tax", taxShipDutyCharges.getTaxDescription());
+		// ship
+		Assert.assertEquals(new BigDecimal(2.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), taxShipDutyCharges.getFreightAmount());
+		Assert.assertEquals("ground based shipping", taxShipDutyCharges.getFreightItemName());
+		Assert.assertEquals("Ground based 5 to 10 day shipping", taxShipDutyCharges.getFreightDescription());
+		// duty
+		Assert.assertEquals(new BigDecimal(1.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), taxShipDutyCharges.getDutyAmount());
+		Assert.assertNull(taxShipDutyCharges.getDutyItemName());
+		Assert.assertNull(taxShipDutyCharges.getDutyItemDescription());
+		// line items
+		Assert.assertEquals(2, order.getOrderItems().size());
+		for(OrderItem orderItem : order.getOrderItems()) {
+			Assert.assertNotNull(orderItem);
+			Assert.assertEquals("ITEM00001", orderItem.getItemId());
+			Assert.assertEquals("name of item sold", orderItem.getItemName());
+			Assert.assertEquals("Description of item sold", orderItem.getItemDescription());
+			Assert.assertEquals(new BigDecimal(1).setScale(Transaction.QUANTITY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), orderItem.getItemQuantity());
+			Assert.assertEquals(new BigDecimal(6.95).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), orderItem.getItemPrice());
+			Assert.assertTrue(orderItem.isItemTaxable());
+		}
+		// prepaid balance
+		Assert.assertEquals(new BigDecimal(30.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP), transactionDetail.getPrepaidBalanceRemaining());
+		Assert.assertFalse(transactionDetail.isItemTaxExempt());
+		// payment
+		Payment payment = transactionDetail.getPayment();
+		Assert.assertNotNull(payment);
+		CreditCard creditCard = payment.getCreditCard();
+		Assert.assertNotNull(creditCard);
+		Assert.assertEquals(CardType.VISA.getValue(), creditCard.getCardType().getValue());
+		// customer
+		Customer customer = transactionDetail.getCustomer();
+		Assert.assertNotNull(customer);
+		Assert.assertEquals(CustomerType.INDIVIDUAL, customer.getCustomerType());
+		Assert.assertEquals("ABC00001", customer.getId());
+		Assert.assertEquals("mark@example.com", customer.getEmail());
+		// billto
+		Address billToAddress = customer.getBillTo();
+		Assert.assertNotNull(billToAddress);
+		Assert.assertEquals("John", billToAddress.getFirstName());
+		Assert.assertEquals("Doe", billToAddress.getLastName());
+		Assert.assertNull(billToAddress.getCompany());
+		Assert.assertEquals("123 Main St.", billToAddress.getAddress());
+		Assert.assertEquals("Bellevue", billToAddress.getCity());
+		Assert.assertEquals("WA", billToAddress.getState());
+		Assert.assertEquals("98004", billToAddress.getZipPostalCode());
+		Assert.assertEquals("USA", billToAddress.getCountry());
+		Assert.assertEquals("000-000-0000", billToAddress.getPhoneNumber());
+		Assert.assertNull(billToAddress.getFaxNumber());
+		// shipto
+		Address shipToAddress = customer.getShipTo();
+		Assert.assertNotNull(shipToAddress);
+		Assert.assertEquals("John", shipToAddress.getFirstName());
+		Assert.assertEquals("Doe", shipToAddress.getLastName());
+		Assert.assertNull(shipToAddress.getCompany());
+		Assert.assertEquals("123 Main St.", shipToAddress.getAddress());
+		Assert.assertEquals("Bellevue", shipToAddress.getCity());
+		Assert.assertEquals("WA", shipToAddress.getState());
+		Assert.assertEquals("98004", shipToAddress.getZipPostalCode());
+		Assert.assertEquals("USA", shipToAddress.getCountry());
+		// recurring billing
+		Assert.assertFalse(transactionDetail.isRecurringBilling());
+		Assert.assertEquals("0.0.0.0", transactionDetail.getCustomerIP());
+	}
+
+	
 	
 }

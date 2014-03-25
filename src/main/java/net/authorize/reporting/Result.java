@@ -296,7 +296,11 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				CreditCard creditCard = CreditCard.createCreditCard();
 				Element credit_card_el = (Element)credit_card_list.item(0);
 				creditCard.setMaskedCreditCardNumber(getElementText(credit_card_el, AuthNetField.ELEMENT_CARD_NUMBER.getFieldName()));
-				creditCard.setExpirationDate(getElementText(credit_card_el, AuthNetField.ELEMENT_EXPIRATION_DATE.getFieldName()));
+				
+				String dateStr = getElementText(credit_card_el, AuthNetField.ELEMENT_EXPIRATION_DATE.getFieldName());				
+				if(StringUtils.isNotEmpty(dateStr)&&(!CreditCard.MASKED_EXPIRY_DATE.equals(dateStr))){
+					creditCard.setExpirationDate(dateStr);	
+				}				
 				if(StringUtils.isNotEmpty(getElementText(credit_card_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName()))){
 					creditCard.setCardType(CardType.findByValue(getElementText(credit_card_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName())));
 				}

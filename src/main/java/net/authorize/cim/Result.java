@@ -135,14 +135,20 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		}
 		// look for singular element data
 		else {
-			String paymentProfileIdStr = getElementText(
-					txn.getCurrentResponse().getDocument().getDocumentElement(),
-					AuthNetField.ELEMENT_CUSTOMER_PAYMENT_PROFILE_ID.getFieldName());
-			if(!net.authorize.util.StringUtils.isEmpty(paymentProfileIdStr)) {
-				this.customerPaymentProfileIdList.add(paymentProfileIdStr);
+			NodeList payment_profile_list = txn.getCurrentResponse().getDocument().getElementsByTagName(AuthNetField.ELEMENT_CUSTOMER_PAYMENT_PROFILE_ID.getFieldName());			
+			
+			if(payment_profile_list.getLength()>0){
+				for(int i=0; i< payment_profile_list.getLength(); i++) {
+					String paymentProfileID = payment_profile_list.item(i).getTextContent();
+					if(!net.authorize.util.StringUtils.isEmpty(paymentProfileID)) {
+						this.customerPaymentProfileIdList.add(paymentProfileID);
+					}
+				}
+
 			}
 		}
 	}
+		
 
 	/**
 	 * Import the customer shipping address id list.
@@ -341,7 +347,10 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			Element credit_card_el = (Element)credit_card_list.item(0);
 			CreditCard creditCard = CreditCard.createCreditCard();
 			creditCard.setMaskedCreditCardNumber(getElementText(credit_card_el, AuthNetField.ELEMENT_CREDIT_CARD_NUMBER.getFieldName()));
-			creditCard.setExpirationDate(getElementText(credit_card_el, AuthNetField.ELEMENT_CREDIT_CARD_EXPIRY.getFieldName()));
+			String dateStr = getElementText(credit_card_el, AuthNetField.ELEMENT_CREDIT_CARD_EXPIRY.getFieldName()); 
+			if(StringUtils.isNotEmpty(dateStr)&&(!CreditCard.MASKED_EXPIRY_DATE.equals(dateStr))){
+				creditCard.setExpirationDate(getElementText(credit_card_el, AuthNetField.ELEMENT_CREDIT_CARD_EXPIRY.getFieldName()));	
+			}			
 
 			paymentProfile.addPayment(Payment.createPayment(creditCard));
 		}
