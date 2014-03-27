@@ -245,6 +245,7 @@ public class TransactionDetails {
 	/**
 	 * @return the fullTransactionDetails
 	 */
+	@Deprecated
 	public boolean isFullTransactionDetails() {
 		return fullTransactionDetails;
 	}
