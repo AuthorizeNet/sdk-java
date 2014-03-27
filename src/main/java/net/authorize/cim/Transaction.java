@@ -343,7 +343,7 @@ public class Transaction extends net.authorize.Transaction {
 
 			if(bank_account.getBankAccountType() != null) {
 				Element account_type_el = document.createElement(AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName());
-				account_type_el.appendChild(document.getDocument().createTextNode(bank_account.getBankAccountType().getValue2()));
+				account_type_el.appendChild(document.getDocument().createTextNode(bank_account.getBankAccountType().getValue()));
 				bankacct_el.appendChild(account_type_el);
 			}
 

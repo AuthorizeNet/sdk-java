@@ -75,10 +75,10 @@ public class CIMTest extends UnitTestData {
 		bankAccount = BankAccount.createBankAccount();
 		bankAccount.setBankAccountName(bankAccountName);
 		bankAccount.setBankAccountNumber(bankAccountNumber);
-		bankAccount.setBankAccountType(BankAccountType.CHECKING);
+		bankAccount.setBankAccountType(BankAccountType.BUSINESSCHECKING);
 		bankAccount.setBankName(bankName);
 		bankAccount.setRoutingNumber(routingNumber);
-		bankAccount.setECheckType(ECheckType.WEB);
+		bankAccount.setECheckType(ECheckType.CCD);
 
 		// Create a billing info
 		//
@@ -683,7 +683,7 @@ public class CIMTest extends UnitTestData {
 		ArrayList<Payment> pl = paymentProfileCC.getPaymentList();
 		Payment p  = pl.get(0);
 		if(p.getCreditCard()!=null)
-			{p.getCreditCard().setExpirationDate("XXXX");}
+			{p.getCreditCard().setExpirationDate(CreditCard.MASKED_EXPIRY_DATE);}
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 
 		Result<Transaction> result = (Result<Transaction>) merchant

@@ -7,10 +7,10 @@ import java.io.Serializable;
  *
  */
 public enum BankAccountType implements Serializable {
-	CHECKING("CHECKING","checking"),
-	BUSINESSCHECKING("BUSINESSCHECKING","businessChecking"),
-	SAVINGS("SAVINGS","savings"),
-	UNKNOWN("UNKNOWN","unknown");
+	CHECKING("checking", "CHECKING"),
+	BUSINESSCHECKING("businessChecking","BUSINESSCHECKING"),
+	SAVINGS("savings","SAVINGS"),
+	UNKNOWN("unknown","UNKNOWN");
 
 	private final String value;
 	private final String value2;
@@ -38,11 +38,6 @@ public enum BankAccountType implements Serializable {
 		return value;
 	}
 	
-	/**
-	 * @return the value2
-	 */
-	public String getValue2() {
-		return value2;
-	}
+
 
 }
