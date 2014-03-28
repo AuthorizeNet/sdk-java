@@ -29,6 +29,7 @@ import net.authorize.data.xml.reporting.SettlementStateType;
 import net.authorize.data.xml.reporting.TransactionDetails;
 import net.authorize.data.xml.reporting.TransactionStatusType;
 import net.authorize.util.BasicXmlDocument;
+import net.authorize.util.StringUtils;
 import net.authorize.xml.Message;
 
 import org.w3c.dom.Element;
@@ -295,8 +296,18 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				CreditCard creditCard = CreditCard.createCreditCard();
 				Element credit_card_el = (Element)credit_card_list.item(0);
 				creditCard.setMaskedCreditCardNumber(getElementText(credit_card_el, AuthNetField.ELEMENT_CARD_NUMBER.getFieldName()));
-				creditCard.setExpirationDate(getElementText(credit_card_el, AuthNetField.ELEMENT_EXPIRATION_DATE.getFieldName()));
-				creditCard.setCardType(CardType.findByValue(getElementText(credit_card_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName())));
+				
+				String dateStr = getElementText(credit_card_el, AuthNetField.ELEMENT_EXPIRATION_DATE.getFieldName());				
+				if(StringUtils.isNotEmpty(dateStr)&&(!CreditCard.MASKED_EXPIRY_DATE.equals(dateStr))){
+					creditCard.setExpirationDate(dateStr);	
+				}				
+				if(StringUtils.isNotEmpty(getElementText(credit_card_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName()))){
+					creditCard.setCardType(CardType.findByValue(getElementText(credit_card_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName())));
+				}
+				else{
+					creditCard.setCardType(CardType.findByValue(getElementText(credit_card_el, AuthNetField.ELEMENT_CARD_TYPE.getFieldName())));
+				}
+				
 				payment = Payment.createPayment(creditCard);
 			}
 			NodeList bank_account_list = payment_el.getElementsByTagName(AuthNetField.ELEMENT_BANK_ACCOUNT.getFieldName());
@@ -315,48 +326,54 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		// customer
 		NodeList customer_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_CUSTOMER.getFieldName());
 		Customer customer = null;
-		if(customer_list != null && customer_list.getLength() == 1) {
+		
+		//if customer element is not present create empty customer
+		if(customer_list == null|| customer_list.getLength() == 0) {			
+			customer = Customer.createCustomer();			
+		}
+		else{
 			Element customer_el = (Element)customer_list.item(0);
 			customer = Customer.createCustomer();
 			customer.setCustomerType(CustomerType.findByName(getElementText(customer_el, AuthNetField.ELEMENT_TYPE.getFieldName())));
 			customer.setId(getElementText(customer_el, AuthNetField.ELEMENT_ID.getFieldName()));
 			customer.setEmail(getElementText(customer_el, AuthNetField.ELEMENT_EMAIL.getFieldName()));
-			// bill to address
-			Address billToAddress = null;
-			NodeList bill_to_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_BILL_TO.getFieldName());
-			if(bill_to_list != null && bill_to_list.getLength() == 1) {
-				Element address_el = (Element)bill_to_list.item(0);
-				billToAddress = Address.createAddress();
-				billToAddress.setFirstName(getElementText(address_el, AuthNetField.ELEMENT_FIRST_NAME.getFieldName()));
-				billToAddress.setLastName(getElementText(address_el, AuthNetField.ELEMENT_LAST_NAME.getFieldName()));
-				billToAddress.setCompany(getElementText(address_el, AuthNetField.ELEMENT_COMPANY.getFieldName()));
-				billToAddress.setAddress(getElementText(address_el, AuthNetField.ELEMENT_ADDRESS.getFieldName()));
-				billToAddress.setCity(getElementText(address_el, AuthNetField.ELEMENT_CITY.getFieldName()));
-				billToAddress.setState(getElementText(address_el, AuthNetField.ELEMENT_STATE.getFieldName()));
-				billToAddress.setZipPostalCode(getElementText(address_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
-				billToAddress.setCountry(getElementText(address_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
-				billToAddress.setPhoneNumber(getElementText(address_el, AuthNetField.ELEMENT_PHONE_NUMBER.getFieldName()));
-				billToAddress.setFaxNumber(getElementText(address_el, AuthNetField.ELEMENT_FAX_NUMBER.getFieldName()));
-				customer.setBillTo(billToAddress);
-			}
-			// ship to address
-			Address shipToAddress = null;
-			NodeList ship_to_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SHIP_TO.getFieldName());
-			if(ship_to_list != null && ship_to_list.getLength() == 1) {
-				Element address_el = (Element)ship_to_list.item(0);
-				shipToAddress = Address.createAddress();
-				shipToAddress.setFirstName(getElementText(address_el, AuthNetField.ELEMENT_FIRST_NAME.getFieldName()));
-				shipToAddress.setLastName(getElementText(address_el, AuthNetField.ELEMENT_LAST_NAME.getFieldName()));
-				shipToAddress.setCompany(getElementText(address_el, AuthNetField.ELEMENT_COMPANY.getFieldName()));
-				shipToAddress.setAddress(getElementText(address_el, AuthNetField.ELEMENT_ADDRESS.getFieldName()));
-				shipToAddress.setCity(getElementText(address_el, AuthNetField.ELEMENT_CITY.getFieldName()));
-				shipToAddress.setState(getElementText(address_el, AuthNetField.ELEMENT_STATE.getFieldName()));
-				shipToAddress.setZipPostalCode(getElementText(address_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
-				shipToAddress.setCountry(getElementText(address_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
-				customer.setShipTo(billToAddress);
-			}
-			transactionDetails.setCustomer(customer);
 		}
+		// bill to address
+		Address billToAddress = null;
+		NodeList bill_to_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_BILL_TO.getFieldName());
+		if(bill_to_list != null && bill_to_list.getLength() == 1) {
+			Element address_el = (Element)bill_to_list.item(0);
+			billToAddress = Address.createAddress();
+			billToAddress.setFirstName(getElementText(address_el, AuthNetField.ELEMENT_FIRST_NAME.getFieldName()));
+			billToAddress.setLastName(getElementText(address_el, AuthNetField.ELEMENT_LAST_NAME.getFieldName()));
+			billToAddress.setCompany(getElementText(address_el, AuthNetField.ELEMENT_COMPANY.getFieldName()));
+			billToAddress.setAddress(getElementText(address_el, AuthNetField.ELEMENT_ADDRESS.getFieldName()));
+			billToAddress.setCity(getElementText(address_el, AuthNetField.ELEMENT_CITY.getFieldName()));
+			billToAddress.setState(getElementText(address_el, AuthNetField.ELEMENT_STATE.getFieldName()));
+			billToAddress.setZipPostalCode(getElementText(address_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
+			billToAddress.setCountry(getElementText(address_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
+			billToAddress.setPhoneNumber(getElementText(address_el, AuthNetField.ELEMENT_PHONE_NUMBER.getFieldName()));
+			billToAddress.setFaxNumber(getElementText(address_el, AuthNetField.ELEMENT_FAX_NUMBER.getFieldName()));
+			customer.setBillTo(billToAddress);
+		}
+		// ship to address
+		Address shipToAddress = null;
+		NodeList ship_to_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SHIP_TO.getFieldName());
+		if(ship_to_list != null && ship_to_list.getLength() == 1) {
+			Element address_el = (Element)ship_to_list.item(0);
+			shipToAddress = Address.createAddress();
+			shipToAddress.setFirstName(getElementText(address_el, AuthNetField.ELEMENT_FIRST_NAME.getFieldName()));
+			shipToAddress.setLastName(getElementText(address_el, AuthNetField.ELEMENT_LAST_NAME.getFieldName()));
+			shipToAddress.setCompany(getElementText(address_el, AuthNetField.ELEMENT_COMPANY.getFieldName()));
+			shipToAddress.setAddress(getElementText(address_el, AuthNetField.ELEMENT_ADDRESS.getFieldName()));
+			shipToAddress.setCity(getElementText(address_el, AuthNetField.ELEMENT_CITY.getFieldName()));
+			shipToAddress.setState(getElementText(address_el, AuthNetField.ELEMENT_STATE.getFieldName()));
+			shipToAddress.setZipPostalCode(getElementText(address_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
+			shipToAddress.setCountry(getElementText(address_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
+			customer.setShipTo(shipToAddress);
+		}
+		transactionDetails.setCustomer(customer);
+		
 		// recurringbilling
 		transactionDetails.setRecurringBilling(getElementText(transaction_el, AuthNetField.ELEMENT_RECURRING_BILLING.getFieldName()));
 		// customer ip

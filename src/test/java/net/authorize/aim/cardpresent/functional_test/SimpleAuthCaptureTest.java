@@ -79,7 +79,6 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		Assert.assertEquals(1, result.getResponseReasonCodes().size());
 		Assert.assertEquals(ResponseReasonCode.RRC_1_1, result.getResponseReasonCodes().get(0));
 		Assert.assertEquals("This transaction has been approved.", result.getResponseReasonCodes().get(0).getReasonText());
-		Assert.assertEquals(AVSCode.P, result.getTarget().getCreditCard().getAvsCode());
 		Assert.assertEquals("000000", result.getAuthCode());
 		Assert.assertEquals("0", result.getTransId());
 		Assert.assertTrue(result.isTestMode());

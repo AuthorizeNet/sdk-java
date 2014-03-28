@@ -194,7 +194,9 @@ public class ReportingTest extends UnitTestData {
 		net.authorize.reporting.Transaction transaction =
 		  merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
 		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
-		reportingDetails.setTransactionId(reportingTransId);
+		reportingDetails.setTransactionId(reportingTransId);		
+		
+		
 		transaction.setReportingDetails(reportingDetails);
 
 		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
