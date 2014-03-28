@@ -28,7 +28,7 @@ import org.apache.http.protocol.HTTP;
  *
  */
 public class HttpClient {
-	private static Log logger = LogFactory.getLog(HttpClient.class);
+	
 
 	public static final String ENCODING = "UTF-8";
 
@@ -90,7 +90,7 @@ public class HttpClient {
 				transaction instanceof net.authorize.sim.Transaction) {
 
 			String decodedResponseData = URLDecoder.decode(responseString, HTTP.UTF_8);
-			logger.debug("Url-decoded response data: " + decodedResponseData);
+			
 
 			responseMap = ResponseParser.parseResponseString(decodedResponseData);
 		}
@@ -115,13 +115,7 @@ public class HttpClient {
 				// create the HTTP POST object
 				HttpPost httpPost = createHttpPost(environment, transaction);
 
-				// get the raw data being sent for logging while in sandbox type modes
-				if(Environment.SANDBOX.equals(environment) ||
-						Environment.SANDBOX_TESTMODE.equals(environment)) {
-					InputStream outstream = (InputStream)httpPost.getEntity().getContent();
-					String requestData = convertStreamToString(outstream);
-					logger.debug("SANDBOX MODES ONLY>> Url-encoded request data: " + requestData);
-				}
+
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -147,7 +141,7 @@ public class HttpClient {
 
 				responseMap = HttpClient.createResponseMap(transaction, rawResponseString);
 			} catch (Exception e) {
-				logger.error("HttpClient execution failed", e);
+				
 			}
 		}
 
@@ -199,13 +193,6 @@ public class HttpClient {
 				// create the HTTP POST object
 				HttpPost httpPost = createHttpPost(environment, transaction);
 
-				// get the raw data being sent for logging while in sandbox type modes
-				if(Environment.SANDBOX.equals(environment) ||
-						Environment.SANDBOX_TESTMODE.equals(environment)) {
-					InputStream outstream = (InputStream)httpPost.getEntity().getContent();
-					String requestData = convertStreamToString(outstream);
-					logger.debug("SANDBOX MODES ONLY>> Url-encoded request data: " + requestData);
-				}
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -248,24 +235,20 @@ public class HttpClient {
 
 				if(Environment.SANDBOX.equals(environment) ||
 						Environment.SANDBOX_TESTMODE.equals(environment)) {
-					logger.debug("SANDBOX MODES ONLY>> Response data: " + rawResponseString);
+					
 				}
 
 				int mark = rawResponseString.indexOf("<?xml");
 				if(mark == -1){
-					logger.error("Invalid response");
-					logger.error(rawResponseString);
 					return null;
 				}
 
 				response.parseString(rawResponseString.substring(mark,rawResponseString.length()));
 				if(response.IsAccessible() == false){
-					logger.error("Invalid response");
-					logger.error(rawResponseString);
 					return null;
 				}
 			} catch (Exception e) {
-				logger.error("HttpClient execution failed", e);
+				
 			}
 		}
 
