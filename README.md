@@ -1,25 +1,6 @@
 Authorize.Net Java SDK
 ======================
 
-The Java SDK is meant to offer an alternate object-oriented model of
-development with the Authorize.net APIs (Version 3.1).  The SDK is based
-entirely off the name-value pair API, but performs the core payment activities
-(such as error handling/parsing, network communication, and data encoding)
-behind the scenes.  Providing the end developer with this, allows the developer
-to start integrating immediately without having to write out a mass of boiler
-plate code.
-
-The SDK can be used with AIM (Advanced Integration Method), SIM (Server
-Integration Method), & DPM (Direct Post Method).  While each integration
-method may share common components of the SDK, the delivery of the payment
-information for each is slightly different.  Take SIM for example.  Rather than
-provide the boiler plate code for making an HTTP POST (like what is done with
-AIM), the SIM component offers a utility method in the Transaction object
-called createSecureRedirectForm(...) which builds out a HTML FORM and returns
-it as a string for display on the page.  While this is offered in the SDK as a
-helper method, the developer is also able to create their own FORM
-programmatically as
-well.
 
 Prerequisites
 =============
