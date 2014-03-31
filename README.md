@@ -1,6 +1,10 @@
 Authorize.Net Java SDK
 ======================
-
+```
+  <groupId>net.authorize</groupId>
+  <artifactId>anet-java-sdk</artifactId>
+  <version>1.8.0</version>
+```
 
 Prerequisites
 =============
