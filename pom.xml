@@ -21,9 +21,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>git@github.com:AuthorizeNet/sdk-java.git</connection>
-    <developerConnection>scm:git:git@github.com:AuthorizeNet/sdk-java.git</developerConnection>
-    <url>git@github.com:AuthorizeNet/sdk-java.git</url>
+    <connection>https://github.com/AuthorizeNet/sdk-java.git</connection>
+    <developerConnection>scm:git:https://github.com/AuthorizeNet/sdk-java.git</developerConnection>
+    <url>https://github.com/AuthorizeNet/sdk-java.git</url>
   </scm>
   <developers>
     <developer>
