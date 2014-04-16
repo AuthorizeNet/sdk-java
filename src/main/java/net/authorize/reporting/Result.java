@@ -12,6 +12,7 @@ import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
 import net.authorize.data.xml.*;
 import net.authorize.data.xml.reporting.*;
+import net.authorize.parser.SubscriptionIdParser;
 import net.authorize.util.BasicXmlDocument;
 import net.authorize.util.StringUtils;
 import net.authorize.xml.Message;
@@ -153,22 +154,13 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				transactionDetails.setAccountNumber(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_NUMBER.getFieldName()));
 				transactionDetails.setSettleAmount(getElementText(transaction_el, AuthNetField.ELEMENT_SETTLE_AMOUNT.getFieldName()));
 
-                addSubscriptionId(transaction_el, transactionDetails);
+                transactionDetails.setSubscriptionId(SubscriptionIdParser.parse(transaction_el));
 
 				transactionDetailList.add(transactionDetails);
 			}
 			this.reportingDetails.setTransactionDetailList(transactionDetailList);
 		}
 	}
-
-    private void addSubscriptionId(Element transaction_el, TransactionDetails transactionDetails) {
-        NodeList subscription_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SUBSCRIPTION.getFieldName());
-
-        if (subscription_list != null && subscription_list.getLength() > 0) {
-            Element subscription_el = (Element) subscription_list.item(0);
-            transactionDetails.setSubscriptionId(getElementText(subscription_el, AuthNetField.ELEMENT_ID.getFieldName()));
-        }
-    }
 
     /**
 	 * Import reporting transaction details.
@@ -201,7 +193,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		transactionDetails.setCAVVResponse(CAVVResponseType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT__CAVV_RESPONSE.getFieldName())));
 		transactionDetails.setFDSFilterAction(FDSFilterActionType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT__FDS_FILTER_ACTION.getFieldName())));
 
-        addSubscriptionId(transaction_el, transactionDetails);
+        transactionDetails.setSubscriptionId(SubscriptionIdParser.parse(transaction_el));
 
 		//FDSFilters
 		NodeList FDSFilters_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT__FDS_FILTER.getFieldName());
