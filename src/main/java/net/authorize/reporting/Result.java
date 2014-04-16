@@ -1,7 +1,5 @@
 package net.authorize.reporting;
 
-import java.util.ArrayList;
-
 import net.authorize.AuthNetField;
 import net.authorize.ResponseCode;
 import net.authorize.ResponseReasonCode;
@@ -12,28 +10,15 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
-import net.authorize.data.xml.Address;
-import net.authorize.data.xml.BankAccount;
-import net.authorize.data.xml.Customer;
-import net.authorize.data.xml.CustomerType;
-import net.authorize.data.xml.Payment;
-import net.authorize.data.xml.reporting.BatchDetails;
-import net.authorize.data.xml.reporting.BatchStatistics;
-import net.authorize.data.xml.reporting.CAVVResponseType;
-import net.authorize.data.xml.reporting.CardCodeResponseType;
-import net.authorize.data.xml.reporting.FDSFilter;
-import net.authorize.data.xml.reporting.FDSFilterActionType;
-import net.authorize.data.xml.reporting.ReportingDetails;
-import net.authorize.data.xml.reporting.ReportingTransactionType;
-import net.authorize.data.xml.reporting.SettlementStateType;
-import net.authorize.data.xml.reporting.TransactionDetails;
-import net.authorize.data.xml.reporting.TransactionStatusType;
+import net.authorize.data.xml.*;
+import net.authorize.data.xml.reporting.*;
 import net.authorize.util.BasicXmlDocument;
 import net.authorize.util.StringUtils;
 import net.authorize.xml.Message;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
 
 /**
  * Reporting specific templated wrapper container for passing back the result from the request gateway.
@@ -167,13 +152,25 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				transactionDetails.setAccountType(CardType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName())));
 				transactionDetails.setAccountNumber(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_NUMBER.getFieldName()));
 				transactionDetails.setSettleAmount(getElementText(transaction_el, AuthNetField.ELEMENT_SETTLE_AMOUNT.getFieldName()));
+
+                addSubscriptionId(transaction_el, transactionDetails);
+
 				transactionDetailList.add(transactionDetails);
 			}
 			this.reportingDetails.setTransactionDetailList(transactionDetailList);
 		}
 	}
 
-	/**
+    private void addSubscriptionId(Element transaction_el, TransactionDetails transactionDetails) {
+        NodeList subscription_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SUBSCRIPTION.getFieldName());
+
+        if (subscription_list != null && subscription_list.getLength() > 0) {
+            Element subscription_el = (Element) subscription_list.item(0);
+            transactionDetails.setSubscriptionId(getElementText(subscription_el, AuthNetField.ELEMENT_ID.getFieldName()));
+        }
+    }
+
+    /**
 	 * Import reporting transaction details.
 	 * @param txn
 	 */
@@ -194,7 +191,6 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		transactionDetails.setTransactionType(ReportingTransactionType.fromValue(getElementText(transaction_el, AuthNetField.ELEMENT_TRANSACTION_TYPE.getFieldName())));
 		transactionDetails.setTransactionStatus(TransactionStatusType.fromValue(getElementText(transaction_el, AuthNetField.ELEMENT_TRANSACTION_STATUS.getFieldName())));
 		transactionDetails.setResponseCode(ResponseCode.findByResponseCode(getElementText(transaction_el, AuthNetField.ELEMENT_RESPONSE_CODE.getFieldName())));
-
 		// auth codes/responses
 		ResponseReasonCode responseReasonCode = ResponseReasonCode.findByReasonCode(getElementText(transaction_el, AuthNetField.ELEMENT_RESPONSE_REASON_CODE.getFieldName()));
 		responseReasonCode.setReasonText(getElementText(transaction_el, AuthNetField.ELEMENT_RESPONSE_REASON_DESCRIPTION.getFieldName()));
@@ -204,6 +200,8 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		transactionDetails.setCardCodeResponse(CardCodeResponseType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT_CARD_CODE_RESPONSE.getFieldName())));
 		transactionDetails.setCAVVResponse(CAVVResponseType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT__CAVV_RESPONSE.getFieldName())));
 		transactionDetails.setFDSFilterAction(FDSFilterActionType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT__FDS_FILTER_ACTION.getFieldName())));
+
+        addSubscriptionId(transaction_el, transactionDetails);
 
 		//FDSFilters
 		NodeList FDSFilters_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT__FDS_FILTER.getFieldName());
