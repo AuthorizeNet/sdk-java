@@ -1,9 +1,5 @@
 package net.authorize.data.xml.reporting;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-
 import net.authorize.ResponseCode;
 import net.authorize.ResponseReasonCode;
 import net.authorize.aim.Transaction;
@@ -13,6 +9,10 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.xml.Customer;
 import net.authorize.data.xml.Payment;
 import net.authorize.util.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Reporting transaction details.
@@ -55,8 +55,9 @@ public class TransactionDetails {
 	private String accountNumber;
 
 	private boolean fullTransactionDetails = false;
+    private String subscriptionId;
 
-	private TransactionDetails() { }
+    private TransactionDetails() { }
 
 	public static TransactionDetails createTransactionDetails() {
 		return new TransactionDetails();
@@ -619,4 +620,17 @@ public class TransactionDetails {
 		}
 	}
 
+    /**
+   	 * @param subscriptionId the subscriptionId to set
+   	 */
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
+
+    /**
+   	 * @return the subscriptionId
+   	 */
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
 }
