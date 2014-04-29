@@ -110,6 +110,10 @@ public enum AuthNetField {
 	ELEMENT_PAYMENT_SCHEDULE("paymentSchedule"),
 	ELEMENT_PAYMENT_NUM("payNum"),
 	ELEMENT_PHONE_NUMBER("phoneNumber"),
+	ELEMENT_PREPAID_CARD("PrepaidCard"),
+	ELEMENT_PREPAID_CARD_REQUESTED_AMOUNT("RequestedAmount"),
+	ELEMENT_PREPAID_CARD_APPROVED_AMOUNT("ApprovedAmount"),
+	ELEMENT_PREPAID_CARD_BALANCE_ON_CARD("BalanceOnCard"),
 	ELEMENT_PREPAID_BALANCE_REMAINING("prepaidBalanceRemaining"),
 	ELEMENT_PROFILE("profile"),
 	ELEMENT_PROFILE_TRANS_AUTH_ONLY("profileTransAuthOnly"),
@@ -224,6 +228,7 @@ public enum AuthNetField {
 	X_FREIGHT("x_freight"),
 	X_HEADER_EMAIL_RECEIPT("x_header_email_receipt"),
 	X_HEADER_HTML_PAYMENT_FORM("x_header_html_payment_form"),
+	X_ID("x_id"),	
 	X_INVOICE_NUM("x_invoice_num"),
 	X_LAST_NAME("x_last_name"),
 	X_LINE_ITEM("x_line_item"),
@@ -233,8 +238,13 @@ public enum AuthNetField {
     X_MD5_HASH("x_MD5_Hash"),
     X_MERCHANT_EMAIL("x_merchant_email"),
     X_METHOD("x_method"),
+    X_PAYMENT_NUM("x_payNum"),
     X_PHONE("x_phone"),
 	X_PO_NUM("x_po_num"),
+	X_PREPAID_CARD("x_prepaid_card"),
+	X_PREPAID_CARD_REQUESTED_AMOUNT("x_requested_amount"),
+	X_PREPAID_CARD_APPROVED_AMOUNT("x_approved_amount"),
+	X_PREPAID_CARD_BALANCE_ON_CARD("x_balance_on_card"),
 	X_PREPAID_BALANCE_ON_CARD("x_prepaid_balance_on_card"),
 	X_PREPAID_REQUESTED_AMOUNT("x_prepaid_requested_amount"),
 	X_RECEIPT_LINK_METHOD("x_receipt_link_method"),
@@ -259,6 +269,7 @@ public enum AuthNetField {
 	X_SHOW_FORM("x_show_form"),
 	X_SPLIT_TENDER_ID("x_split_tender_id"),
 	X_STATE("x_state"),
+	X_SUBSCRIPTION("x_subscription"),
 	X_TAX("x_tax"),
 	X_TAX_EXEMPT("x_tax_exempt"),
 	X_TEST_REQUEST("x_test_request"),
@@ -283,6 +294,4 @@ public enum AuthNetField {
 	public String getFieldName() {
 		return fieldName;
 	}
-
-
 }

@@ -10,6 +10,7 @@ import net.authorize.aim.Transaction;
 import net.authorize.data.Order;
 import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
+import net.authorize.data.reporting.PrepaidCard;
 import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Customer;
 import net.authorize.data.xml.Payment;
@@ -41,6 +42,7 @@ public class TransactionDetails {
 	private BigDecimal prepaidBalanceRemaining = null;
 	private boolean itemTaxExempt;
 	private Subscription subscription = null;
+	private PrepaidCard prepaidCard = null;
 	
 	private BigDecimal requestedAmount;
 	private BigDecimal authAmount;
@@ -635,5 +637,21 @@ public class TransactionDetails {
 	 */
 	public void setSubscription(Subscription subscription) {
 		this.subscription = subscription;
+	}
+	
+	/**
+	 * Gets PrepaidCard for transaction details
+	 * @return  PrepaidCard for transaction details
+	 */
+	public PrepaidCard getPrepaidCard() {
+		return prepaidCard;
+	}
+
+	/**
+	 * Sets PrepaidCard for transaction details
+	 * @param prepaidCard  PrepaidCard for transaction details
+	 */
+	public void setPrepaidCard(PrepaidCard prepaidCard) {
+		this.prepaidCard = prepaidCard;
 	}
 }
