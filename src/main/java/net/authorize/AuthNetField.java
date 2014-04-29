@@ -108,6 +108,7 @@ public enum AuthNetField {
 	ELEMENT_PAYMENT_PROFILE("paymentProfile"),
 	ELEMENT_PAYMENT_PROFILES("paymentProfiles"),
 	ELEMENT_PAYMENT_SCHEDULE("paymentSchedule"),
+	ELEMENT_PAYMENT_NUM("payNum"),
 	ELEMENT_PHONE_NUMBER("phoneNumber"),
 	ELEMENT_PREPAID_BALANCE_REMAINING("prepaidBalanceRemaining"),
 	ELEMENT_PROFILE("profile"),

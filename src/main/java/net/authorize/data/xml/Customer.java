@@ -1,7 +1,14 @@
 package net.authorize.data.xml;
 
-public class Customer  {
+import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class Customer implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private Address billTo;
 	private Address shipTo;
 	private DriversLicense license;

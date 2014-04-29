@@ -5,9 +5,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+@XmlRootElement
 /**
  * General order related information.
  *

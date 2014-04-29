@@ -1,6 +1,12 @@
 package net.authorize;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Properties;
 
 import net.authorize.Environment;
 import net.authorize.Merchant;
@@ -8,18 +14,16 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.echeck.BankAccountType;
 import net.authorize.data.echeck.ECheckType;
+import net.authorize.util.Constants;
 
 public abstract class UnitTestData {
-
-	protected static String apiLoginID = System.getProperty("API_LOGIN_ID");
-	protected static String transactionKey = System.getProperty("TRANSACTION_KEY");
-	protected static String cp_apiLoginID = System.getProperty("CP_API_LOGIN_ID");
-	protected static String cp_transactionKey = System.getProperty("CP_TRANSACTION_KEY");
-	protected static String merchantMD5Key = System.getProperty("MD5_HASH_KEY");
-	protected static Merchant merchant = Merchant.createMerchant(
-			Environment.SANDBOX, apiLoginID,
-			transactionKey);
-
+	protected static String apiLoginID ;
+	protected static String transactionKey ;
+	protected static String cp_apiLoginID ;
+	protected static String cp_transactionKey ;
+	protected static String merchantMD5Key ;
+	protected static Merchant merchant = null;
+	
 	// customer information
 	protected final String firstName = "John";
 	protected final String lastName = "Doe";
@@ -105,4 +109,143 @@ public abstract class UnitTestData {
 
 	protected final String reportingBatchId = "814302";
 	protected final String reportingTransId = "2156009012";
+
+	private static boolean internetAccessible = false;
+
+	static URL url = null;
+	static String[] propertiesList = {
+		Constants.HTTP_USE_PROXY,
+		Constants.HTTP_PROXY_HOST,
+		Constants.HTTP_PROXY_PORT,
+		Constants.HTTPS_USE_PROXY,
+		Constants.HTTPS_PROXY_HOST,
+		Constants.HTTPS_PROXY_PORT,
+		/*
+		not needed http/https			
+		".nonProxyHosts",
+  		".proxyPassword",
+		".proxyUser",
+		"_proxy",
+		*/
+		};
+
+	
+	/**
+	 * Default static constructor
+	 * Try to initialize proxy, if necessary, from environment variables
+	 * to open connection to Internet
+	 */
+	//protected UnitTestData()
+	static
+	{
+		//getPropertyFromNames get the value from properties file or environment
+		apiLoginID = getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
+		transactionKey = getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
+		cp_apiLoginID = getPropertyFromNames(Constants.ENV_CP_API_LOGINID, Constants.PROP_CP_API_LOGINID);
+		cp_transactionKey = getPropertyFromNames(Constants.ENV_CP_TRANSACTION_KEY, Constants.PROP_CP_TRANSACTION_KEY);
+		merchantMD5Key = getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
+
+		if ((null == apiLoginID) ||
+			(null == transactionKey) ||
+			(null == cp_apiLoginID) ||
+			(null == cp_transactionKey))
+		{
+			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
+		}
+		else
+		{
+			merchant = Merchant.createMerchant( Environment.SANDBOX, apiLoginID, transactionKey);
+		}
+		if ( !internetAccessible()) {
+			setProxySettings();
+			internetAccessible(); 
+		}
+	}
+	
+	protected static void setProxySettings() {
+		Properties systemProperties = System.getProperties();
+
+		HashMap<String, String> proxySettings = getProxySettings();
+		for (String property : proxySettings.keySet()) {
+			String value = proxySettings.get(property);
+			if (null != value) {
+				if (!systemProperties.containsKey(property)) {
+					systemProperties.put(property, value);
+				}
+			}
+		}
+	}
+
+	public static HashMap<String, String> getProxySettings() {
+		HashMap<String, String> proxySettings = new HashMap<String, String>();
+		for (String property : getPropertiesList()) {
+			String propValue = System.getProperty(property);
+			String envValue = System.getenv(property);
+			
+			/*
+			if ( !property.toLowerCase().contains("password")) {
+				System.out.printf("Values: %s, Property='%s', Environment='%s'\n", property, propValue, envValue);
+			}
+			*/
+			if (null != propValue) {
+				proxySettings.put(property, propValue);
+			} else if (null != envValue) {
+				proxySettings.put(property, envValue);
+			}
+		}
+
+		return proxySettings;
+	}
+
+	public static boolean isInternetAccessible() {
+		if ( !internetAccessible)
+		{
+			internetAccessible();
+		}
+		return internetAccessible;
+	}
+	
+	private static boolean internetAccessible() {
+		if ( !internetAccessible)
+		{
+
+			try {
+				String[] urls = new String[] { 
+							"http://www.google.com", 
+							"https://www.google.com", 
+							Environment.SANDBOX.getBaseUrl(),
+							Environment.SANDBOX.getXmlBaseUrl(), 
+							Environment.SANDBOX.getCardPresentUrl(), 
+						};
+				
+				for ( String url : urls)
+				{
+					URLConnection conn = ( new URL(url)).openConnection();
+					conn.connect();
+					//System.out.printf( "Connection to %s is ok \n", url);
+					conn = null;
+					url = null;
+				}
+				internetAccessible = true;
+			} catch (final MalformedURLException e) {
+				//System.err.printf("MalformedURLException accessing: %s, Message: %s\n", url.toString(), e.getMessage());
+			} catch (final IOException e) {
+				//System.err.printf("IOException accessing: %s, Message: %s\n", url.toString(), e.getMessage());
+			}
+		}
+		
+		return internetAccessible;
+	}
+	
+	protected static String[] getPropertiesList()
+	{
+		return propertiesList;
+	}
+	
+	private static String getPropertyFromNames(String firstName, String secondName) {
+		String value = Environment.getProperty(firstName);
+		if (null == value) { value = Environment.getProperty(secondName); }
+		
+		return value;
+	}
 }

@@ -1,7 +1,12 @@
 package net.authorize.data.xml;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement
+@XmlType(namespace="net.authorize.data.xml")
 public class Address extends net.authorize.data.Address {
+	private static final long serialVersionUID = 1L;
 
 	protected String phoneNumber;
 	protected String faxNumber;

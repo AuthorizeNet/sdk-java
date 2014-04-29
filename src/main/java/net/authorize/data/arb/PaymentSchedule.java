@@ -1,7 +1,11 @@
 package net.authorize.data.arb;
+
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class PaymentSchedule implements Serializable {
 
 	private static final long serialVersionUID = 1L;

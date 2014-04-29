@@ -14,11 +14,11 @@ import net.authorize.Environment;
 import net.authorize.ResponseField;
 import net.authorize.Transaction;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
@@ -29,9 +29,13 @@ import org.apache.http.protocol.HTTP;
  */
 public class HttpClient {
 	
-
 	public static final String ENCODING = "UTF-8";
+	static boolean proxySet = false;
 
+	static boolean UseProxy = Environment.getBooleanProperty(Constants.HTTPS_USE_PROXY);
+	static String ProxyHost = Environment.getProperty(Constants.HTTPS_PROXY_HOST);
+	static int ProxyPort = Environment.getIntProperty(Constants.HTTPS_PROXY_PORT);
+	
 	/**
 	 * Creates the http post object for an environment and transaction container.
 	 *
@@ -112,10 +116,10 @@ public class HttpClient {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 
+				setProxyIfRequested(httpClient);
+
 				// create the HTTP POST object
 				HttpPost httpPost = createHttpPost(environment, transaction);
-
-
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -141,7 +145,7 @@ public class HttpClient {
 
 				responseMap = HttpClient.createResponseMap(transaction, rawResponseString);
 			} catch (Exception e) {
-				
+				System.err.printf( "Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString());
 			}
 		}
 
@@ -190,9 +194,10 @@ public class HttpClient {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 
+				setProxyIfRequested(httpClient);
+				
 				// create the HTTP POST object
 				HttpPost httpPost = createHttpPost(environment, transaction);
-
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -248,11 +253,26 @@ public class HttpClient {
 					return null;
 				}
 			} catch (Exception e) {
-				
+				System.err.printf( "Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString());
 			}
 		}
 
 		return response;
 	}
 
+	/**
+	 * if proxy use is requested, set http-client appropriately 
+	 * @param httpClient the client to add proxy values to 
+	 */
+	private static void setProxyIfRequested(DefaultHttpClient httpClient) {
+		if ( UseProxy)
+		{
+			if ( !proxySet) {
+				System.out.printf( "Setting up proxy to URL: '%s://%s:%d'\n", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
+				proxySet = true;
+			}
+			HttpHost proxyHttpHost = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);
+			httpClient.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxyHttpHost);
+		}
+	}
 }

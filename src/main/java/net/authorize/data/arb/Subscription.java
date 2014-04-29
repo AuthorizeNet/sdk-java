@@ -1,16 +1,22 @@
  package net.authorize.data.arb;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import net.authorize.arb.Transaction;
 import net.authorize.data.Order;
 import net.authorize.data.xml.Customer;
 import net.authorize.data.xml.Payment;
 
+@XmlRootElement
 /**
  * Subscription container.
  */
-public class Subscription {
+public class Subscription implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String subscription_id = null;
 
 	private String name = null;

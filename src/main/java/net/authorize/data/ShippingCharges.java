@@ -3,9 +3,12 @@ package net.authorize.data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import net.authorize.aim.Transaction;
 import net.authorize.util.StringUtils;
 
+@XmlRootElement
 /**
  * Shipping charges (tax, freight/shipping, duty)
  *

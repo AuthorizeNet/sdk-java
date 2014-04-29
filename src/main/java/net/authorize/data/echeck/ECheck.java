@@ -2,6 +2,10 @@ package net.authorize.data.echeck;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+@XmlRootElement
 /**
  * Container used to hold ECheck related information.
  *

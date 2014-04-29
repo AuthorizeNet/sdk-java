@@ -12,6 +12,7 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
+import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Customer;
@@ -167,6 +168,8 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				transactionDetails.setAccountType(CardType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName())));
 				transactionDetails.setAccountNumber(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_NUMBER.getFieldName()));
 				transactionDetails.setSettleAmount(getElementText(transaction_el, AuthNetField.ELEMENT_SETTLE_AMOUNT.getFieldName()));
+				//subscription
+				importSubscription(transaction_el, transactionDetails);
 				transactionDetailList.add(transactionDetails);
 			}
 			this.reportingDetails.setTransactionDetailList(transactionDetailList);
@@ -379,6 +382,26 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		// customer ip
 		transactionDetails.setCustomerIP(getElementText(transaction_el, AuthNetField.ELEMENT_CUSTOMER_IP.getFieldName()));
 		this.getReportingDetails().getTransactionDetailList().add(transactionDetails);
+		
+		//subscription
+		importSubscription(transaction_el, transactionDetails);
+	}
+
+	/**
+	 * @param transaction_el
+	 * @param transactionDetails
+	 */
+	private void importSubscription(Element transaction_el, TransactionDetails transactionDetails) {
+
+		NodeList subscription_nl = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SUBSCRIPTION.getFieldName());
+		if ( null != subscription_nl && 1 == subscription_nl.getLength())
+		{
+			Element subscription_el = (Element) subscription_nl.item(0);
+			Subscription subscription = Subscription.createSubscription();
+			subscription.setId(getElementText( subscription_el, AuthNetField.ELEMENT_ID.getFieldName()));
+			subscription.setPayNum(getElementText( subscription_el, AuthNetField.ELEMENT_PAYMENT_NUM.getFieldName()));
+			transactionDetails.setSubscription(subscription);
+		}
 	}
 
 	/**
