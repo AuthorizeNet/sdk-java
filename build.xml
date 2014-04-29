@@ -10,9 +10,11 @@
 	<property name="src.tests" value="${basedir}/src/test/java" />
 	<property name="resources.dir" value="${basedir}/resources" />
 	<property name="reports.tests" value="${src.tests}/reports" />
+
 	<!-- build.properties related info -->
 	<property file="${user.home}/build.properties" />
 	<property file="${user.home}/${ant.project.name}.properties" />
+
 	<property name="prop.message" value="must be defined, preferably in ${user.home}/build.properties or ${user.home}/${ant.project.name}.properties" />
 	<fail message="api.login.id ${prop.message}" unless="api.login.id" />
 	<fail message="transaction.key ${prop.message}" unless="transaction.key" />
@@ -35,14 +37,18 @@
 		<delete dir="${classes.dir}" />
 	</target>
 
-	<target name="compile" depends="clean">
+	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac target="1.5" srcdir="${src.dir}" destdir="${classes.dir}" debug="true" optimize="true" includes="**/*.java" classpathref="classpath" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" optimize="true" includes="**/*.java" classpathref="classpath" includeantruntime="false">
+			<compilerarg value="-Xlint" />
+		</javac> 
 	</target>
 
 	<target name="compile-test" depends="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac target="1.5" srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" />
+		<javac srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" includeantruntime="false">
+			<compilerarg value="-Xlint" />
+		</javac> 
 	</target>
 
 	<target name="jar" depends="compile, compile-test">
@@ -64,7 +70,7 @@
 		<delete dir="${reports.tests}" />
 		<mkdir dir="${reports.tests}" />
 
-		<junit printsummary="yes" failureProperty="test.failure">
+		<junit printsummary="yes" failureProperty="test.failure" showoutput="true">
 			<classpath>
 				<path refid="junit-classpath" />
 			</classpath>
