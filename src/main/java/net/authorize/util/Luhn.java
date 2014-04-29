@@ -3,7 +3,7 @@ package net.authorize.util;
 import net.authorize.data.creditcard.CardType;
 
 /**
- * @link http://en.wikipedia.org/wiki/Luhn_algorithm
+ * @see <a href="http://en.wikipedia.org/wiki/Luhn_algorithm" >Luhn_algorithm (WikiPedia)</a>
  *
  */
 public class Luhn {

@@ -623,7 +623,7 @@ public class TransactionDetails {
 
 	/**
 	 * Gets subscription for transaction details
-	 * @return Subscription 
+	 * @return Subscription  Gets the subscription for the transaction
 	 */
 	public Subscription getSubscription() {
 		return subscription;
@@ -631,7 +631,7 @@ public class TransactionDetails {
 
 	/**
 	 * Sets subscription for transaction details
-	 * @param subscription
+	 * @param subscription  Sets the subscription for the transaction
 	 */
 	public void setSubscription(Subscription subscription) {
 		this.subscription = subscription;

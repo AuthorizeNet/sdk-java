@@ -28,6 +28,7 @@ public final class XmlUtility {
 	/**
 	 * Helper method to serialize an object to XML. Requires object to be Serializable
 	 * @param entity Object to serialize
+	 * @param <T> class that implements Serializable
 	 * @return String XML representation of object
 	 * @throws IOException if errors during serialization
 	 * @throws JAXBException if errors during serialization
@@ -50,6 +51,7 @@ public final class XmlUtility {
 	 * Helper method to de-serialize XML to an object. Requires object to be Serializable
 	 * @param xml object serialized into valid XML
 	 * @param classType Class Type of the object to be de-serialized into
+	 * @param <T> class that implements Serializable
 	 * @return T De-serialized object
 	 * @throws IOException if errors during de-serialization
 	 * @throws JAXBException if errors during de-serialization

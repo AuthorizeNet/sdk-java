@@ -138,12 +138,14 @@ public class Transaction extends net.authorize.aim.Transaction {
 	 *
 	 * If "notes" was passed in as the inputName, the htmlInputData provided
 	 * could look like
-	 *
-	 * "<div>
+	 * 
+	 * <pre>
+	 * {@code
 	 *   <label>Notes</label>
 	 *   <input type='text' class='text' name='notes' size='45'></input>
-     * </div>"
-	 *
+	 * }
+	 * </pre>
+	 * 
 	 * @param inputName
 	 * @param htmlInputData
 	 */

@@ -81,7 +81,7 @@ public class HttpClient {
 	 *
 	 * @param transaction
 	 * @param responseString
-	 * @return Map<ResponseField, String> container
+	 * @return container map containing semi-processed data after request was posted
 	 * @throws UnsupportedEncodingException
 	 */
 	private static Map<ResponseField, String> createResponseMap(Transaction transaction, String responseString)
@@ -107,7 +107,7 @@ public class HttpClient {
 	 *
 	 * @param environment
 	 * @param transaction
-	 * @return Return a HashMap<ResponseField> that contains semi-processed data after a request was posted.
+	 * @return container map containing semi-processed data after request was posted
 	 */
 	public static Map<ResponseField, String> execute(Environment environment, Transaction transaction) {
 		Map<ResponseField, String> responseMap = new HashMap<ResponseField, String>();
@@ -185,7 +185,7 @@ public class HttpClient {
 	 *
 	 * @param environment
 	 * @param transaction
-	 * @return Return a HashMap<ResponseField> that contains semi-processed data after a request was posted.
+	 * @return BasicXmlDocument containing semi-processed data after request was posted
 	 */
 	public static BasicXmlDocument executeXML(Environment environment, Transaction transaction) {
 		BasicXmlDocument response = new BasicXmlDocument();

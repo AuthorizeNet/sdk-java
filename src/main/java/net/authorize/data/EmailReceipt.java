@@ -96,7 +96,6 @@ public class EmailReceipt implements Serializable {
 	/**
 	 *
 	 * @param merchantEmail
-	 * @throws ValidationException
 	 */
 	public void setMerchantEmail(String merchantEmail) {
 		this.merchantEmail = merchantEmail;

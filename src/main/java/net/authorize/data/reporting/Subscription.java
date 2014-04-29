@@ -8,9 +8,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 */
 @XmlRootElement
 public class Subscription implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private int id = 0;
 	private int payNum = 0;
@@ -25,12 +22,18 @@ public class Subscription implements Serializable{
 	/**
 	 * Create a subscription.
 	 *
-	 * @return Subscription
+	 * @return Subscription with empty fields 
 	 */
 	public static Subscription createSubscription() {
 		return new Subscription();
 	}
 
+	/**
+	 * Creates a populated Subscription
+	 * @param id Sets the subscription Id for subscription
+	 * @param payNum Sets the payment number for subscription
+	 * @return Subscription with fields populated
+	 */
 	public static Subscription createSubscription(int id, int payNum) {
 		Subscription subscription = new Subscription();
 		subscription.setId(id);
@@ -42,7 +45,7 @@ public class Subscription implements Serializable{
 	/**
 	 * Get the subscription id.
 	 *
-	 * @return int
+	 * @return int Gets the subscription Id for subscription
 	 */
 	public int getId() {
 		return this.id;
@@ -51,7 +54,7 @@ public class Subscription implements Serializable{
 	/**
 	 * Set the subscription id.
 	 *
-	 * @param id
+	 * @param id Sets the subscription Id for subscription
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -60,7 +63,7 @@ public class Subscription implements Serializable{
 	/**
 	 * Get the payNum.
 	 *
-	 * @return int
+	 * @return int Gets the payment number for subscription
 	 */
 	public int getPayNum() {
 		return this.payNum;
@@ -69,7 +72,7 @@ public class Subscription implements Serializable{
 	/**
 	 * Set the payNum.
 	 *
-	 * @param payNum
+	 * @param payNum Sets the payment number for subscription
 	 */
 	public void setPayNum(int payNum) {
 		this.payNum = payNum;
@@ -79,7 +82,7 @@ public class Subscription implements Serializable{
 	/**
 	 * Set the subscription id.
 	 *
-	 * @param id
+	 * @param id Sets the subscription Id for subscription
 	 */
 	public void setId(String id) {
 		this.id = Integer.parseInt( id);
@@ -88,7 +91,7 @@ public class Subscription implements Serializable{
 	/**
 	 * Set the payNum.
 	 *
-	 * @param payNum
+	 * @param payNum Sets the payment number for subscription
 	 */
 	public void setPayNum(String payNum) {
 		this.payNum = Integer.parseInt( payNum);
