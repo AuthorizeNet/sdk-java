@@ -4,7 +4,6 @@ import java.util.Calendar;
 
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
-import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.reporting.BatchDetails;
 import net.authorize.data.xml.reporting.BatchStatistics;
 import net.authorize.data.xml.reporting.ReportingDetails;
@@ -78,13 +77,15 @@ public class ReportingTest extends UnitTestData {
 		net.authorize.reporting.Transaction transaction =
 		  merchant.createReportingTransaction(TransactionType.GET_SETTLED_BATCH_LIST);
 		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
+
 		Calendar firstSettlementCal = Calendar.getInstance();
-		firstSettlementCal.add(Calendar.DAY_OF_YEAR, -3);
+		firstSettlementCal.add(Calendar.DAY_OF_YEAR, -30);
 		reportingDetails.setBatchFirstSettlementDate(firstSettlementCal.getTime());
 		
 		Calendar lastSettlementCal = Calendar.getInstance();
-		lastSettlementCal.add(Calendar.DAY_OF_YEAR, +25);
+		//lastSettlementCal.add(Calendar.DAY_OF_YEAR, +25);
 		reportingDetails.setBatchLastSettlementDate(lastSettlementCal.getTime());
+
 		reportingDetails.setBatchIncludeStatistics(true);
 		transaction.setReportingDetails(reportingDetails);
 
@@ -130,7 +131,9 @@ public class ReportingTest extends UnitTestData {
 	@Test
 	public void getTransactionListRequestLive() {
 
-		Assert.assertNotNull(reportingTransId);		
+		Assert.assertNotNull(reportingBatchId);
+		Assert.assertNotSame( "",reportingBatchId);
+		
 		// batch list request
 		net.authorize.reporting.Transaction transaction =
 		  merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_LIST);
@@ -208,6 +211,7 @@ public class ReportingTest extends UnitTestData {
 	public void getTransactionDetailsRequestLive() {
 
 		Assert.assertNotNull(reportingTransId);		
+		Assert.assertNotSame( "",reportingTransId);		
 		// batch list request
 		net.authorize.reporting.Transaction transaction =
 		  merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
