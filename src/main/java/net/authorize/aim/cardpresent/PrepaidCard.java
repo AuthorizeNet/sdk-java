@@ -1,7 +1,11 @@
-package net.authorize.data.reporting;
+package net.authorize.aim.cardpresent;
 
 import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
 * PrepaidCard container.
@@ -12,6 +16,8 @@ public class PrepaidCard implements Serializable{
 	private double requestedAmount = 0.0;
 	private double approvedAmount = 0.0;
 	private double balanceAmountOnCard = 0.0;
+
+	private static Log logger = LogFactory.getLog(PrepaidCard.class);
 
 	/**
     * Default C'tor
@@ -46,6 +52,23 @@ public class PrepaidCard implements Serializable{
 		return prepaidCard;
 	}
 
+	/**
+	 * Creates a populated PrepaidCard
+	 * @param requestedAmount  amount requested in the transaction
+	 * @param approvedAmount   amount approved in the transaction
+	 * @param balanceAmountOnCard  remaining balance on the card
+	 * @return PrepaidCard with fields populated
+	 */
+	public static PrepaidCard createPrepaidCard(
+			String requestedAmount, String approvedAmount, String balanceAmountOnCard) {
+		PrepaidCard prepaidCard = new PrepaidCard();
+		prepaidCard.setRequestedAmount(requestedAmount);
+		prepaidCard.setApprovedAmount(approvedAmount);
+		prepaidCard.setBalanceAmountOnCard(balanceAmountOnCard);
+		
+		return prepaidCard;
+	}
+	
 	/**
 	 * Gets amount requested in the transaction
 	 * @return amount requested in the transaction
@@ -100,7 +123,11 @@ public class PrepaidCard implements Serializable{
 	 * @param requestedAmount amount requested in the transaction
 	 */
 	public void setRequestedAmount(String requestedAmount) {
-		this.requestedAmount = Double.parseDouble(requestedAmount);
+		try {
+			this.requestedAmount = Double.parseDouble(requestedAmount);
+		} catch (NumberFormatException nfe) {
+			logger.warn(String.format("Error parsing to double value: '%s'", requestedAmount));
+		}
 	}
 
 	/**
@@ -108,7 +135,11 @@ public class PrepaidCard implements Serializable{
 	 * @param approvedAmount amount approved in the transaction
 	 */
 	public void setApprovedAmount(String approvedAmount) {
-		this.approvedAmount = Double.parseDouble(approvedAmount);
+		try {
+			this.approvedAmount = Double.parseDouble(approvedAmount);
+		} catch (NumberFormatException nfe) {
+			logger.warn(String.format("Error parsing to double value: '%s'", approvedAmount));
+		}
 	}
 
 	/**
@@ -116,7 +147,11 @@ public class PrepaidCard implements Serializable{
 	 * @param balanceAmountOnCard remaining balance on the card
 	 */
 	public void setBalanceAmountOnCard(String balanceAmountOnCard) {
-		this.balanceAmountOnCard = Double.parseDouble(balanceAmountOnCard);
+		try {
+			this.balanceAmountOnCard = Double.parseDouble(balanceAmountOnCard);
+		} catch (NumberFormatException nfe) {
+			logger.warn(String.format("Error parsing to double value: '%s'", balanceAmountOnCard));
+		}
 	}
 	
 	public String toString() {

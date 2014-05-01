@@ -14,7 +14,11 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.xml.reporting.CardCodeResponseType;
 import net.authorize.util.BasicXmlDocument;
+import net.authorize.util.XmlUtility;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -25,6 +29,7 @@ import org.w3c.dom.NodeList;
 public class Result<T> extends net.authorize.Result<T> {
 
 	private static final long serialVersionUID = 1L;
+	private static Log logger = LogFactory.getLog(Result.class);
 
 	protected ResponseCode responseCode = null;
 	protected ArrayList<ResponseReasonCode> responseReasonCodes = new ArrayList<ResponseReasonCode>();
@@ -37,6 +42,8 @@ public class Result<T> extends net.authorize.Result<T> {
 	private String transHash;
 	private boolean testMode;
 	private String userRef;
+	private PrepaidCard prepaidCard;
+	private String splitTenderId;  
 	protected BasicXmlDocument xmlResponseDocument;
 
 	protected Result() { }
@@ -58,7 +65,10 @@ public class Result<T> extends net.authorize.Result<T> {
 			result.importTransHash(targetTransaction);
 			result.importTestMode(targetTransaction);
 			result.importUserRef(targetTransaction);
-
+			
+			result.importSplitTenderId( targetTransaction);
+			result.importPrepaidCard(targetTransaction);			
+		
 			// update target credit card information
 			CreditCard creditCard = targetTransaction.getCreditCard();
 			if(creditCard != null) {
@@ -307,7 +317,6 @@ public class Result<T> extends net.authorize.Result<T> {
 		this.testMode = "1".equals(_testMode)?true:false;
 	}
 
-
 	/**
 	 * Import the UserRef.
 	 *
@@ -377,5 +386,67 @@ public class Result<T> extends net.authorize.Result<T> {
 
 	    return md5Check != null && md5Check.equalsIgnoreCase(getTransHash());
 	}
+	
+	public PrepaidCard getPrepaidCard() {
+		return this.prepaidCard;
+	}
 
+	public void setPrepaidCard(PrepaidCard prepaidCard) {
+		this.prepaidCard = prepaidCard;
+	}
+
+	public String getSplitTenderId() {
+		return this.splitTenderId;
+	}
+
+	public void setSplitTenderId(String splitTenderId) {
+		this.splitTenderId = splitTenderId;
+	}
+
+	private void importSplitTenderId(Transaction txn) {
+		String splitTenderId = (BasicXmlDocument.getElementText(
+						txn.getCurrentResponse().getDocumentElement(),
+						AuthNetField.ELEMENT_SPLIT_TENDER_ID.getFieldName()));
+		this.splitTenderId = splitTenderId;
+	}
+
+	private void importPrepaidCard(Transaction txn) {
+		final String prepaidElementName = AuthNetField.ELEMENT_PREPAID_CARD.getFieldName();
+		
+		Document document = txn.getCurrentResponse().getDocument();
+		NodeList prepaidCard_list = document.getElementsByTagName(prepaidElementName);
+
+		int cardCount = prepaidCard_list.getLength();
+		if ( 0 < cardCount) {
+			//look at the first element
+			Element prepaidCard_el = (Element) prepaidCard_list.item(0);
+			String requestedAmount = BasicXmlDocument.getElementText(prepaidCard_el,AuthNetField.ELEMENT_PREPAID_CARD_REQUESTED_AMOUNT.getFieldName());
+			String approvedAmount = BasicXmlDocument.getElementText(prepaidCard_el,AuthNetField.ELEMENT_PREPAID_CARD_APPROVED_AMOUNT.getFieldName());
+			String balanceOnCard = BasicXmlDocument.getElementText(prepaidCard_el,AuthNetField.ELEMENT_PREPAID_CARD_BALANCE_ON_CARD.getFieldName());
+			PrepaidCard prepaidCard = getPrepaidCardFromElement(prepaidCard_el);
+			if ( null == prepaidCard) {
+				prepaidCard = PrepaidCard.createPrepaidCard(requestedAmount, approvedAmount, balanceOnCard);
+			}
+			
+			this.setPrepaidCard(prepaidCard);
+			//log if there are additional elements found
+			if ( cardCount > 1) {
+				logger.warn(String.format("Found more than one element named: '%s' in result: '%s'", prepaidElementName, prepaidCard_list.toString()));
+			}
+		}
+	}
+
+	private static PrepaidCard  getPrepaidCardFromElement(Element prepaidCardElement) {
+		PrepaidCard prepaidCard = null;
+
+		if ( null != prepaidCardElement) {
+			try {
+				prepaidCard = XmlUtility.create(prepaidCardElement.toString(), PrepaidCard.class);
+			}
+			catch (Exception e) {
+				logger.warn(String.format("Error de-serializing XML to PrepaidCard: '%s', ErrorMessage: '%s'", prepaidCardElement.toString(), e.getMessage()));
+			}
+		}
+		return prepaidCard;
+	}
 }

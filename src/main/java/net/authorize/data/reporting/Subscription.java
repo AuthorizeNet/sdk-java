@@ -1,7 +1,11 @@
 package net.authorize.data.reporting;
 
 import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
 * Subscription container.
@@ -11,6 +15,7 @@ public class Subscription implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int id = 0;
 	private int payNum = 0;
+	private static Log logger = LogFactory.getLog(Subscription.class);
 
 	/**
     * Default C'tor
@@ -85,7 +90,11 @@ public class Subscription implements Serializable{
 	 * @param id Sets the subscription Id for subscription
 	 */
 	public void setId(String id) {
-		this.id = Integer.parseInt( id);
+		try {
+			this.id = Integer.parseInt( id);
+		} catch (NumberFormatException nfe) {
+			logger.warn(String.format("Error parsing to int value: '%s'", id));
+		}
 	}
 
 	/**
@@ -94,7 +103,11 @@ public class Subscription implements Serializable{
 	 * @param payNum Sets the payment number for subscription
 	 */
 	public void setPayNum(String payNum) {
-		this.payNum = Integer.parseInt( payNum);
+		try {
+			this.payNum = Integer.parseInt( payNum);
+		} catch (NumberFormatException nfe) {
+			logger.warn(String.format("Error parsing to int value: '%s'", payNum));
+		}
 	}
 	
 	

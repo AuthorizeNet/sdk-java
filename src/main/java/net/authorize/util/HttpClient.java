@@ -14,6 +14,8 @@ import net.authorize.Environment;
 import net.authorize.ResponseField;
 import net.authorize.Transaction;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -28,6 +30,7 @@ import org.apache.http.protocol.HTTP;
  *
  */
 public class HttpClient {
+	private static Log logger = LogFactory.getLog(HttpClient.class);
 	
 	public static final String ENCODING = "UTF-8";
 	static boolean proxySet = false;
@@ -145,7 +148,7 @@ public class HttpClient {
 
 				responseMap = HttpClient.createResponseMap(transaction, rawResponseString);
 			} catch (Exception e) {
-				System.err.printf( "Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString());
+				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
 			}
 		}
 
@@ -253,7 +256,7 @@ public class HttpClient {
 					return null;
 				}
 			} catch (Exception e) {
-				System.err.printf( "Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString());
+				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
 			}
 		}
 
@@ -268,7 +271,7 @@ public class HttpClient {
 		if ( UseProxy)
 		{
 			if ( !proxySet) {
-				System.out.printf( "Setting up proxy to URL: '%s://%s:%d'\n", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
+				logger.info(String.format("Setting up proxy to URL: '%s://%s:%d'\n", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort));
 				proxySet = true;
 			}
 			HttpHost proxyHttpHost = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);

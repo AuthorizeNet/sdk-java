@@ -12,7 +12,6 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
-import net.authorize.data.reporting.PrepaidCard;
 import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
@@ -288,8 +287,6 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		order.setOrderItems(orderItemList);
 		transactionDetails.setOrder(order);
 		transactionDetails.setPrepaidBalanceRemaining(getElementText(transaction_el, AuthNetField.ELEMENT_PREPAID_BALANCE_REMAINING.getFieldName()));
-		//prepaid 
-		importPrepaidCard(transaction_el, transactionDetails);
 		transactionDetails.setItemTaxExempt(getElementText(transaction_el, AuthNetField.ELEMENT_TAX_EXEMPT.getFieldName()));
 
 		// payment
@@ -407,24 +404,6 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		}
 	}
 
-	/**
-	 * @param transaction_el
-	 * @param transactionDetails
-	 */
-	private void importPrepaidCard(Element transaction_el, TransactionDetails transactionDetails) {
-
-		NodeList prepaidCard_nl = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_PREPAID_CARD.getFieldName());
-		if ( null != prepaidCard_nl && 1 == prepaidCard_nl.getLength())
-		{
-			Element prepaidCard_el = (Element) prepaidCard_nl.item(0);
-			PrepaidCard prepaidCard = PrepaidCard.createPrepaidCard();
-			prepaidCard.setRequestedAmount(getElementText( prepaidCard_el, AuthNetField.ELEMENT_PREPAID_CARD_REQUESTED_AMOUNT.getFieldName()));
-			prepaidCard.setApprovedAmount(getElementText( prepaidCard_el, AuthNetField.ELEMENT_PREPAID_CARD_APPROVED_AMOUNT.getFieldName()));
-			prepaidCard.setBalanceAmountOnCard(getElementText( prepaidCard_el, AuthNetField.ELEMENT_PREPAID_CARD_BALANCE_ON_CARD.getFieldName()));
-			
-			transactionDetails.setPrepaidCard(prepaidCard);
-		}
-	}
 	
 	/**
 	 * Import the response messages into the result.

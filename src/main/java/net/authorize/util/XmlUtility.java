@@ -11,6 +11,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Helper methods for serializing and de-serializing to XML using JAXB
  * @author ramittal
@@ -18,6 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public final class XmlUtility {
+	private static Log logger = LogFactory.getLog(XmlUtility.class);
 
 	/**
     * Default C'tor, cannot be instantiated
@@ -35,15 +39,20 @@ public final class XmlUtility {
 	 */
 	public static <T extends Serializable> String getXml(T entity) throws IOException, JAXBException
 	{
-        JAXBContext ctx = JAXBContext.newInstance(entity.getClass());
-
-        Marshaller m = ctx.createMarshaller();
-        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
         StringWriter sw = new StringWriter();
-        m.marshal(entity, sw);
+
+        if ( null != entity)
+		{
+	        JAXBContext ctx = JAXBContext.newInstance(entity.getClass());
+	
+	        Marshaller m = ctx.createMarshaller();
+	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+	
+	        m.marshal(entity, sw);
+		}
+        sw.flush();
         sw.close();
-        
+		
         return sw.toString();
 	}
 
@@ -59,14 +68,56 @@ public final class XmlUtility {
 	public static <T extends Serializable> T create(String xml, Class<T> classType) throws IOException, JAXBException
 	{
 		T entity = null;
-        JAXBContext ctx = JAXBContext.newInstance(classType);
-        Unmarshaller um = ctx.createUnmarshaller();
-        Object unmarshaled = um.unmarshal(new StringReader(xml));
-        if ( null != unmarshaled)
-        {
-        	entity = (T) classType.cast(unmarshaled);
-        }
+		//make sure we have not null and not-empty string to de-serialize
+		if ( null != xml && !xml.trim().isEmpty())
+		{
+	        JAXBContext ctx = JAXBContext.newInstance(classType);
+	        Unmarshaller um = ctx.createUnmarshaller();
+	        Object unmarshaled = um.unmarshal(new StringReader(xml));
+	        if ( null != unmarshaled)
+	        {
+	        	entity = (T) classType.cast(unmarshaled);
+	        }
+		}
 
         return entity;
+	}
+	
+	/**
+	 * Helper method to encode a string to XML
+	 * @param valueToSerialize string value to encode into xml
+	 * @return xml encoded string
+	 */
+	public static String getXml( String valueToSerialize) {
+		String retVal = null;
+		
+		try {
+			retVal = XmlUtility.getXml(valueToSerialize);
+		}
+		catch ( Exception e)
+		{
+			logger.warn(String.format("Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage()));
+			retVal = valueToSerialize;
+		}
+		return 	retVal;	
+	}
+
+	/**
+	 * Helper method to decode a string from XML string
+	 * @param valueToDeserialize string value to decode from xml
+	 * @return string decoded from xml
+	 */
+	public static String create(String valueToDeserialize) {
+		String retVal = null;
+		
+		try {
+			retVal = XmlUtility.create(valueToDeserialize, String.class);
+		}
+		catch ( Exception e)
+		{
+			logger.warn(String.format("Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage()));
+			retVal = valueToDeserialize;
+		}
+		return 	retVal;	
 	}
 }
