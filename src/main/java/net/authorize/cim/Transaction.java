@@ -21,6 +21,7 @@ import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Payment;
 import net.authorize.util.BasicXmlDocument;
 import net.authorize.util.StringUtils;
+import net.authorize.util.XmlUtility;
 
 import org.w3c.dom.Element;
 
@@ -226,7 +227,8 @@ public class Transaction extends net.authorize.Transaction {
 
 			// description
 			Element description_el = document.createElement(AuthNetField.ELEMENT_DESCRIPTION.getFieldName());
-			description_el.appendChild(document.getDocument().createTextNode(this.customerProfile.getDescription()));
+			String description = XmlUtility.escapeStringForXml(this.customerProfile.getDescription());
+			description_el.appendChild(document.getDocument().createTextNode(description));
 			profile_el.appendChild(description_el);
 			// email
 			Element email_el = document.createElement(AuthNetField.ELEMENT_EMAIL.getFieldName());
@@ -398,7 +400,8 @@ public class Transaction extends net.authorize.Transaction {
 			address_el.appendChild(lname_el);
 
 			Element company_el = document.createElement(AuthNetField.ELEMENT_COMPANY.getFieldName());
-			company_el.appendChild(document.getDocument().createTextNode(address.getCompany()));
+			String encodedCompany = XmlUtility.escapeStringForXml(address.getCompany());
+			company_el.appendChild(document.getDocument().createTextNode( encodedCompany));
 			address_el.appendChild(company_el);
 
 			Element address_line_el = document.createElement(AuthNetField.ELEMENT_ADDRESS.getFieldName());
@@ -497,8 +500,8 @@ public class Transaction extends net.authorize.Transaction {
 								shippingCharges.getTaxItemName()));
 					}
 					if(shippingCharges.getTaxDescription() != null) {
-						tax_description_el.appendChild(document.getDocument().createTextNode(
-								shippingCharges.getTaxDescription()));
+						String taxDescription = XmlUtility.escapeStringForXml(shippingCharges.getTaxDescription());
+						tax_description_el.appendChild(document.getDocument().createTextNode(taxDescription));
 					}
 					tax_el.appendChild(tax_amount_el);
 					tax_el.appendChild(tax_name_el);
@@ -519,8 +522,8 @@ public class Transaction extends net.authorize.Transaction {
 								shippingCharges.getFreightItemName()));
 					}
 					if(shippingCharges.getFreightDescription() != null) {
-						shipping_description_el.appendChild(document.getDocument().createTextNode(
-								shippingCharges.getFreightDescription()));
+						String freightDescription = XmlUtility.escapeStringForXml(shippingCharges.getFreightDescription());
+						shipping_description_el.appendChild(document.getDocument().createTextNode(freightDescription));
 					}
 					shipping_el.appendChild(shipping_amount_el);
 					shipping_el.appendChild(shipping_name_el);
@@ -538,7 +541,8 @@ public class Transaction extends net.authorize.Transaction {
 						name_el.appendChild(document.getDocument().createTextNode(orderItem.getItemName()));
 
 						Element description_el = document.createElement(AuthNetField.ELEMENT_DESCRIPTION.getFieldName());
-						description_el.appendChild(document.getDocument().createTextNode(orderItem.getItemDescription()));
+						String orderItemDescription = XmlUtility.escapeStringForXml(orderItem.getItemDescription());
+						description_el.appendChild(document.getDocument().createTextNode(orderItemDescription));
 
 						Element quantity_el = document.createElement(AuthNetField.ELEMENT_QUANTITY.getFieldName());
 						quantity_el.appendChild(document.getDocument().createTextNode(orderItem.getItemQuantity().toBigInteger().toString()));
@@ -610,7 +614,10 @@ public class Transaction extends net.authorize.Transaction {
 					Element description_el = document.createElement(AuthNetField.ELEMENT_DESCRIPTION.getFieldName());
 					Element purchase_order_number_el = document.createElement(AuthNetField.ELEMENT_PURCHASE_ORDER_NUMBER.getFieldName());
 					invoice_number_el.appendChild(document.getDocument().createTextNode(order.getInvoiceNumber()));
-					description_el.appendChild(document.getDocument().createTextNode(order.getDescription()));
+
+					String orderDescription = XmlUtility.escapeStringForXml(order.getDescription());
+					description_el.appendChild(document.getDocument().createTextNode(orderDescription));
+					
 					if(shippingCharges != null) {
 						purchase_order_number_el.appendChild(document.getDocument().createTextNode(shippingCharges.getPurchaseOrderNumber()));
 					}

@@ -767,7 +767,7 @@ public class CIMTest extends UnitTestData {
 		String badXml = XmlUtility.getXml(customer);
 		Customer badCustomer = XmlUtility.create(badXml, Customer.class);
 		Address billTo = badCustomer.getBillTo();
-		billTo.setCompany( badString  + billTo.getCompany()); //badString  + 
+		billTo.setCompany( badString + billTo.getCompany()); //badString  + 
 
 		badXml = XmlUtility.getXml(paymentProfileCC);
 		PaymentProfile badPaymentProfile = XmlUtility.create(badXml, PaymentProfile.class);
@@ -775,7 +775,7 @@ public class CIMTest extends UnitTestData {
 
 		badXml = XmlUtility.getXml(customerProfile);
 		CustomerProfile badCustomerProfile = XmlUtility.create(badXml, CustomerProfile.class);
-		badCustomerProfile.setDescription( badCustomerProfile.getDescription() ); //badString  + 
+		badCustomerProfile.setDescription( badString + badCustomerProfile.getDescription() ); //badString  + 
 		
 		System.out.println( "BadCustomerProfile: " + XmlUtility.getXml(badCustomerProfile));
 		System.out.println( "BadPaymentProfile: " + XmlUtility.getXml(badPaymentProfile));

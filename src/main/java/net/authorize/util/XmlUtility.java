@@ -85,39 +85,89 @@ public final class XmlUtility {
 	
 	/**
 	 * Helper method to encode a string to XML
+	 * Returns the same string if null or empty
 	 * @param valueToSerialize string value to encode into xml
 	 * @return xml encoded string
 	 */
-	public static String getXml( String valueToSerialize) {
-		String retVal = null;
+	public static String escapeStringForXml( String valueToSerialize) {
+		String retVal = valueToSerialize;
 		
-		try {
-			retVal = XmlUtility.getXml(valueToSerialize);
-		}
-		catch ( Exception e)
-		{
-			logger.warn(String.format("Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage()));
-			retVal = valueToSerialize;
+		if ( null != valueToSerialize && valueToSerialize.length() > 0) { 
+			try {
+				XmlUtility.XmlString value = new XmlString(valueToSerialize);
+				String xmlString = XmlUtility.getXml(value);
+				int begin = xmlString.indexOf(XmlString.VALUE_BEGIN) + XmlString.VALUE_BEGIN.length();
+				int end = xmlString.indexOf(XmlString.VALUE_END);
+				if ( null != xmlString && begin >= 0 && end >= 0)
+				{
+					retVal = xmlString.substring(begin, end);
+				}
+			}
+			catch ( Exception e)
+			{
+				logger.warn(String.format("Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage()));
+				retVal = valueToSerialize;
+			}
 		}
 		return 	retVal;	
 	}
 
 	/**
 	 * Helper method to decode a string from XML string
+	 * Returns the same string if null or empty
 	 * @param valueToDeserialize string value to decode from xml
 	 * @return string decoded from xml
 	 */
-	public static String create(String valueToDeserialize) {
-		String retVal = null;
+	public static String descapeStringForXml(String valueToDeserialize) {
+		String retVal = valueToDeserialize;
 		
-		try {
-			retVal = XmlUtility.create(valueToDeserialize, String.class);
-		}
-		catch ( Exception e)
+		if ( null != valueToDeserialize && valueToDeserialize.length() > 0)
 		{
-			logger.warn(String.format("Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage()));
-			retVal = valueToDeserialize;
+			try {
+				StringBuilder value = new StringBuilder();
+				value.append(XmlString.CLASS_BEGIN).append(XmlString.VALUE_BEGIN);
+				value.append(valueToDeserialize);
+				value.append(XmlString.VALUE_END).append(XmlString.CLASS_END);
+				XmlString xmlString = XmlUtility.create(value.toString(), XmlString.class);
+				if ( null != xmlString) { 
+					retVal = xmlString.getXmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue();
+				}
+			}
+			catch ( Exception e)
+			{
+				logger.warn(String.format("Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage()));
+				retVal = valueToDeserialize;
+			}
 		}
 		return 	retVal;	
+	}
+	
+	@XmlRootElement
+	static class XmlString implements Serializable {
+		public static final String VALUE_BEGIN = "<xmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue>";
+		public static final String VALUE_END = "</xmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue>";
+		public static final String CLASS_BEGIN = "<xmlString>";
+		public static final String CLASS_END = "</xmlString>";
+		
+		private static final long serialVersionUID = 1L;
+		String xmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue = null;
+		
+		XmlString() {
+		}
+		
+		XmlString(String value) {
+			this.setXmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue(value);
+		}
+
+		public String getXmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue() {
+			return xmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue;
+		}
+		public void setXmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue(String value) {
+			this.xmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue = value;
+		}
+		
+		public String toString() {
+			return xmlStringValueUnlikelyToBeElementUsedInRealXmlStringValue;
+		}
 	}
 }

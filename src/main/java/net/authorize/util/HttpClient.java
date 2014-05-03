@@ -146,7 +146,9 @@ public class HttpClient {
 
 				httpClient.getConnectionManager().shutdown();
 
-				responseMap = HttpClient.createResponseMap(transaction, rawResponseString);
+				String cleanResponseString = XmlUtility.descapeStringForXml(rawResponseString);
+				
+				responseMap = HttpClient.createResponseMap(transaction, cleanResponseString);
 			} catch (Exception e) {
 				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
 			}

@@ -28,6 +28,43 @@ public class XmlUtilityTest {
 		Assert.assertNotNull( xmlMyt);
 		System.out.println(xmlMyt);
 	}
+	
+	@Test
+	public void testStringXmlUtility() {
+		final String base = "Bad string with & last character as period.";
+		String xmlBase = XmlUtility.escapeStringForXml( base);
+		Assert.assertNotNull(xmlBase);
+		Assert.assertNotSame(base, xmlBase);
+		Assert.assertFalse(base.equals(xmlBase));
+
+		String decoded = XmlUtility.descapeStringForXml(xmlBase);
+		Assert.assertNotNull(decoded);
+		Assert.assertNotSame(xmlBase, decoded);
+		Assert.assertFalse(xmlBase.equals(decoded));		
+		Assert.assertEquals(base, decoded);
+		Assert.assertTrue(base.equals(decoded));
+	}
+
+	@Test
+	public void testStringXmlUtilityNegative() {
+		testStringXmlUtilityNegative( null, true);
+		testStringXmlUtilityNegative( "", false);
+		testStringXmlUtilityNegative( " ", false);
+	}
+
+	private void testStringXmlUtilityNegative(String someValue, boolean nullCheck) {
+		String xmlBase = XmlUtility.escapeStringForXml( someValue);
+		String decoded = XmlUtility.descapeStringForXml(someValue);
+		if ( nullCheck) {
+			Assert.assertNull(xmlBase);
+			Assert.assertNull(decoded);
+		} else {
+			Assert.assertNotNull(xmlBase);
+			Assert.assertNotNull(decoded);
+			Assert.assertEquals(someValue, xmlBase);
+			Assert.assertEquals(someValue, decoded);
+		}
+	}
 }
 
 @XmlRootElement

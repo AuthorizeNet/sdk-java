@@ -37,18 +37,6 @@ public abstract class Transaction implements Serializable{
 		Transaction.TRANSACTION_FIELD_DELIMITER = transactionFieldDelimiter;
 	}
 
-	/**
-	 * Try to decode string value from xml node as per proper xml requirements
-	 * @param node which is a text element 
-	 * @return decoded String value
-	 */
-	public static String getDecodedString(Node node) {
-		String value = node.getTextContent();
-		String decodedValue = XmlUtility.create(value);
-		
-		return decodedValue;
-	}
-	
 	public String toNVPString() { return ""; }
 
 	public String toXMLString() { return ""; }
@@ -72,9 +60,21 @@ public abstract class Transaction implements Serializable{
 	 * @return Node with encoded text value appropriate for XML
 	 */
 	public static Node getEncodedString(net.authorize.util.BasicXmlDocument document, String value) {
-		String encodedValue = XmlUtility.getXml(value);
+		String encodedValue = XmlUtility.escapeStringForXml(value);
 		Node node = document.getDocument().createTextNode(encodedValue);
 		
 		return node;
+	}
+
+	/**
+	 * Try to decode string value from xml node as per proper xml requirements
+	 * @param node which is a text element 
+	 * @return decoded String value
+	 */
+	public static String getDecodedString(Node node) {
+		String value = node.getTextContent();
+		String decodedValue = XmlUtility.descapeStringForXml(value);
+		
+		return decodedValue;
 	}
 }
