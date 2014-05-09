@@ -1,13 +1,15 @@
 package net.authorize.reporting;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import net.authorize.ResponseCode;
 import net.authorize.ResponseReasonCode;
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
-import net.authorize.aim.cardpresent.Result;
 import net.authorize.data.Order;
 import net.authorize.data.OrderItem;
 import net.authorize.data.ShippingCharges;
@@ -15,6 +17,8 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
+import net.authorize.data.reporting.ReturnedItem;
+import net.authorize.data.reporting.Solution;
 import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
@@ -33,6 +37,7 @@ import net.authorize.data.xml.reporting.SettlementStateType;
 import net.authorize.data.xml.reporting.TransactionDetails;
 import net.authorize.data.xml.reporting.TransactionStatusType;
 import net.authorize.util.BasicXmlDocument;
+import net.authorize.util.DateUtil;
 import net.authorize.util.XmlUtility;
 
 import org.junit.Assert;
@@ -48,11 +53,62 @@ public class ReportingTest extends UnitTestData {
 	{
 		randomGenerator = new Random();
 	}
+
+	static final Date now = Calendar.getInstance().getTime();
+	static final String dateUtcString = DateUtil.getFormattedDate(now, ReportingDetails.DATE_FORMAT);
+	static Date dateLocal = null;
+
+	static ArrayList<ReturnedItem> returnedItems = new ArrayList<ReturnedItem>();
+	static ReturnedItem returnedItemOne = null;
+	static ReturnedItem returnedItemTwo = null;
+	static Solution solution = null;
+	static Subscription subscriptionOne = null; 
+	static Subscription subscriptionTwo = null;	
+	
+	static String subscriptionOneString = null;
+	static String subscriptionTwoString = null;
+	static String solutionString = null;
+	static String returnedItemOneString = null;
+	static String returnedItemTwoString = null;
+	static String returnedItemsString = null;
+
+	static String paymentMethodString = null;
+	static String marketTypeString = null;
+	static String productString = null;
+	static String hasReturnedItemsString = null;
+
+	static {
+		Calendar currentCalender = Calendar.getInstance();
+		currentCalender.add(Calendar.HOUR_OF_DAY, -3);
+		dateLocal = currentCalender.getTime();
+
+		subscriptionOne = Subscription.createSubscription( 10, 101);
+		subscriptionTwo = Subscription.createSubscription( 20, 202);
+		subscriptionOneString = XmlUtility.getRootElementXml( subscriptionOne);//" <subscription> <id>10</id> <payNum>101</payNum> </subscription> ";
+		subscriptionTwoString = XmlUtility.getRootElementXml( subscriptionTwo);//" <subscription> <id>20</id> <payNum>202</payNum> </subscription> ";
+
+		hasReturnedItemsString = String.format( "<%1$s> %2$b </%1$s>", "hasReturnedItems", true);
+
+		solution = Solution.createSolution( "10", "SolutionName10");
+		solutionString = XmlUtility.getRootElementXml( solution);
+
+		returnedItemOne = ReturnedItem.createReturnedItem( "10", now, dateLocal, "RI:1", "ReturnedItem:10");
+		returnedItemTwo = ReturnedItem.createReturnedItem( "20", now, dateLocal, "RI:2", "ReturnedItem:20");
+		returnedItems.add(returnedItemOne);
+		returnedItems.add(returnedItemTwo);
+		returnedItemOneString = XmlUtility.getRootElementXml( returnedItemOne);
+		returnedItemTwoString = XmlUtility.getRootElementXml( returnedItemTwo);
+		returnedItemsString = String.format( "<returnedItems>%s%s</returnedItems>", returnedItemOneString, returnedItemTwoString);
+		
+		paymentMethodString = String.format( "<%1$s> x%1$sx </%1$s>", "paymentMethod");
+		marketTypeString = String.format( "<%1$s> x%1$sx </%1$s>", "marketType");
+		productString = String.format( "<%1$s> x%1$sx </%1$s>", "product");
+	}
 	
 	@Test
 	public void getSettledBatchListRequestMock() {
 
-		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getSettledBatchListResponse xmlns=\"AnetApi/xml/v1/schema/ AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <batchList> <batch> <batchId>12345678</batchId> <settlementTimeUTC>2010-05-30T09:00:00</settlementTimeUTC> <settlementTimeLocal>2010-05-30T03:00:00</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> <statistics> <statistic> <accountType>Visa</accountType> <!-- accountTypeEnum --> <chargeAmount>200.00</chargeAmount> <chargeCount>13</chargeCount> <refundAmount>10.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> <returnedItemAmount>0.00</returnedItemAmount> <returnedItemCount>0</returnedItemCount> <chargebackAmount>0.00</chargebackAmount> <chargebackCount>0</chargebackCount> <correctionNoticeCount>0</correctionNoticeCount> <chargeChargeBackAmount>0.00</chargeChargeBackAmount> <chargeChargeBackCount>0</chargeChargeBackCount> <refundChargeBackAmount>0.00</refundChargeBackAmount> <refundChargeBackCount>0</refundChargeBackCount> <chargeReturnedItemsAmount>0.00</chargeReturnedItemsAmount> <chargeReturnedItemsCount>0</chargeReturnedItemsCount> <refundReturnedItemsAmount>0.00</refundReturnedItemsAmount> <refundReturnedItemsCount>0</refundReturnedItemsCount> </statistic> <statistic> <accountType>MasterCard</accountType> <chargeAmount>200.00</chargeAmount> <chargeCount>13</chargeCount> <refundAmount>10.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> <chargebackAmount>0.00</chargebackAmount> <chargebackCount>0</chargebackCount> <correctionNoticeCount>0</correctionNoticeCount> <chargeChargeBackAmount>0.00</chargeChargeBackAmount> <chargeChargeBackCount>0</chargeChargeBackCount> <refundChargeBackAmount>0.00</refundChargeBackAmount> <refundChargeBackCount>0</refundChargeBackCount> </statistic> </statistics> </batch> <batch> <batchId>23456789</batchId> <settlementTimeUTC>2010-05-30T09:00:00</settlementTimeUTC> <settlementTimeLocal>2010-05-30T03:00:00</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> <statistics> <statistic> <accountType>eCheck</accountType> <chargeAmount>200.00</chargeAmount> <chargeCount>13</chargeCount> <refundAmount>10.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> <returnedItemAmount>0.00</returnedItemAmount> <returnedItemCount>0</returnedItemCount> <correctionNoticeCount>0</correctionNoticeCount> <chargeReturnedItemsAmount>0.00</chargeReturnedItemsAmount> <chargeReturnedItemsCount>0</chargeReturnedItemsCount> <refundReturnedItemsAmount>0.00</refundReturnedItemsAmount> <refundReturnedItemsCount>0</refundReturnedItemsCount> </statistic> </statistics> </batch> </batchList> </getSettledBatchListResponse>";
+		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getSettledBatchListResponse xmlns=\"AnetApi/xml/v1/schema/ AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <batchList> <batch> <batchId>12345678</batchId> <settlementTimeUTC>2010-05-30T09:00:00</settlementTimeUTC> <settlementTimeLocal>2010-05-30T03:00:00</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> " + marketTypeString + productString + " <statistics> <statistic> <accountType>Visa</accountType> <!-- accountTypeEnum --> <chargeAmount>200.00</chargeAmount> <chargeCount>13</chargeCount> <refundAmount>10.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> <returnedItemAmount>0.00</returnedItemAmount> <returnedItemCount>0</returnedItemCount> <chargebackAmount>0.00</chargebackAmount> <chargebackCount>0</chargebackCount> <correctionNoticeCount>0</correctionNoticeCount> <chargeChargeBackAmount>0.00</chargeChargeBackAmount> <chargeChargeBackCount>0</chargeChargeBackCount> <refundChargeBackAmount>0.00</refundChargeBackAmount> <refundChargeBackCount>0</refundChargeBackCount> <chargeReturnedItemsAmount>0.00</chargeReturnedItemsAmount> <chargeReturnedItemsCount>0</chargeReturnedItemsCount> <refundReturnedItemsAmount>0.00</refundReturnedItemsAmount> <refundReturnedItemsCount>0</refundReturnedItemsCount> </statistic> <statistic> <accountType>MasterCard</accountType> <chargeAmount>200.00</chargeAmount> <chargeCount>13</chargeCount> <refundAmount>10.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> <chargebackAmount>0.00</chargebackAmount> <chargebackCount>0</chargebackCount> <correctionNoticeCount>0</correctionNoticeCount> <chargeChargeBackAmount>0.00</chargeChargeBackAmount> <chargeChargeBackCount>0</chargeChargeBackCount> <refundChargeBackAmount>0.00</refundChargeBackAmount> <refundChargeBackCount>0</refundChargeBackCount> </statistic> </statistics> </batch> <batch> <batchId>23456789</batchId> <settlementTimeUTC>2010-05-30T09:00:00</settlementTimeUTC> <settlementTimeLocal>2010-05-30T03:00:00</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> " + marketTypeString + productString + " <statistics> <statistic> <accountType>eCheck</accountType> <chargeAmount>200.00</chargeAmount> <chargeCount>13</chargeCount> <refundAmount>10.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> <returnedItemAmount>0.00</returnedItemAmount> <returnedItemCount>0</returnedItemCount> <correctionNoticeCount>0</correctionNoticeCount> <chargeReturnedItemsAmount>0.00</chargeReturnedItemsAmount> <chargeReturnedItemsCount>0</chargeReturnedItemsCount> <refundReturnedItemsAmount>0.00</refundReturnedItemsAmount> <refundReturnedItemsCount>0</refundReturnedItemsCount> </statistic> </statistics> </batch> </batchList> </getSettledBatchListResponse>";
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
 
@@ -78,6 +134,9 @@ public class ReportingTest extends UnitTestData {
 		Assert.assertEquals("Sun May 30 03:00:00 PDT 2010",batchDetail.getSettlementTimeLocal().toString());
 		Assert.assertEquals("Sun May 30 09:00:00 PDT 2010",batchDetail.getSettlementTimeUTC().toString());
 		Assert.assertEquals(null,batchDetail.getPaymentMethod());
+		Assert.assertNotNull(batchDetail.getMarketType());
+		Assert.assertNotNull(batchDetail.getProduct());
+		
 		Assert.assertEquals(2, batchDetail.getBatchStatisticsList().size());
 		int num = 0;
 		for(BatchStatistics batchStat :batchDetail.getBatchStatisticsList()) {
@@ -123,7 +182,10 @@ public class ReportingTest extends UnitTestData {
 		Assert.assertEquals(SettlementStateType.SETTLED_SUCCESSFULLY, batchDetail.getSettlementState());
 		Assert.assertEquals("Sun May 30 03:00:00 PDT 2010",batchDetail.getSettlementTimeLocal().toString());
 		Assert.assertEquals("Sun May 30 09:00:00 PDT 2010",batchDetail.getSettlementTimeUTC().toString());
-		Assert.assertEquals(null,batchDetail.getPaymentMethod());
+		Assert.assertNull(batchDetail.getPaymentMethod());
+		Assert.assertNotNull(batchDetail.getMarketType());
+		Assert.assertNotNull(batchDetail.getProduct());
+
 		Assert.assertEquals(1, batchDetail.getBatchStatisticsList().size());
 		BatchStatistics batchStat = batchDetail.getBatchStatisticsList().get(0);
 		Assert.assertEquals(CardType.ECHECK, batchStat.getAccountType());
@@ -150,8 +212,8 @@ public class ReportingTest extends UnitTestData {
 
 	@Test
 	public void getTransactionListRequestMock() {
-
-		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getTransactionListResponse xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transactions> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> <subscription> <id>10</id> <payNum>101</payNum> </subscription> </transaction> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> <subscription> <id>20</id> <payNum>202</payNum> </subscription> </transaction> </transactions> </getTransactionListResponse>";
+		
+		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getTransactionListResponse xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transactions> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> " + subscriptionOneString + hasReturnedItemsString + " </transaction> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> " + subscriptionTwoString + hasReturnedItemsString + " </transaction> </transactions> </getTransactionListResponse>";
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
 
@@ -182,14 +244,17 @@ public class ReportingTest extends UnitTestData {
 			Assert.assertEquals(new BigDecimal(2.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP),
 					transactionDetail.getSettleAmount());
 
+			Assert.assertEquals(true, transactionDetail.isHasReturnedItems());
 			AssertSubscription( ++count, transactionDetail);
+			Assert.assertNull( transactionDetail.getSolution());
+			Assert.assertNull( transactionDetail.getReturnedItems());
 		}
 	}
 
 	@Test
 	public void getTransactionDetailsRequestMock() {
 
-		String xml = "<?xml version=\"1.0\"?> <getTransactionDetailsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transaction> <transId>12345</transId> <refTransId>12345</refTransId> <splitTenderId>12345</splitTenderId> <submitTimeUTC>2010-08-30T17:49:20.757Z</submitTimeUTC> <submitTimeLocal>2010-08-30T13:49:20.757</submitTimeLocal> <transactionType>authOnlyTransaction</transactionType> <transactionStatus>settledSuccessfully</transactionStatus> <responseCode>1</responseCode> <responseReasonCode>1</responseReasonCode> <responseReasonDescription>Approval</responseReasonDescription> <authCode>000000</authCode> <AVSResponse>X</AVSResponse> <cardCodeResponse>M</cardCodeResponse> <CAVVResponse>2</CAVVResponse> <FDSFilterAction>authAndHold</FDSFilterAction> <FDSFilters> <FDSFilter> <name>Hourly Velocity Filter</name> <action>authAndHold</action> </FDSFilter> <FDSFilter> <name>Amount Filter</name> <action>report</action> </FDSFilter> </FDSFilters> <batch> <batchId>12345</batchId> <settlementTimeUTC>2010-08-30T17:49:20.757Z</settlementTimeUTC> <settlementTimeLocal>2010-08-30T13:49:20.757</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> </batch> <order> <invoiceNumber>INV00001</invoiceNumber> <description>some description</description> <purchaseOrderNumber>PO000001</purchaseOrderNumber> </order> <requestedAmount>5.00</requestedAmount> <authAmount>2.00</authAmount> <settleAmount>2.00</settleAmount> <tax> <amount>1.00</amount> <name>WA state sales tax</name> <description>Washington state sales tax</description> </tax> <shipping> <amount>2.00</amount> <name>ground based shipping</name> <description>Ground based 5 to 10 day shipping</description> </shipping> <duty> <amount>1.00</amount> </duty> <lineItems> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> </lineItems> <prepaidBalanceRemaining>30.00</prepaidBalanceRemaining> <taxExempt>false</taxExempt> <payment><bankAccount> <routingNumber>XXXX0000</routingNumber> <accountNumber>XXXX0000</accountNumber> <nameOnAccount>John Doe</nameOnAccount> <echeckType>WEB</echeckType> </bankAccount> </payment> <customer> <type>individual</type> <id>ABC00001</id> <email>mark@example.com</email> </customer> <billTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> <phoneNumber>000-000-0000</phoneNumber> <faxNumber/> </billTo> <shipTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> </shipTo> <recurringBilling>false</recurringBilling> <customerIP>0.0.0.0</customerIP> <subscription> <id>10</id> <payNum>101</payNum> </subscription> </transaction> </getTransactionDetailsResponse>";
+		String xml = "<?xml version=\"1.0\"?> <getTransactionDetailsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transaction> <transId>12345</transId> <refTransId>12345</refTransId> <splitTenderId>12345</splitTenderId> <submitTimeUTC>2010-08-30T17:49:20.757Z</submitTimeUTC> <submitTimeLocal>2010-08-30T13:49:20.757</submitTimeLocal> <transactionType>authOnlyTransaction</transactionType> <transactionStatus>settledSuccessfully</transactionStatus> <responseCode>1</responseCode> <responseReasonCode>1</responseReasonCode> <responseReasonDescription>Approval</responseReasonDescription> <authCode>000000</authCode> <AVSResponse>X</AVSResponse> <cardCodeResponse>M</cardCodeResponse> <CAVVResponse>2</CAVVResponse> <FDSFilterAction>authAndHold</FDSFilterAction> <FDSFilters> <FDSFilter> <name>Hourly Velocity Filter</name> <action>authAndHold</action> </FDSFilter> <FDSFilter> <name>Amount Filter</name> <action>report</action> </FDSFilter> </FDSFilters> <batch> <batchId>12345</batchId> <settlementTimeUTC>2010-08-30T17:49:20.757Z</settlementTimeUTC> <settlementTimeLocal>2010-08-30T13:49:20.757</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState>  </batch> <order> <invoiceNumber>INV00001</invoiceNumber> <description>some description</description> <purchaseOrderNumber>PO000001</purchaseOrderNumber> </order> <requestedAmount>5.00</requestedAmount> <authAmount>2.00</authAmount> <settleAmount>2.00</settleAmount> <tax> <amount>1.00</amount> <name>WA state sales tax</name> <description>Washington state sales tax</description> </tax> <shipping> <amount>2.00</amount> <name>ground based shipping</name> <description>Ground based 5 to 10 day shipping</description> </shipping> <duty> <amount>1.00</amount> </duty> <lineItems> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> </lineItems> <prepaidBalanceRemaining>30.00</prepaidBalanceRemaining> <taxExempt>false</taxExempt> <payment><bankAccount> <routingNumber>XXXX0000</routingNumber> <accountNumber>XXXX0000</accountNumber> <nameOnAccount>John Doe</nameOnAccount> <echeckType>WEB</echeckType> </bankAccount> </payment> <customer> <type>individual</type> <id>ABC00001</id> <email>mark@example.com</email> </customer> <billTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> <phoneNumber>000-000-0000</phoneNumber> <faxNumber/> </billTo> <shipTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> </shipTo> <recurringBilling>false</recurringBilling> <customerIP>0.0.0.0</customerIP> " + subscriptionOneString + returnedItemsString + solutionString + " </transaction> </getTransactionDetailsResponse>";
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
 
@@ -235,6 +300,10 @@ public class ReportingTest extends UnitTestData {
 		Assert.assertEquals("Mon Aug 30 17:49:20 PDT 2010", batch.getSettlementTimeUTC().toString());
 		Assert.assertEquals("Mon Aug 30 13:49:20 PDT 2010", batch.getSettlementTimeLocal().toString());
 		Assert.assertEquals(SettlementStateType.SETTLED_SUCCESSFULLY, batch.getSettlementState());
+		Assert.assertEquals(null, batch.getPaymentMethod());
+		Assert.assertNull(batch.getMarketType());
+		Assert.assertNull(batch.getProduct());
+		
 		// order
 		Order order = transactionDetail.getOrder();
 		Assert.assertNotNull(order);
@@ -320,13 +389,17 @@ public class ReportingTest extends UnitTestData {
 		
 		//subscription
 		int count = 0; 
+		Assert.assertFalse(transactionDetail.isHasReturnedItems());
 		AssertSubscription( ++count, transactionDetail);
+		AssertSolution( transactionDetail);
+		//TODO count check
+		AssertReturnedItems( 1, transactionDetail);
 	}
 
 	@Test
 	public void getBatchStatisticsRequestRequestMock() {
 
-		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getBatchStatisticsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <batch> <batchId>24</batchId> <settlementTimeUTC>2011-01-13T20:58:33Z</settlementTimeUTC> <settlementTimeLocal>2011-01-13T12:58:33</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> <paymentMethod>creditCard</paymentMethod> <statistics> <statistic> <accountType>Visa</accountType> <chargeAmount>30.15</chargeAmount> <chargeCount>7</chargeCount> <refundAmount>0.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> </statistic> </statistics> </batch> </getBatchStatisticsResponse>";
+		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getBatchStatisticsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <batch> <batchId>24</batchId> <settlementTimeUTC>2011-01-13T20:58:33Z</settlementTimeUTC> <settlementTimeLocal>2011-01-13T12:58:33</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> <paymentMethod>creditCard</paymentMethod> " +  marketTypeString + productString + " <statistics> <statistic> <accountType>Visa</accountType> <chargeAmount>30.15</chargeAmount> <chargeCount>7</chargeCount> <refundAmount>0.00</refundAmount> <refundCount>1</refundCount> <voidCount>2</voidCount> <declineCount>4</declineCount> <errorCount>6</errorCount> </statistic> </statistics> </batch> </getBatchStatisticsResponse>";
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
 
@@ -349,9 +422,14 @@ public class ReportingTest extends UnitTestData {
 		BatchDetails batchDetails = result.getReportingDetails().getBatchDetailsList().get(0);
 		Assert.assertEquals("24", batchDetails.getBatchId());
 		Assert.assertEquals("creditCard", batchDetails.getPaymentMethod());
+		Assert.assertNotNull(batchDetails.getMarketType());
+		Assert.assertNotNull(batchDetails.getProduct());
 		Assert.assertEquals(SettlementStateType.SETTLED_SUCCESSFULLY, batchDetails.getSettlementState());
 		Assert.assertEquals("Thu Jan 13 20:58:33 PST 2011", batchDetails.getSettlementTimeUTC().toString());
 		Assert.assertEquals("Thu Jan 13 12:58:33 PST 2011", batchDetails.getSettlementTimeLocal().toString());
+		Assert.assertNotNull(batchDetails.getMarketType());
+		Assert.assertNotNull(batchDetails.getProduct());
+		
 		for(BatchStatistics batchStat :batchDetails.getBatchStatisticsList()) {
 			Assert.assertEquals(CardType.VISA,batchStat.getAccountType());
 			Assert.assertEquals(new BigDecimal(30.15).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP),
@@ -388,7 +466,7 @@ public class ReportingTest extends UnitTestData {
 	@Test
 	public void getUnsettledTransactionListRequestMock() {
 
-		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getUnsettledTransactionListResponse xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transactions> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> <subscription> <id>10</id> <payNum>101</payNum> </subscription> </transaction> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> <subscription> <id>20</id> <payNum>202</payNum> </subscription> </transaction> </transactions> </getUnsettledTransactionListResponse>";
+		String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> <getUnsettledTransactionListResponse xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transactions> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> " + subscriptionOneString + hasReturnedItemsString + " </transaction> <transaction> <transId>12345</transId> <submitTimeUTC>2009-05-30T09:00:00</submitTimeUTC> <submitTimeLocal>2009-05-30T04:00:00</submitTimeLocal> <transactionStatus>settledSuccessfully</transactionStatus> <invoiceNumber>INV00001</invoiceNumber> <firstName>John</firstName> <lastName>Doe</lastName> <settleAmount>2.00</settleAmount> <accountType>Visa</accountType> <accountNumber>XXXX1111</accountNumber> " + subscriptionTwoString + hasReturnedItemsString + " </transaction> </transactions> </getUnsettledTransactionListResponse>";
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
 
@@ -405,6 +483,7 @@ public class ReportingTest extends UnitTestData {
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getReportingDetails().getTransactionDetailList());
 		Assert.assertTrue(result.getReportingDetails().getTransactionDetailList().size() > 0);
+
 		int count=0;
 		for(TransactionDetails transactionDetail : result.getReportingDetails().getTransactionDetailList()) {
 			Assert.assertEquals("12345", transactionDetail.getTransId());
@@ -419,14 +498,18 @@ public class ReportingTest extends UnitTestData {
 			Assert.assertEquals(new BigDecimal(2.00).setScale(Transaction.CURRENCY_DECIMAL_PLACES, BigDecimal.ROUND_HALF_UP),
 					transactionDetail.getSettleAmount());
 
+			Assert.assertEquals(true, transactionDetail.isHasReturnedItems());
+			Assert.assertNotNull( transactionDetail.getSubscription());
 			AssertSubscription( ++count, transactionDetail);
+			Assert.assertNull( transactionDetail.getSolution());
+			Assert.assertNull( transactionDetail.getReturnedItems());
 		}
 	}
 	
 	
 	@Test
 	public void getTransactionDetailsRequestRefundMock() {
-		String xml = "<?xml version=\"1.0\"?> <getTransactionDetailsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transaction> <transId>12345</transId> <refTransId>12345</refTransId> <splitTenderId>12345</splitTenderId> <submitTimeUTC>2010-08-30T17:49:20.757Z</submitTimeUTC> <submitTimeLocal>2010-08-30T13:49:20.757</submitTimeLocal> <transactionType>authOnlyTransaction</transactionType> <transactionStatus>settledSuccessfully</transactionStatus> <responseCode>1</responseCode> <responseReasonCode>1</responseReasonCode> <responseReasonDescription>Approval</responseReasonDescription> <authCode>000000</authCode> <AVSResponse>X</AVSResponse> <cardCodeResponse>M</cardCodeResponse> <CAVVResponse>2</CAVVResponse> <FDSFilterAction>authAndHold</FDSFilterAction> <FDSFilters> <FDSFilter> <name>Hourly Velocity Filter</name> <action>authAndHold</action> </FDSFilter> <FDSFilter> <name>Amount Filter</name> <action>report</action> </FDSFilter> </FDSFilters> <batch> <batchId>12345</batchId> <settlementTimeUTC>2010-08-30T17:49:20.757Z</settlementTimeUTC> <settlementTimeLocal>2010-08-30T13:49:20.757</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> </batch> <order> <invoiceNumber>INV00001</invoiceNumber> <description>some description</description> <purchaseOrderNumber>PO000001</purchaseOrderNumber> </order> <requestedAmount>5.00</requestedAmount> <authAmount>2.00</authAmount> <settleAmount>2.00</settleAmount> <tax> <amount>1.00</amount> <name>WA state sales tax</name> <description>Washington state sales tax</description> </tax> <shipping> <amount>2.00</amount> <name>ground based shipping</name> <description>Ground based 5 to 10 day shipping</description> </shipping> <duty> <amount>1.00</amount> </duty> <lineItems> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> </lineItems> <prepaidBalanceRemaining>30.00</prepaidBalanceRemaining> <taxExempt>false</taxExempt>  <payment>      <creditCard>        <cardNumber>XXXX1111</cardNumber>        <expirationDate>XXXX</expirationDate>        <cardType>Visa</cardType>      </creditCard>    </payment> <customer> <type>individual</type> <id>ABC00001</id> <email>mark@example.com</email> </customer> <billTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> <phoneNumber>000-000-0000</phoneNumber> <faxNumber/> </billTo> <shipTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> </shipTo> <recurringBilling>false</recurringBilling> <customerIP>0.0.0.0</customerIP> <subscription> <id>10</id> <payNum>101</payNum> </subscription> </transaction> </getTransactionDetailsResponse>";
+		String xml = "<?xml version=\"1.0\"?> <getTransactionDetailsResponse xmlns:xsi=\"http://www.w3.org/2001/ XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"> <messages> <resultCode>Ok</resultCode> <message> <code>I00001</code> <text>Successful.</text> </message> </messages> <transaction> <transId>12345</transId> <refTransId>12345</refTransId> <splitTenderId>12345</splitTenderId> <submitTimeUTC>2010-08-30T17:49:20.757Z</submitTimeUTC> <submitTimeLocal>2010-08-30T13:49:20.757</submitTimeLocal> <transactionType>authOnlyTransaction</transactionType> <transactionStatus>settledSuccessfully</transactionStatus> <responseCode>1</responseCode> <responseReasonCode>1</responseReasonCode> <responseReasonDescription>Approval</responseReasonDescription> <authCode>000000</authCode> <AVSResponse>X</AVSResponse> <cardCodeResponse>M</cardCodeResponse> <CAVVResponse>2</CAVVResponse> <FDSFilterAction>authAndHold</FDSFilterAction> <FDSFilters> <FDSFilter> <name>Hourly Velocity Filter</name> <action>authAndHold</action> </FDSFilter> <FDSFilter> <name>Amount Filter</name> <action>report</action> </FDSFilter> </FDSFilters> <batch> <batchId>12345</batchId> <settlementTimeUTC>2010-08-30T17:49:20.757Z</settlementTimeUTC> <settlementTimeLocal>2010-08-30T13:49:20.757</settlementTimeLocal> <settlementState>settledSuccessfully</settlementState> </batch> <order> <invoiceNumber>INV00001</invoiceNumber> <description>some description</description> <purchaseOrderNumber>PO000001</purchaseOrderNumber> </order> <requestedAmount>5.00</requestedAmount> <authAmount>2.00</authAmount> <settleAmount>2.00</settleAmount> <tax> <amount>1.00</amount> <name>WA state sales tax</name> <description>Washington state sales tax</description> </tax> <shipping> <amount>2.00</amount> <name>ground based shipping</name> <description>Ground based 5 to 10 day shipping</description> </shipping> <duty> <amount>1.00</amount> </duty> <lineItems> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> <lineItem> <itemId>ITEM00001</itemId> <name>name of item sold</name> <description>Description of item sold</description> <quantity>1</quantity> <unitPrice>6.95</unitPrice> <taxable>true</taxable> </lineItem> </lineItems> <prepaidBalanceRemaining>30.00</prepaidBalanceRemaining> <taxExempt>false</taxExempt>  <payment>      <creditCard>        <cardNumber>XXXX1111</cardNumber>        <expirationDate>XXXX</expirationDate>        <cardType>Visa</cardType>      </creditCard>    </payment> <customer> <type>individual</type> <id>ABC00001</id> <email>mark@example.com</email> </customer> <billTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> <phoneNumber>000-000-0000</phoneNumber> <faxNumber/> </billTo> <shipTo> <firstName>John</firstName> <lastName>Doe</lastName> <company/> <address>123 Main St.</address> <city>Bellevue</city> <state>WA</state> <zip>98004</zip> <country>USA</country> </shipTo> <recurringBilling>false</recurringBilling> <customerIP>0.0.0.0</customerIP> " + subscriptionOneString + solutionString + returnedItemsString + " </transaction> </getTransactionDetailsResponse>";
 
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
@@ -474,6 +557,10 @@ public class ReportingTest extends UnitTestData {
 		Assert.assertEquals("Mon Aug 30 17:49:20 PDT 2010", batch.getSettlementTimeUTC().toString());
 		Assert.assertEquals("Mon Aug 30 13:49:20 PDT 2010", batch.getSettlementTimeLocal().toString());
 		Assert.assertEquals(SettlementStateType.SETTLED_SUCCESSFULLY, batch.getSettlementState());
+		Assert.assertNull(batch.getPaymentMethod());
+		Assert.assertNull(batch.getMarketType());
+		Assert.assertNull(batch.getProduct());
+		
 		// order
 		Order order = transactionDetail.getOrder();
 		Assert.assertNotNull(order);
@@ -556,7 +643,11 @@ public class ReportingTest extends UnitTestData {
 
 		//subscription
 		int count=0;
+		Assert.assertFalse(transactionDetail.isHasReturnedItems());
 		AssertSubscription( ++count, transactionDetail);
+		AssertSolution( transactionDetail);
+		//TODO count check
+		AssertReturnedItems( 1, transactionDetail);
 	}
 
 
@@ -616,6 +707,32 @@ public class ReportingTest extends UnitTestData {
 		{
 			Assert.assertEquals( count * 10, subs.getId());
 			Assert.assertEquals( count * 101, subs.getPayNum());
+		}
+	}
+
+	public static void AssertSolution( TransactionDetails transactionDetail)
+	{
+		Assert.assertNotNull(transactionDetail);
+		Solution sol = transactionDetail.getSolution();
+		Assert.assertNotNull(sol);
+		Assert.assertNotNull( sol.getId());
+		Assert.assertNotNull( sol.getName());
+	}
+
+	public static void AssertReturnedItems( int count, TransactionDetails transactionDetail)
+	{
+		Assert.assertNotNull(transactionDetail);
+		ArrayList<ReturnedItem> returnedItems = transactionDetail.getReturnedItems();
+		Assert.assertNotNull(returnedItems);
+		Assert.assertEquals(count, returnedItems.size());
+
+		for ( ReturnedItem returnedItem :  returnedItems)
+		{
+			Assert.assertNotNull(returnedItem.getId());
+			Assert.assertNotNull(returnedItem.getDateUTC());
+			Assert.assertNotNull(returnedItem.getDateLocal());
+			Assert.assertNotNull(returnedItem.getCode());
+			Assert.assertNotNull(returnedItem.getDescription());
 		}
 	}
 }

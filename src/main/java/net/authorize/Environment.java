@@ -117,7 +117,7 @@ public enum Environment {
 		String stringValue = getProperty(propertyName);
 		if ( null != stringValue)
 		{
-			value = Integer.parseInt(stringValue); 
+			value = Integer.parseInt(stringValue.trim()); 
 		}
 		
 		return value;
@@ -135,7 +135,7 @@ public enum Environment {
 		String stringValue = getProperty(propertyName);
 		if ( null != stringValue)
 		{
-			value = Boolean.parseBoolean(stringValue); 
+			value = Boolean.parseBoolean(stringValue.trim()); 
 		}
 		
 		return value;

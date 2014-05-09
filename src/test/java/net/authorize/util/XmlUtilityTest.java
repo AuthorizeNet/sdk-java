@@ -5,10 +5,10 @@ import java.util.Random;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.authorize.data.reporting.Subscription;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import net.authorize.data.reporting.Subscription;
 
 public class XmlUtilityTest {
 	@Test
@@ -27,6 +27,9 @@ public class XmlUtilityTest {
 		MyTest xmlMyt = XmlUtility.create(xml, MyTest.class);
 		Assert.assertNotNull( xmlMyt);
 		System.out.println(xmlMyt);
+		
+		System.out.println( XmlUtility.getRootElementXml(myt));
+		System.out.println( XmlUtility.getRootElementXml(xml));		
 	}
 	
 	@Test

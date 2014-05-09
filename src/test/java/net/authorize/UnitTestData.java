@@ -242,7 +242,7 @@ public abstract class UnitTestData {
 		return propertiesList;
 	}
 	
-	private static String getPropertyFromNames(String firstName, String secondName) {
+	public static String getPropertyFromNames(String firstName, String secondName) {
 		String value = Environment.getProperty(firstName);
 		if (null == value) { value = Environment.getProperty(secondName); }
 		

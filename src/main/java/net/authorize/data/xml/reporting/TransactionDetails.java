@@ -4,13 +4,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.authorize.ResponseCode;
 import net.authorize.ResponseReasonCode;
 import net.authorize.aim.Transaction;
-import net.authorize.aim.cardpresent.PrepaidCard;
 import net.authorize.data.Order;
 import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
+import net.authorize.data.reporting.ReturnedItem;
+import net.authorize.data.reporting.Solution;
 import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Customer;
 import net.authorize.data.xml.Payment;
@@ -21,6 +25,8 @@ import net.authorize.util.StringUtils;
  */
 public class TransactionDetails {
 
+	private static Log logger = LogFactory.getLog(TransactionDetails.class);
+	
 	private String transId;
 	private String refTransId;
 	private String splitTenderId;
@@ -57,6 +63,10 @@ public class TransactionDetails {
 	private CardType accountType;
 	private String accountNumber;
 
+	private boolean hasReturnedItems;
+	private ArrayList<ReturnedItem> returnedItems = null;
+    private Solution solution = null;
+	
 	private boolean fullTransactionDetails = false;
 
 	private TransactionDetails() { }
@@ -638,4 +648,61 @@ public class TransactionDetails {
 		this.subscription = subscription;
 	}
 
+	/**
+	 * @return the hasReturnedItems
+	 */
+	public boolean isHasReturnedItems() {
+		return hasReturnedItems;
+	}
+
+	/**
+	 * @param hasReturnedItems the hasReturnedItems to set
+	 */
+	public void setHasReturnedItems(boolean hasReturnedItems) {
+		this.hasReturnedItems = hasReturnedItems;
+	}
+
+	/**
+	 * @param hasReturnedItems the hasReturnedItems to set
+	 */
+	public void setHasReturnedItems(String hasReturnedItems) {
+		if ( null != hasReturnedItems)
+		{
+			try {
+				//since xml may return leading/trailing white space, which is not parsed correctly 
+				boolean hasItems = Boolean.parseBoolean( hasReturnedItems.trim());
+				this.setHasReturnedItems(hasItems);
+			} catch (Exception e) { //safety-net, ideally no exception is thrown
+				logger.warn(String.format("Error parsing to boolean value: '%s'", hasReturnedItems));
+			}
+		}
+	}
+	
+	/**
+	 * @return the returnedItems
+	 */
+	public ArrayList<ReturnedItem> getReturnedItems() {
+		return returnedItems;
+	}
+
+	/**
+	 * @param returnedItems the returnedItems to set
+	 */
+	public void setReturnedItems(ArrayList<ReturnedItem> returnedItems) {
+		this.returnedItems = returnedItems;
+	}
+
+	/**
+	 * @return the solution
+	 */
+	public Solution getSolution() {
+		return solution;
+	}
+
+	/**
+	 * @param solution the solution to set
+	 */
+	public void setSolution(Solution solution) {
+		this.solution = solution;
+	}
 }

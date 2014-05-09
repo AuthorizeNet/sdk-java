@@ -173,12 +173,13 @@ public class HttpClient {
 	            sb.append(line + "\n");
 	        }
 	    } catch (IOException e) {
-	        e.printStackTrace();
+			logger.warn(String.format("Exception reading data from Stream: '%s'", e.getMessage()));
 	    } finally {
-	        try {
+
+	    	try {
 	            is.close();
 	        } catch (IOException e) {
-	            e.printStackTrace();
+				logger.warn(String.format("Exception closing InputStream: '%s'", e.getMessage()));
 	        }
 	    }
 	    return sb.toString();
@@ -269,7 +270,7 @@ public class HttpClient {
 	 * if proxy use is requested, set http-client appropriately 
 	 * @param httpClient the client to add proxy values to 
 	 */
-	private static void setProxyIfRequested(DefaultHttpClient httpClient) {
+	public static void setProxyIfRequested(DefaultHttpClient httpClient) {
 		if ( UseProxy)
 		{
 			if ( !proxySet) {

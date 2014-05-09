@@ -44,6 +44,9 @@ public class ReportingTest extends UnitTestData {
 			Assert.assertNotNull(batchDetail.getSettlementTimeLocal());
 			Assert.assertNotNull(batchDetail.getSettlementTimeUTC());
 			Assert.assertNotNull(batchDetail.getPaymentMethod());
+			Assert.assertNotNull(batchDetail.getMarketType());
+			Assert.assertNotNull(batchDetail.getProduct());
+			
 			for(BatchStatistics batchStat :batchDetail.getBatchStatisticsList()) {
 				Assert.assertNotNull(batchStat.getAccountType());
 				Assert.assertNotNull(batchStat.getChargeAmount());
@@ -102,6 +105,9 @@ public class ReportingTest extends UnitTestData {
 			Assert.assertNotNull(batchDetail.getSettlementTimeLocal());
 			Assert.assertNotNull(batchDetail.getSettlementTimeUTC());
 			Assert.assertNotNull(batchDetail.getPaymentMethod());
+			Assert.assertNotNull(batchDetail.getMarketType());
+			Assert.assertNotNull(batchDetail.getProduct());
+			
 			for(BatchStatistics batchStat :batchDetail.getBatchStatisticsList()) {
 				Assert.assertNotNull(batchStat.getAccountType());
 				Assert.assertNotNull(batchStat.getChargeAmount());

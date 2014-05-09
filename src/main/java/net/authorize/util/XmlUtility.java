@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -19,9 +20,9 @@ import org.apache.commons.logging.LogFactory;
  * @author ramittal
  *
  */
-@XmlRootElement
 public final class XmlUtility {
 	private static Log logger = LogFactory.getLog(XmlUtility.class);
+	private static final String XmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 
 	/**
     * Default C'tor, cannot be instantiated
@@ -65,6 +66,7 @@ public final class XmlUtility {
 	 * @throws IOException if errors during de-serialization
 	 * @throws JAXBException if errors during de-serialization
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T extends Serializable> T create(String xml, Class<T> classType) throws IOException, JAXBException
 	{
 		T entity = null;
@@ -76,7 +78,17 @@ public final class XmlUtility {
 	        Object unmarshaled = um.unmarshal(new StringReader(xml));
 	        if ( null != unmarshaled)
 	        {
-	        	entity = (T) classType.cast(unmarshaled);
+	        	try {
+	        		entity = (T) classType.cast(unmarshaled);
+	        	} catch (ClassCastException cce) {
+	        		if (unmarshaled instanceof JAXBElement) {
+	        			@SuppressWarnings("rawtypes")
+						JAXBElement element = (JAXBElement) unmarshaled;
+	        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
+	        				entity = (T) element.getValue();
+	        			}
+	        		}
+	        	}
 	        }
 		}
 
@@ -140,6 +152,34 @@ public final class XmlUtility {
 			}
 		}
 		return 	retVal;	
+	}
+
+	/**
+	 * Removes the XML prologue 
+	 * @param entity object to remove prologue 
+	 * @return String  String XML representation of root element xml without prologue
+	 */
+	public static  <T extends Serializable> String getRootElementXml(T entity) {
+		String rootElementXml = null;
+		try {
+			String xml = getXml(entity);
+			rootElementXml = getRootElementXml(xml);
+		} catch (Exception e) {
+			logger.warn(String.format("Unable to serialize into xml: '%s'", entity));
+			rootElementXml = String.format( "<%s/>", entity.getClass().getSimpleName());
+		}
+		
+		return rootElementXml;
+	}
+	
+	/**
+	 * Removes the XML prologue 
+	 * @param xmlString string to remove prologue 
+	 * @return String  root element xml without prologue
+	 */
+	public static String getRootElementXml(String xmlString) {
+		String rootElementXml = xmlString.replace(XmlHeader, "");
+		return rootElementXml;
 	}
 	
 	@XmlRootElement
