@@ -60,7 +60,7 @@ public class ReturnedItem implements Serializable{
 		returnedItem.setCode( code);
 		returnedItem.setDescription( description);
 
-		logger.debug(String.format("Created: ", returnedItem));
+		logger.debug(String.format("Created: '%s'", returnedItem));
 		
 		return returnedItem;
 	}

@@ -140,27 +140,27 @@ public class Transaction extends net.authorize.Transaction implements Serializab
 
 		// populate the authorization code
 		if(responseMap.containsKey(ResponseField.AUTHORIZATION_CODE)) {
-			_transaction.setAuthorizationCode((String)responseMap.get(ResponseField.AUTHORIZATION_CODE));
+			_transaction.setAuthorizationCode(responseMap.get(ResponseField.AUTHORIZATION_CODE));
 		}
 
 		// transaction ID
 		if(responseMap.containsKey(ResponseField.TRANSACTION_ID)) {
-			_transaction.setTransactionId((String)responseMap.get(ResponseField.TRANSACTION_ID));
+			_transaction.setTransactionId(responseMap.get(ResponseField.TRANSACTION_ID));
 		}
 
 		CreditCard creditCard = _transaction.getCreditCard();
 		if(creditCard != null) {
 			// masked credit card
 			if(responseMap.containsKey(ResponseField.ACCOUNT_NUMBER)) {
-				creditCard.setMaskedCreditCardNumber((String)responseMap.get(ResponseField.ACCOUNT_NUMBER));
+				creditCard.setMaskedCreditCardNumber(responseMap.get(ResponseField.ACCOUNT_NUMBER));
 			}
 			// credit card type
 			if(responseMap.containsKey(ResponseField.CARD_TYPE)) {
-				creditCard.setCardType(CardType.findByValue((String)responseMap.get(ResponseField.CARD_TYPE)));
+				creditCard.setCardType(CardType.findByValue(responseMap.get(ResponseField.CARD_TYPE)));
 			}
 			// AVS response
 			if(responseMap.containsKey(ResponseField.AVS_CODE)) {
-				creditCard.setAvsCode(AVSCode.findByValue((String)responseMap.get(ResponseField.AVS_CODE)));
+				creditCard.setAvsCode(AVSCode.findByValue(responseMap.get(ResponseField.AVS_CODE)));
 			}
 
 			_transaction.setCreditCard(creditCard);

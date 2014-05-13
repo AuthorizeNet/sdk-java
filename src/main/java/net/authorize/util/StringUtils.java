@@ -99,7 +99,7 @@ public class StringUtils {
 			padding = "0";
 		}
 		String number = padding + i;
-		sb.append("&#" + number + ";");
+		sb.append("&#").append(number).append(";");
 	}
 
 	/**

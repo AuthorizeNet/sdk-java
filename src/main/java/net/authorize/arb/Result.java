@@ -88,7 +88,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			System.out.println("Result Subscription Id: " + resultSubscriptionId);
 		}
 		for(int i = 0; i < messages.size(); i++){
-			Message message = (Message)messages.get(i);
+			Message message = messages.get(i);
 			System.out.println(message.getCode() + " - " + message.getText());
 		}
 	}

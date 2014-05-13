@@ -63,13 +63,13 @@ public class ARBTest extends UnitTestData {
 
 		// Create a billing info
 		//
-		billing_info = (Address) Address.createAddress();
+		billing_info = Address.createAddress();
 		billing_info.setFirstName(firstName + System.currentTimeMillis());
 		billing_info.setLastName(lastName);
 
 		// Create a shipping info
 		//
-		shipping_info = (Address) Address.createAddress();
+		shipping_info = Address.createAddress();
 		shipping_info.setFirstName(firstName + System.currentTimeMillis());
 		shipping_info.setLastName(lastName);
 		shipping_info.setCompany(company);

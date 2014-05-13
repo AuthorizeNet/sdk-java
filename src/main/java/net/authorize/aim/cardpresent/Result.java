@@ -314,7 +314,7 @@ public class Result<T> extends net.authorize.Result<T> {
 				txn.getCurrentResponse().getDocumentElement(),
 				AuthNetField.ELEMENT__TEST_MODE.getFieldName());
 
-		this.testMode = "1".equals(_testMode)?true:false;
+		this.testMode = "1".equals(_testMode);
 	}
 
 	/**

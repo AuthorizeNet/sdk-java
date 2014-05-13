@@ -45,7 +45,7 @@ public class Solution implements Serializable{
 		solution.setId(id);
 		solution.setName(name);
 
-		logger.debug(String.format("Created: ", solution));
+		logger.debug(String.format("Created: '%s'", solution));
 		
 		return solution;
 	}

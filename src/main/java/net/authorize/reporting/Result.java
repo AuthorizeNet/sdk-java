@@ -92,8 +92,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		NodeList batchlist_list = txn.getCurrentResponse().getDocument().getElementsByTagName(AuthNetField.ELEMENT_BATCH.getFieldName());
 
 		if(batchlist_list.getLength() == 0) {
-			return;
-		} else {
+        } else {
 			for(int i = 0; i < batchlist_list.getLength(); i++) {
 				Element batch_el = (Element)batchlist_list.item(i);
 				BatchDetails batchDetail = BatchDetails.createBatchDetail();
@@ -157,8 +156,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		NodeList transactions_list = txn.getCurrentResponse().getDocument().getElementsByTagName(AuthNetField.ELEMENT_TRANSACTION.getFieldName());
 
 		if(transactions_list.getLength() == 0) {
-			return;
-		} else {
+        } else {
 			ArrayList<TransactionDetails> transactionDetailList = new ArrayList<TransactionDetails>();
 			for(int i = 0; i < transactions_list.getLength(); i++) {
 				Element transaction_el = (Element)transactions_list.item(i);
@@ -514,7 +512,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 	public void printMessages() {
 		System.out.println("Result Code: " + (resultCode != null ? resultCode : "No result code"));
 		for(int i = 0; i < messages.size(); i++){
-			Message message = (Message)messages.get(i);
+			Message message = messages.get(i);
 			System.out.println(message.getCode() + " - " + message.getText());
 		}
 	}

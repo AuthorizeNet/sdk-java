@@ -58,7 +58,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		Assert.assertEquals("1234123412341234=0305101193010877", authCaptureTransaction.getCreditCard().getTrack2());
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
-			(net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction>) net.authorize.aim.cardpresent.Result.createResult(authCaptureTransaction, xmlResponse);
+                Result.createResult(authCaptureTransaction, xmlResponse);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isApproved());
@@ -102,7 +102,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCreditCard(creditCard);
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
-			(net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction>) net.authorize.aim.cardpresent.Result.createResult(authCaptureTransaction, xmlResponse);
+                Result.createResult(authCaptureTransaction, xmlResponse);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isDeclined());
@@ -140,7 +140,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCreditCard(creditCard);
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
-			(net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction>) net.authorize.aim.cardpresent.Result.createResult(authCaptureTransaction, xmlResponse);
+                Result.createResult(authCaptureTransaction, xmlResponse);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isError());

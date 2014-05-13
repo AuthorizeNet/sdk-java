@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class HttpClient {
 	 * @throws Exception
 	 */
 	private static HttpPost createHttpPost(Environment env, Transaction transaction) throws Exception {
-		URI postUrl = null;
+		URI postUrl;
 		HttpPost httpPost = null;
 
 		if(transaction instanceof net.authorize.aim.Transaction ||
@@ -126,12 +127,12 @@ public class HttpClient {
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
-				String rawResponseString = "";
+				String rawResponseString;
 				if(httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = httpResponse.getEntity();
 
 					// get the raw data being received
-					InputStream instream = (InputStream)entity.getContent();
+					InputStream instream = entity.getContent();
 					rawResponseString = convertStreamToString(instream);
 				}
 				// handle HTTP errors
@@ -150,7 +151,7 @@ public class HttpClient {
 				
 				responseMap = HttpClient.createResponseMap(transaction, cleanResponseString);
 			} catch (Exception e) {
-				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
+				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace())));
 			}
 		}
 
@@ -167,10 +168,10 @@ public class HttpClient {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	    StringBuilder sb = new StringBuilder();
 
-	    String line = null;
+	    String line;
 	    try {
 	        while ((line = reader.readLine()) != null) {
-	            sb.append(line + "\n");
+	            sb.append(line).append("\n");
 	        }
 	    } catch (IOException e) {
 			logger.warn(String.format("Exception reading data from Stream: '%s'", e.getMessage()));
@@ -207,12 +208,12 @@ public class HttpClient {
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
-				String rawResponseString = "";
+				String rawResponseString;
 				if(httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = httpResponse.getEntity();
 
 					// get the raw data being received
-					InputStream instream = (InputStream)entity.getContent();
+					InputStream instream = entity.getContent();
 					rawResponseString = convertStreamToString(instream);
 				}
 				else {
@@ -259,7 +260,7 @@ public class HttpClient {
 					return null;
 				}
 			} catch (Exception e) {
-				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
+				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace())));
 			}
 		}
 

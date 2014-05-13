@@ -83,7 +83,7 @@ public class CIMTest extends UnitTestData {
 
 		// Create a billing info
 		//
-		billingInfo = (Address) Address.createAddress();
+		billingInfo = Address.createAddress();
 		billingInfo.setFirstName(firstName + System.currentTimeMillis());
 		billingInfo.setLastName(lastName);
 		billingInfo.setCompany(company);
@@ -97,7 +97,7 @@ public class CIMTest extends UnitTestData {
 
 		// Create a shipping info
 		//
-		shippingInfo = (Address) Address.createAddress();
+		shippingInfo = Address.createAddress();
 		shippingInfo.setFirstName(firstName + System.currentTimeMillis());
 		shippingInfo.setLastName(lastName);
 		shippingInfo.setCompany(company);

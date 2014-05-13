@@ -130,8 +130,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the refId to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addRefId(BasicXmlDocument document) {
 		if(refId != null) {
 			Element ref_id_el = document.createElement(AuthNetField.ELEMENT_REFID.getFieldName());
@@ -144,8 +143,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer profile id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerProfileId(BasicXmlDocument document) {
 		if(customerProfile != null && customerProfile.getCustomerProfileId() != null) {
 			Element customer_profile_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_PROFILE_ID.getFieldName());
@@ -158,8 +156,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer address id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerAddressId(BasicXmlDocument document) {
 		if(this.paymentTransaction.getCustomerShippingAddressId() != null) {
 			Element customer_shipping_address_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_ADDRESS_ID.getFieldName());
@@ -171,8 +168,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer shipping address id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerShippingAddressId(BasicXmlDocument document) {
 		if(this.paymentTransaction.getCustomerShippingAddressId() != null) {
 			Element customer_shipping_address_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_SHIPPING_ADDRESS_ID.getFieldName());
@@ -185,8 +181,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer payment profile id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerPaymentProfileId(BasicXmlDocument document) {
 		if(this.paymentTransaction.getCustomerPaymentProfileId() != null) {
 			Element customer_payment_profile_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_PAYMENT_PROFILE_ID.getFieldName());
@@ -199,8 +194,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the card code to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCardCode(BasicXmlDocument document) {
 		if(paymentTransaction != null && !StringUtils.isEmpty(paymentTransaction.getCardCode())) {
 			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
@@ -253,7 +247,6 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add payment profiles to the request profile.
 	 *
 	 * @param document
-	 * @param paymentProfiles
 	 * @param profile_el - if null handles the singular element case
 	 */
 	private void addPaymentProfiles(BasicXmlDocument document, Element profile_el) {
