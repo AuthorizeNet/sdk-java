@@ -54,6 +54,6 @@ public class FingerprintTest extends UnitTestData {
 
 		}
 	    Assert.assertNotNull(md5Check);
-		Assert.assertEquals(md5Check, x_MD5_Hash);
+		Assert.assertEquals(x_MD5_Hash, md5Check);
 	}
 }
