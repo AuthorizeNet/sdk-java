@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.authorize.util.LogHelper;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -45,7 +47,7 @@ public class Solution implements Serializable{
 		solution.setId(id);
 		solution.setName(name);
 
-		logger.debug(String.format("Created: '%s'", solution));
+		LogHelper.debug(logger, "Created: '%s'", solution);
 		
 		return solution;
 	}

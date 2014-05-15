@@ -41,7 +41,7 @@ public class HttpClient {
 	static int ProxyPort = Environment.getIntProperty(Constants.HTTPS_PROXY_PORT);
 	
 	static {
-		logger.info(String.format("Use Proxy: '%s'", UseProxy));
+		LogHelper.info(logger, "Use Proxy: '%s'", UseProxy);
 	}
 	/**
 	 * Creates the http post object for an environment and transaction container.
@@ -154,7 +154,7 @@ public class HttpClient {
 				
 				responseMap = HttpClient.createResponseMap(transaction, cleanResponseString);
 			} catch (Exception e) {
-				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace())));
+				LogHelper.warn(logger, "Exception getting response: '%s': '%s', '%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
 			}
 		}
 
@@ -177,14 +177,23 @@ public class HttpClient {
 	            sb.append(line).append("\n");
 	        }
 	    } catch (IOException e) {
-			logger.warn(String.format("Exception reading data from Stream: '%s'", e.getMessage()));
+	    	LogHelper.warn(logger, "Exception reading data from Stream: '%s'", e.getMessage());
 	    } finally {
+	    	if ( null != reader){
+	    		try {
+	    			reader.close();
+		        } catch (IOException e) {
+		        	LogHelper.warn(logger, "Exception closing BufferedReader: '%s'", e.getMessage());
+		        }
+	    	}
 
-	    	try {
-	            is.close();
-	        } catch (IOException e) {
-				logger.warn(String.format("Exception closing InputStream: '%s'", e.getMessage()));
-	        }
+	    	if ( null != is) {
+		    	try {
+		            is.close();
+		        } catch (IOException e) {
+		        	LogHelper.warn(logger, "Exception closing InputStream: '%s'", e.getMessage());
+		        }
+	    	}
 	    }
 	    return sb.toString();
 	}
@@ -263,7 +272,7 @@ public class HttpClient {
 					return null;
 				}
 			} catch (Exception e) {
-				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace())));
+				LogHelper.warn(logger, "Exception getting response: '%s': '%s', '%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
 			}
 		}
 
@@ -278,7 +287,7 @@ public class HttpClient {
 		if ( UseProxy)
 		{
 			if ( !proxySet) {
-				logger.info(String.format("Setting up proxy to URL: '%s://%s:%d'\n", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort));
+				LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
 				proxySet = true;
 			}
 			HttpHost proxyHttpHost = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);

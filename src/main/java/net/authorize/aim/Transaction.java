@@ -30,6 +30,7 @@ import net.authorize.data.echeck.ECheckType;
 import net.authorize.util.BasicXmlDocument;
 import net.authorize.util.DeepCopy;
 import net.authorize.util.HttpClient;
+import net.authorize.util.LogHelper;
 import net.authorize.util.StringUtils;
 
 import org.apache.commons.logging.Log;
@@ -702,7 +703,7 @@ public class Transaction extends net.authorize.Transaction implements Serializab
 					}
 					nvpBuffer.append(key).append("=").append(value).append("&");
 				} catch (Exception e) {
-					logger.warn("NVP encoding failed: " + e.getMessage());
+					LogHelper.warn(logger, "NVP encoding failed: " + e.getMessage());
 				}
 			}
 		}

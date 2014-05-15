@@ -46,7 +46,7 @@ public class FingerprintTest extends UnitTestData {
 		String md5Check = null;
 
 		try {
-		    MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+		    MessageDigest digest = java.security.MessageDigest.getInstance(  net.authorize.Result.MessageDigestAlgorithm);
 		    String s = merchant_MD5_Key + merchant.getLogin() + txnId + amount;
 		    digest.update(s.getBytes());
 		    md5Check = new BigInteger(1,digest.digest()).toString(16).toUpperCase();

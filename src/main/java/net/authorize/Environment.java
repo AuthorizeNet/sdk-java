@@ -115,10 +115,7 @@ public enum Environment {
 	{
 		int value = 0;
 		String stringValue = getProperty(propertyName);
-		if ( null != stringValue)
-		{
-			value = Integer.parseInt(stringValue.trim()); 
-		}
+		value = (net.authorize.util.StringUtils.parseInt(stringValue));
 		
 		return value;
 	}

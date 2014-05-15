@@ -90,13 +90,7 @@ public class Subscription implements Serializable{
 	 * @param id Sets the subscription Id for subscription
 	 */
 	public void setId(String id) {
-		if ( null != id) { 
-			try {
-				this.id = Integer.parseInt( id.trim());
-			} catch (NumberFormatException nfe) {
-				logger.warn(String.format("Error parsing to int value: '%s'", id));
-			}
-		}
+		this.setId(net.authorize.util.StringUtils.parseInt(id));
 	}
 
 	/**
@@ -105,15 +99,8 @@ public class Subscription implements Serializable{
 	 * @param payNum Sets the payment number for subscription
 	 */
 	public void setPayNum(String payNum) {
-		if ( null != payNum) {
-			try {
-				this.payNum = Integer.parseInt( payNum.trim());
-			} catch (NumberFormatException nfe) {
-				logger.warn(String.format("Error parsing to int value: '%s'", payNum));
-			}
-		}
+		this.setPayNum(net.authorize.util.StringUtils.parseInt(payNum));
 	}
-	
 	
 	public String toString() {
 		 StringBuilder builder = new StringBuilder();

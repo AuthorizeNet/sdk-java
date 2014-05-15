@@ -298,13 +298,13 @@ public class CIMTest extends UnitTestData {
 	public void testCreateCustomerProfileTransactionRequest_AuthOnly_NoCardCode() {
 
 		String cardCode = null;
-		//MyReturnValues returnValues =//ignore return values
+		//MyReturnValuesTest returnValues =//ignore return values
 		createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, cardCode);
 	}
 
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_AuthOnly() {
-		//MyReturnValues returnValues = //ignore return values 
+		//MyReturnValuesTest returnValues = //ignore return values 
 		String cardCode = "";
 		createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, cardCode);
 	}
@@ -313,7 +313,7 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_PriorAuthCapture() {
 		String cardCode = "";
-		MyReturnValues returnValues = createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, cardCode);
+		MyReturnValuesTest returnValues = createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, cardCode);
 
 		// Create an auth capture txn request
 		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
@@ -368,7 +368,7 @@ public class CIMTest extends UnitTestData {
 	public void testCreateCustomerProfileTransactionRequest_CaptureOnly() {
 
 		String cardCode = "";
-		MyReturnValues returnValues = createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, cardCode);
+		MyReturnValuesTest returnValues = createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, cardCode);
 		
 		// Create a capture only txn request
 		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
@@ -395,7 +395,7 @@ public class CIMTest extends UnitTestData {
 	@Test
 	public void testCreateCustomerProfileTransactionRequest_Void() {
 
-		MyReturnValues returnValues = createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, "");
+		MyReturnValuesTest returnValues = createCustomerProfileWithAuthOnly(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE, "");
 		String customerProfileId = returnValues.customerProfileId;
 		String customerPaymentProfileId = returnValues.customerPaymentProfileId;
 		
@@ -817,7 +817,7 @@ public class CIMTest extends UnitTestData {
 	}
 
 	@SuppressWarnings("unchecked")
-	private MyReturnValues createCustomerProfileWithAuthOnly(
+	private MyReturnValuesTest createCustomerProfileWithAuthOnly(
 			CustomerProfile customerProfile, PaymentProfile firstPaymentProfile, ValidationModeType validationModeType, String cardCode) {
 		String customerProfileId = getCustomerProfileId(customerProfile, firstPaymentProfile, validationModeType);
 		String customerPaymentProfileId = getPaymentProfile(customerProfileId, null, validationModeType);
@@ -851,13 +851,13 @@ public class CIMTest extends UnitTestData {
 		//TODO 
 		splitTenderId = result.getDirectResponseList().get(0).getDirectResponseMap().get(ResponseField.SPLIT_TENDER_ID);
 
-		return new MyReturnValues(customerProfileId, null, customerPaymentProfileId, null, authCode, splitTenderId, transactionId, customerShippingAddressId);
+		return new MyReturnValuesTest(customerProfileId, null, customerPaymentProfileId, null, authCode, splitTenderId, transactionId, customerShippingAddressId);
 	}
 	
 	private String createdCustomerPaymentProfileId = null;
 }
 
-class MyReturnValues {
+class MyReturnValuesTest {
 	public String customerProfileId;
 	public Result<Transaction> customerProfileResult;
 	public String customerPaymentProfileId;
@@ -868,7 +868,7 @@ class MyReturnValues {
 	public String transactionId;
 	public String customerShippingAddressId;
 	
-	public MyReturnValues(
+	public MyReturnValuesTest(
 			String customerProfileId,Result<Transaction> customerProfileResult,
 			String customerPaymentProfileId,ArrayList<String> paymentList,
 			String authCode, String splitTenderId, String transactionId, String customerShippingAddressId			

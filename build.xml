@@ -13,7 +13,6 @@
 	<!--
 	<property file="${resources.dir}/build.properties"/>
 	-->
- 
 	<!-- build.properties related info -->
 	<property file="${user.home}/build.properties" />
 	<property file="${user.home}/${ant.project.name}.properties" />
@@ -37,7 +36,7 @@
 	</path>
 
 	<target name="clean">
-		<delete includeEmptyDirs="true">
+		<delete includeEmptyDirs="true" quiet="true">
 			<fileset dir="${classes.dir}" includes="**/*.*" />
 			<fileset dir="${build.dir}" includes="**/*.jar" />
 		</delete>
@@ -70,6 +69,18 @@
 				<include name="**/*Test*.class" />
 			</fileset>
 		</jar>
+
+		<jar jarfile="${build.dir}/${ant.project.name}-src-${version}.jar">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${src.tests}">
+				<include name="**/*.java" />
+			</fileset>
+		</jar>
+		<!-- Make VeraCode happy by giving same binary file name to verify -->
+		<copy file="${build.dir}/${ant.project.name}-${version}.jar"      tofile="${build.dir}/${ant.project.name}.jar"/>
+		<copy file="${build.dir}/${ant.project.name}-test-${version}.jar" tofile="${build.dir}/${ant.project.name}-test.jar"/>
 	</target>
 
 	<target name="unit-test" depends="jar">

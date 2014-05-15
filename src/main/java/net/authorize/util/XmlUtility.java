@@ -116,7 +116,7 @@ public final class XmlUtility {
 			}
 			catch ( Exception e)
 			{
-				logger.warn(String.format("Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage()));
+				LogHelper.warn(logger, "Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage());
 				retVal = valueToSerialize;
 			}
 		}
@@ -146,7 +146,7 @@ public final class XmlUtility {
 			}
 			catch ( Exception e)
 			{
-				logger.warn(String.format("Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage()));
+				LogHelper.warn(logger, "Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage());
 				retVal = valueToDeserialize;
 			}
 		}
@@ -164,7 +164,7 @@ public final class XmlUtility {
 			String xml = getXml(entity);
 			rootElementXml = getRootElementXml(xml);
 		} catch (Exception e) {
-			logger.warn(String.format("Unable to serialize into xml: '%s'", entity));
+			LogHelper.warn(logger, "Unable to serialize into xml: '%s'", entity);
 			rootElementXml = String.format( "<%s/>", entity.getClass().getSimpleName());
 		}
 		

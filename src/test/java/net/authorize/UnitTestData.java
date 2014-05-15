@@ -159,9 +159,9 @@ public abstract class UnitTestData {
 		}
 		else
 		{
-			logger.info(String.format(
+			net.authorize.util.LogHelper.info( logger,
 					"PropertyValues: ApiLoginId:'%s', TransactionKey:'%s', CPApiLoginId:'%s', CPTransactionKey:'%s', MD5Key:'%s' ", 
-					apiLoginID, transactionKey, cp_apiLoginID, cp_transactionKey, merchantMD5Key));
+					apiLoginID, transactionKey, cp_apiLoginID, cp_transactionKey, merchantMD5Key);
 			merchant = Merchant.createMerchant( Environment.SANDBOX, apiLoginID, transactionKey);
 		}
 		if ( !internetAccessible()) {
