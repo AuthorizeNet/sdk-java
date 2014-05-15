@@ -10,6 +10,7 @@
 	<property name="src.tests" value="${basedir}/src/test/java" />
 	<property name="resources.dir" value="${basedir}/resources" />
 	<property name="reports.tests" value="${src.tests}/reports" />
+	<property name="javac.version" value="1.5" />
 	<!--
 	<property file="${resources.dir}/build.properties"/>
 	-->
@@ -44,14 +45,14 @@
 
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="true" optimize="true" includes="**/*.java" classpathref="classpath" includeantruntime="false">
+		<javac srcdir="${src.dir}"   destdir="${classes.dir}" debug="true" optimize="true"  includes="**/*.java" classpathref="classpath" includeantruntime="false" source="${javac.version}" target="${javac.version}">
 			<compilerarg value="-Xlint" />
 		</javac> 
 	</target>
 
 	<target name="compile-test" depends="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" includeantruntime="false">
+		<javac srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" includeantruntime="false" source="${javac.version}" target="${javac.version}">
 			<compilerarg value="-Xlint" />
 		</javac> 
 	</target>
