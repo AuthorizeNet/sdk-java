@@ -40,6 +40,9 @@ public class HttpClient {
 	static String ProxyHost = Environment.getProperty(Constants.HTTPS_PROXY_HOST);
 	static int ProxyPort = Environment.getIntProperty(Constants.HTTPS_PROXY_PORT);
 	
+	static {
+		logger.info(String.format("Use Proxy: '%s'", UseProxy));
+	}
 	/**
 	 * Creates the http post object for an environment and transaction container.
 	 *

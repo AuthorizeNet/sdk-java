@@ -8,6 +8,9 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.authorize.Environment;
 import net.authorize.Merchant;
 import net.authorize.data.creditcard.AVSCode;
@@ -111,7 +114,9 @@ public abstract class UnitTestData {
 	protected final String reportingTransId = "2156009012";
 
 	private static boolean internetAccessible = false;
-
+	
+	private static Log logger = LogFactory.getLog(UnitTestData.class);
+	
 	static URL url = null;
 	static String[] propertiesList = {
 		Constants.HTTP_USE_PROXY,
@@ -154,6 +159,9 @@ public abstract class UnitTestData {
 		}
 		else
 		{
+			logger.info(String.format(
+					"PropertyValues: ApiLoginId:'%s', TransactionKey:'%s', CPApiLoginId:'%s', CPTransactionKey:'%s', MD5Key:'%s' ", 
+					apiLoginID, transactionKey, cp_apiLoginID, cp_transactionKey, merchantMD5Key));
 			merchant = Merchant.createMerchant( Environment.SANDBOX, apiLoginID, transactionKey);
 		}
 		if ( !internetAccessible()) {
