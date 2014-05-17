@@ -323,15 +323,15 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			billTo.setState(getElementText(bill_to_el, AuthNetField.ELEMENT_STATE.getFieldName()));
 			billTo.setZipPostalCode(getElementText(bill_to_el, AuthNetField.ELEMENT_ZIP.getFieldName()));
 			billTo.setCountry(getElementText(bill_to_el, AuthNetField.ELEMENT_COUNTRY.getFieldName()));
-			billTo.setPhoneNumber(getElementText(bill_to_el, AuthNetField.ELEMENT_PHONE_NUMBER.getFieldName()));;
-			paymentProfile.setBillTo(billTo);
+			billTo.setPhoneNumber(getElementText(bill_to_el, AuthNetField.ELEMENT_PHONE_NUMBER.getFieldName()));
+            paymentProfile.setBillTo(billTo);
 		}
 	}
 
 	/**
 	 * Import the payment information.
 	 *
-	 * @param payment_profile_el
+	 * @param root_el
 	 * @param paymentProfile
 	 */
 	private void importPaymentInfo(Element root_el, PaymentProfile paymentProfile) {
@@ -500,7 +500,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			System.out.println("Result customerProfile Id: " + getCustomerProfileId());
 		}
 		for(int i = 0; i < messages.size(); i++){
-			Message message = (Message)messages.get(i);
+			Message message = messages.get(i);
 			System.out.println(message.getCode() + " - " + message.getText());
 		}
 	}

@@ -68,9 +68,9 @@ public class Result<T> extends net.authorize.Result<T> {
 	 *
 	 * @param txn transaction containing the response messages.
 	 */
-	protected void importResponseMessages(Transaction txn) {};
+	protected void importResponseMessages(Transaction txn) {}
 
-	public void printMessages() { }
+    public void printMessages() { }
 
 	/**
 	 * Returns true if the response is Ok.

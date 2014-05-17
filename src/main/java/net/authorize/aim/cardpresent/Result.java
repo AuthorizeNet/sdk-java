@@ -14,6 +14,7 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.xml.reporting.CardCodeResponseType;
 import net.authorize.util.BasicXmlDocument;
+import net.authorize.util.LogHelper;
 import net.authorize.util.XmlUtility;
 
 import org.apache.commons.logging.Log;
@@ -314,7 +315,7 @@ public class Result<T> extends net.authorize.Result<T> {
 				txn.getCurrentResponse().getDocumentElement(),
 				AuthNetField.ELEMENT__TEST_MODE.getFieldName());
 
-		this.testMode = "1".equals(_testMode)?true:false;
+		this.testMode = "1".equals(_testMode);
 	}
 
 	/**
@@ -370,21 +371,10 @@ public class Result<T> extends net.authorize.Result<T> {
 	    String amount = ((Transaction)this.target).getRequestMap().get(AuthNetField.X_AMOUNT.getFieldName());
         String MD5Value = ((Transaction)this.target).getMD5Value();
         String apiLoginId = ((Transaction)this.target).getRequestMap().get(AuthNetField.X_LOGIN.getFieldName());
-        String md5Check = null;
-
-	    try {
-		    MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-		    String s = MD5Value + apiLoginId + getTransId() + amount;
-		    digest.update(s.getBytes());
-		    md5Check = new BigInteger(1,digest.digest()).toString(16).toUpperCase();
-		    while(md5Check.length() < 32) {
-		    	md5Check = "0" + md5Check;
-		    }
-	    } catch (NoSuchAlgorithmException nsae) {
-	    	//
-	    }
-
-	    return md5Check != null && md5Check.equalsIgnoreCase(getTransHash());
+        String transId = getTransId();
+        String transHash = getTransHash();
+       
+        return net.authorize.Result.isAuthorizeNetResponse(MD5Value, apiLoginId, amount, transId, transHash);
 	}
 	
 	public PrepaidCard getPrepaidCard() {
@@ -431,7 +421,7 @@ public class Result<T> extends net.authorize.Result<T> {
 			this.setPrepaidCard(prepaidCard);
 			//log if there are additional elements found
 			if ( cardCount > 1) {
-				logger.warn(String.format("Found more than one element named: '%s' in result: '%s'", prepaidElementName, prepaidCard_list.toString()));
+				LogHelper.warn( logger, "Found more than one element named: '%s' in result: '%s'", prepaidElementName, prepaidCard_list.toString());
 			}
 		}
 	}
@@ -444,7 +434,7 @@ public class Result<T> extends net.authorize.Result<T> {
 				prepaidCard = XmlUtility.create(prepaidCardElement.toString(), PrepaidCard.class);
 			}
 			catch (Exception e) {
-				logger.warn(String.format("Error de-serializing XML to PrepaidCard: '%s', ErrorMessage: '%s'", prepaidCardElement.toString(), e.getMessage()));
+				LogHelper.warn( logger, "Error de-serializing XML to PrepaidCard: '%s', ErrorMessage: '%s'", prepaidCardElement.toString(), e.getMessage());
 			}
 		}
 		return prepaidCard;

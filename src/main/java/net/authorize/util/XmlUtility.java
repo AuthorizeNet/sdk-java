@@ -63,11 +63,10 @@ public final class XmlUtility {
 	 * @param classType Class Type of the object to be de-serialized into
 	 * @param <T> class that implements Serializable
 	 * @return T De-serialized object
-	 * @throws IOException if errors during de-serialization
 	 * @throws JAXBException if errors during de-serialization
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T create(String xml, Class<T> classType) throws IOException, JAXBException
+	public static <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException
 	{
 		T entity = null;
 		//make sure we have not null and not-empty string to de-serialize
@@ -79,7 +78,7 @@ public final class XmlUtility {
 	        if ( null != unmarshaled)
 	        {
 	        	try {
-	        		entity = (T) classType.cast(unmarshaled);
+	        		entity = classType.cast(unmarshaled);
 	        	} catch (ClassCastException cce) {
 	        		if (unmarshaled instanceof JAXBElement) {
 	        			@SuppressWarnings("rawtypes")
@@ -110,14 +109,14 @@ public final class XmlUtility {
 				String xmlString = XmlUtility.getXml(value);
 				int begin = xmlString.indexOf(XmlString.VALUE_BEGIN) + XmlString.VALUE_BEGIN.length();
 				int end = xmlString.indexOf(XmlString.VALUE_END);
-				if ( null != xmlString && begin >= 0 && end >= 0)
+				if (begin >= 0 && end >= 0)
 				{
 					retVal = xmlString.substring(begin, end);
 				}
 			}
 			catch ( Exception e)
 			{
-				logger.warn(String.format("Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage()));
+				LogHelper.warn(logger, "Error encoding to XML, value: '%s', ErrorMessage: '%s'", valueToSerialize, e.getMessage());
 				retVal = valueToSerialize;
 			}
 		}
@@ -147,7 +146,7 @@ public final class XmlUtility {
 			}
 			catch ( Exception e)
 			{
-				logger.warn(String.format("Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage()));
+				LogHelper.warn(logger, "Error decoding from XML, value: '%s', ErrorMessage: '%s'", valueToDeserialize, e.getMessage());
 				retVal = valueToDeserialize;
 			}
 		}
@@ -160,12 +159,12 @@ public final class XmlUtility {
 	 * @return String  String XML representation of root element xml without prologue
 	 */
 	public static  <T extends Serializable> String getRootElementXml(T entity) {
-		String rootElementXml = null;
+		String rootElementXml;
 		try {
 			String xml = getXml(entity);
 			rootElementXml = getRootElementXml(xml);
 		} catch (Exception e) {
-			logger.warn(String.format("Unable to serialize into xml: '%s'", entity));
+			LogHelper.warn(logger, "Unable to serialize into xml: '%s'", entity);
 			rootElementXml = String.format( "<%s/>", entity.getClass().getSimpleName());
 		}
 		

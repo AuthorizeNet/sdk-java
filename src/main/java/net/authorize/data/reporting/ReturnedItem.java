@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.authorize.data.xml.reporting.ReportingDetails;
+import net.authorize.util.LogHelper;
 import net.authorize.util.StringUtils;
 
 import org.apache.commons.logging.Log;
@@ -60,7 +61,7 @@ public class ReturnedItem implements Serializable{
 		returnedItem.setCode( code);
 		returnedItem.setDescription( description);
 
-		logger.debug(String.format("Created: ", returnedItem));
+		LogHelper.debug(logger, "Created: '%s'", returnedItem);
 		
 		return returnedItem;
 	}

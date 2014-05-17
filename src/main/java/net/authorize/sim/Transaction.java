@@ -15,6 +15,7 @@ import net.authorize.sim.button.ImageButton;
 import net.authorize.sim.button.TextButton;
 import net.authorize.sim.data.HostedPaymentFormSettings;
 import net.authorize.sim.data.HostedReceiptPageSettings;
+import net.authorize.util.LogHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -336,7 +337,7 @@ public class Transaction extends net.authorize.aim.Transaction {
 					.append("'>\n").append(addBreak?"<BR/>":EMPTY_STRING);
 				}
 			} catch (Exception e) {
-				logger.warn("NVP encoding failed: " + e.getMessage());
+				LogHelper.warn(logger, "NVP encoding failed: " + e.getMessage());
 			}
 		}
 

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +40,9 @@ public class HttpClient {
 	static String ProxyHost = Environment.getProperty(Constants.HTTPS_PROXY_HOST);
 	static int ProxyPort = Environment.getIntProperty(Constants.HTTPS_PROXY_PORT);
 	
+	static {
+		LogHelper.info(logger, "Use Proxy: '%s'", UseProxy);
+	}
 	/**
 	 * Creates the http post object for an environment and transaction container.
 	 *
@@ -49,7 +53,7 @@ public class HttpClient {
 	 * @throws Exception
 	 */
 	private static HttpPost createHttpPost(Environment env, Transaction transaction) throws Exception {
-		URI postUrl = null;
+		URI postUrl;
 		HttpPost httpPost = null;
 
 		if(transaction instanceof net.authorize.aim.Transaction ||
@@ -126,12 +130,12 @@ public class HttpClient {
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
-				String rawResponseString = "";
+				String rawResponseString;
 				if(httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = httpResponse.getEntity();
 
 					// get the raw data being received
-					InputStream instream = (InputStream)entity.getContent();
+					InputStream instream = entity.getContent();
 					rawResponseString = convertStreamToString(instream);
 				}
 				// handle HTTP errors
@@ -150,7 +154,7 @@ public class HttpClient {
 				
 				responseMap = HttpClient.createResponseMap(transaction, cleanResponseString);
 			} catch (Exception e) {
-				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
+				LogHelper.warn(logger, "Exception getting response: '%s': '%s', '%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
 			}
 		}
 
@@ -167,20 +171,29 @@ public class HttpClient {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	    StringBuilder sb = new StringBuilder();
 
-	    String line = null;
+	    String line;
 	    try {
 	        while ((line = reader.readLine()) != null) {
-	            sb.append(line + "\n");
+	            sb.append(line).append("\n");
 	        }
 	    } catch (IOException e) {
-			logger.warn(String.format("Exception reading data from Stream: '%s'", e.getMessage()));
+	    	LogHelper.warn(logger, "Exception reading data from Stream: '%s'", e.getMessage());
 	    } finally {
+	    	if ( null != reader){
+	    		try {
+	    			reader.close();
+		        } catch (IOException e) {
+		        	LogHelper.warn(logger, "Exception closing BufferedReader: '%s'", e.getMessage());
+		        }
+	    	}
 
-	    	try {
-	            is.close();
-	        } catch (IOException e) {
-				logger.warn(String.format("Exception closing InputStream: '%s'", e.getMessage()));
-	        }
+	    	if ( null != is) {
+		    	try {
+		            is.close();
+		        } catch (IOException e) {
+		        	LogHelper.warn(logger, "Exception closing InputStream: '%s'", e.getMessage());
+		        }
+	    	}
 	    }
 	    return sb.toString();
 	}
@@ -207,12 +220,12 @@ public class HttpClient {
 
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
-				String rawResponseString = "";
+				String rawResponseString;
 				if(httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = httpResponse.getEntity();
 
 					// get the raw data being received
-					InputStream instream = (InputStream)entity.getContent();
+					InputStream instream = entity.getContent();
 					rawResponseString = convertStreamToString(instream);
 				}
 				else {
@@ -259,7 +272,7 @@ public class HttpClient {
 					return null;
 				}
 			} catch (Exception e) {
-				logger.warn(String.format("Exception getting response: '%s': '%s'\n'%s'", e.getMessage(), e.getCause(), e.getStackTrace().toString()));
+				LogHelper.warn(logger, "Exception getting response: '%s': '%s', '%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
 			}
 		}
 
@@ -274,7 +287,7 @@ public class HttpClient {
 		if ( UseProxy)
 		{
 			if ( !proxySet) {
-				logger.info(String.format("Setting up proxy to URL: '%s://%s:%d'\n", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort));
+				LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
 				proxySet = true;
 			}
 			HttpHost proxyHttpHost = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);

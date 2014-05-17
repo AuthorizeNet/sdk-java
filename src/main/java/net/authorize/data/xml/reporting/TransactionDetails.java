@@ -18,6 +18,7 @@ import net.authorize.data.reporting.Solution;
 import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Customer;
 import net.authorize.data.xml.Payment;
+import net.authorize.util.LogHelper;
 import net.authorize.util.StringUtils;
 
 /**
@@ -673,7 +674,7 @@ public class TransactionDetails {
 				boolean hasItems = Boolean.parseBoolean( hasReturnedItems.trim());
 				this.setHasReturnedItems(hasItems);
 			} catch (Exception e) { //safety-net, ideally no exception is thrown
-				logger.warn(String.format("Error parsing to boolean value: '%s'", hasReturnedItems));
+				LogHelper.warn( logger, "Error parsing to boolean value: '%s'", hasReturnedItems);
 			}
 		}
 	}
