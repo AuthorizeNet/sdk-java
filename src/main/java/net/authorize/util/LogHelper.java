@@ -1,7 +1,5 @@
 package net.authorize.util;
 
-import java.util.ArrayList;
-
 import org.apache.commons.logging.Log;
 
 public final class LogHelper {
