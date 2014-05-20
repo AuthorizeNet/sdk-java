@@ -1,8 +1,5 @@
 package net.authorize.aim.cardpresent;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import net.authorize.AuthNetField;

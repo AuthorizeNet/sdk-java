@@ -59,13 +59,13 @@ public class Fingerprint {
 				fingerprint.timeStamp + "^" + amount + "^";
 			byte[] result = mac.doFinal(inputstring.getBytes());
 			// Convert the result from byte[] to hexadecimal format
-			StringBuffer strbuf = new StringBuffer(result.length * 2);
-			for (int i = 0; i < result.length; i++) {
-				if (((int) result[i] & 0xff) < 0x10) {
-					strbuf.append("0");
-				}
-				strbuf.append(Long.toString((int) result[i] & 0xff, 16));
-			}
+			StringBuilder strbuf = new StringBuilder(result.length * 2);
+            for (byte aResult : result) {
+                if (((int) aResult & 0xff) < 0x10) {
+                    strbuf.append("0");
+                }
+                strbuf.append(Long.toString((int) aResult & 0xff, 16));
+            }
 			fingerprint.fingerprintHash = strbuf.toString();
 		} catch (NoSuchAlgorithmException nsae) {
 			LogHelper.error(logger, "Fingerprint creation failed.", nsae);

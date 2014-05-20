@@ -82,9 +82,9 @@ public class TransactionTest extends UnitTestData {
 		Assert.assertNotNull(form);
 		Assert.assertTrue(form.indexOf("FORM") > 0);
 		Assert.assertTrue(form.indexOf("INPUT") > 0);
-		Assert.assertTrue(form.indexOf("x_card_num") == -1);
-		Assert.assertTrue(form.indexOf("x_exp_date") == -1);
-		Assert.assertTrue(form.indexOf("x_zip") == -1);
+		Assert.assertTrue(!form.contains("x_card_num"));
+		Assert.assertTrue(!form.contains("x_exp_date"));
+		Assert.assertTrue(!form.contains("x_zip"));
 	}
 
 	@Test

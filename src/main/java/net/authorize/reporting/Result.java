@@ -511,9 +511,8 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 	 */
 	public void printMessages() {
 		System.out.println("Result Code: " + (resultCode != null ? resultCode : "No result code"));
-		for(int i = 0; i < messages.size(); i++){
-			Message message = messages.get(i);
-			System.out.println(message.getCode() + " - " + message.getText());
-		}
+        for (Message message : messages) {
+            System.out.println(message.getCode() + " - " + message.getText());
+        }
 	}
 }

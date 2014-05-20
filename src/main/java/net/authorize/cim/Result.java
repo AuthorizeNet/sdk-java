@@ -499,9 +499,8 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		if(getCustomerProfileId() != null){
 			System.out.println("Result customerProfile Id: " + getCustomerProfileId());
 		}
-		for(int i = 0; i < messages.size(); i++){
-			Message message = messages.get(i);
-			System.out.println(message.getCode() + " - " + message.getText());
-		}
+        for (Message message : messages) {
+            System.out.println(message.getCode() + " - " + message.getText());
+        }
 	}
 }

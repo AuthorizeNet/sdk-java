@@ -177,8 +177,7 @@ public final class XmlUtility {
 	 * @return String  root element xml without prologue
 	 */
 	public static String getRootElementXml(String xmlString) {
-		String rootElementXml = xmlString.replace(XmlHeader, "");
-		return rootElementXml;
+        return xmlString.replace(XmlHeader, "");
 	}
 	
 	@XmlRootElement
