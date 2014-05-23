@@ -4,9 +4,9 @@ import net.authorize.apicore.contract.v1.CreateCustomerProfileRequest;
 import net.authorize.apicore.contract.v1.CreateCustomerProfileResponse;
 import net.authorize.apicore.contract.v1.ValidationModeEnum;
 
-public class CreateCustomerProfile extends ApiOperation<CreateCustomerProfileRequest, CreateCustomerProfileResponse> {
+public class CreateCustomerProfileController extends ApiOperationBase<CreateCustomerProfileRequest, CreateCustomerProfileResponse> {
 
-	public CreateCustomerProfile(CreateCustomerProfileRequest apiRequest) {
+	public CreateCustomerProfileController(CreateCustomerProfileRequest apiRequest) {
 		super(apiRequest);
 	}
 

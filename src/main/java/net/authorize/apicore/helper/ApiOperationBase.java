@@ -21,9 +21,9 @@ import org.apache.commons.logging.LogFactory;
  * @author ramittal
  *
  */
-public abstract class ApiOperation<Q extends ANetApiRequest, S extends ANetApiResponse> implements IApiOperation<Q, S> {
+public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetApiResponse> implements IApiOperation<Q, S> {
 
-	protected static Log logger = LogFactory.getLog(ApiOperation.class);
+	protected static Log logger = LogFactory.getLog(ApiOperationBase.class);
 	
 	private Q apiRequest = null;
 	private S apiResponse = null;
@@ -37,7 +37,7 @@ public abstract class ApiOperation<Q extends ANetApiRequest, S extends ANetApiRe
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	protected ApiOperation(Q apiRequest) {
+	protected ApiOperationBase(Q apiRequest) {
 		if ( null == apiRequest)
 		{
 			logger.error(apiRequest);
@@ -101,8 +101,10 @@ public abstract class ApiOperation<Q extends ANetApiRequest, S extends ANetApiRe
 				S response = (S) apiResponse;
 				this.setApiResponse( response);
 				logger.info(String.format("Setting response: '%s'", response));				
-			}
-			else {
+			} else if (apiResponse.getClass() == ErrorResponse.class) {
+				this.setErrorResponse(apiResponse);
+				logger.info(String.format("Received ErrorResponse:'%s'", apiResponse));
+			} else {
 				this.setErrorResponse(apiResponse);
 				logger.error(String.format("Invalid response:'%s'", apiResponse));
 			}

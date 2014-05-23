@@ -10,8 +10,8 @@ import net.authorize.apicore.contract.v1.DeleteCustomerProfileRequest;
 import net.authorize.apicore.contract.v1.DeleteCustomerProfileResponse;
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.ValidationModeEnum;
-import net.authorize.apicore.helper.CreateCustomerProfile;
-import net.authorize.apicore.helper.DeleteCustomerProfile;
+import net.authorize.apicore.helper.CreateCustomerProfileController;
+import net.authorize.apicore.helper.DeleteCustomerProfileController;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,14 +46,14 @@ public class CustomerProfileTest extends ApiCoreTestBase {
 		
 		//create a new customer profile
 		CreateCustomerProfileRequest createRequest = new CreateCustomerProfileRequest();
-		createRequest.setMerchantAuthentication(merchantAuthenticationType);
+		createRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
 		createRequest.setProfile(customerProfileType);
 		createRequest.setRefId(refId);
 		createRequest.setValidationMode(ValidationModeEnum.TEST_MODE);
 		List<CustomerPaymentProfileType> paymentProfiles = createRequest.getProfile().getPaymentProfiles();
 		paymentProfiles.add( customerPaymentProfileOne);
 		
-		CreateCustomerProfile createProfile = new CreateCustomerProfile(createRequest);
+		CreateCustomerProfileController createProfile = new CreateCustomerProfileController(createRequest);
 		CreateCustomerProfileResponse createResponse = createProfile.executeWithApiResponse(environment);
 		logger.info(String.format("Create ResultCode: %s", createProfile.getResultCode()));
 		logger.info(String.format("Create Results:    %s", createProfile.getResults()));
@@ -65,11 +65,11 @@ public class CustomerProfileTest extends ApiCoreTestBase {
 		
 		//delete the customer profile create earlier
 		DeleteCustomerProfileRequest deleteRequest = new DeleteCustomerProfileRequest();
-		deleteRequest.setMerchantAuthentication(merchantAuthenticationType);
+		deleteRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
 		deleteRequest.setRefId(refId);
 		deleteRequest.setCustomerProfileId( createResponse.getCustomerProfileId());
 		
-		DeleteCustomerProfile deleteProfile = new DeleteCustomerProfile(deleteRequest);
+		DeleteCustomerProfileController deleteProfile = new DeleteCustomerProfileController(deleteRequest);
 		deleteProfile.execute(environment);  
 		DeleteCustomerProfileResponse deleteResponse = deleteProfile.getApiResponse();
 		logger.info(String.format("Delete ResultCode: %s", deleteProfile.getResultCode()));

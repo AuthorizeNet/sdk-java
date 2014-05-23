@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Random;
 
 import net.authorize.Environment;
+import net.authorize.Merchant;
 import net.authorize.UnitTestData;
 import net.authorize.apicore.contract.v1.BankAccountType;
 import net.authorize.apicore.contract.v1.BankAccountTypeEnum;
@@ -39,9 +40,12 @@ public abstract class ApiCoreTestBase {
 
 	protected static Log logger = LogFactory.getLog(ApiCoreTestBase.class);
 	
-	static Environment environment = Environment.SANDBOX;
+	static Environment environment = Environment.HOSTED_VM;
+	static Merchant cnpMerchant = null;
+	static Merchant cpMerchant = null;
 	
-	MerchantAuthenticationType merchantAuthenticationType = null;
+	MerchantAuthenticationType cnpMerchantAuthenticationType = null;
+	MerchantAuthenticationType cpMerchantAuthenticationType = null;
 	CustomerProfileType customerProfileType = null;
 	CustomerPaymentProfileType customerPaymentProfileOne = null;
 	CustomerAddressType customerAddressOne = null;
@@ -83,6 +87,14 @@ public abstract class ApiCoreTestBase {
 		{
 			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
 		}
+		
+		//hosted vm
+		CnpApiLoginIdKey = "7zc5c7YBTE";
+		CnpTransactionKey = "3SDAqcgNh28294wk";
+		
+		cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
+		cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
+		
 	}
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -101,9 +113,14 @@ public abstract class ApiCoreTestBase {
 		now = Calendar.getInstance().getTime();
 		nowString = DateUtil.getFormattedDate(now, ReportingDetails.DATE_FORMAT);
 				
-		merchantAuthenticationType = new MerchantAuthenticationType() ;
-		merchantAuthenticationType.setName(CnpApiLoginIdKey);
-		merchantAuthenticationType.setTransactionKey(CnpTransactionKey);
+		cnpMerchantAuthenticationType = new MerchantAuthenticationType() ;
+		cnpMerchantAuthenticationType.setName(CnpApiLoginIdKey);
+		cnpMerchantAuthenticationType.setTransactionKey(CnpTransactionKey);
+
+		cpMerchantAuthenticationType = new MerchantAuthenticationType() ;
+		cpMerchantAuthenticationType.setName(CpApiLoginIdKey);
+		cpMerchantAuthenticationType.setTransactionKey(CpTransactionKey);
+		
 //		merchantAuthenticationType.setSessionToken(getRandomString("SessionToken"));
 //		merchantAuthenticationType.setPassword(getRandomString("Password"));
 //	    merchantAuthenticationType.setMobileDeviceId(getRandomString("MobileDevice"));

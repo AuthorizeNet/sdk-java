@@ -1,10 +1,14 @@
 package net.authorize.util;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Random;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import net.authorize.apicore.contract.v1.MessageTypeEnum;
+import net.authorize.apicore.contract.v1.MessagesType;
+import net.authorize.apicore.helper.ErrorResponse;
 import net.authorize.data.reporting.Subscription;
 
 import org.junit.Assert;
@@ -55,6 +59,40 @@ public class XmlUtilityTest {
 		testStringXmlUtilityNegative( " ", false);
 	}
 
+	@Test
+	public void testErrorResponse() {
+		final String xmlFromApiCall = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?><ErrorResponse xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"><messages><resultCode>Error</resultCode><message><code>E00003</code><text>The element 'ARBGetSubscriptionReportRequest' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd' has invalid child element 'OrderDescending' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'. List of possible elements expected: 'ExpDateHash, StartReportDate' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'.</text></message></messages></ErrorResponse>";
+
+		MessagesType.Message message = new MessagesType.Message();
+		message.setCode("E00003");
+		message.setText("The element 'ARBGetSubscriptionReportRequest' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd' has invalid child element 'OrderDescending' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'. List of possible elements expected: 'ExpDateHash, StartReportDate' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'.");
+		MessagesType messagesType = new MessagesType();
+		messagesType.setResultCode(MessageTypeEnum.ERROR);
+		List<MessagesType.Message> messages = messagesType.getMessage();
+		messages.add(message);
+
+		ErrorResponse testResponse = new ErrorResponse();
+		testResponse.setMessages(messagesType);
+
+		
+		try {
+			String xmlFromTestResponse = XmlUtility.getXml(testResponse);
+			Assert.assertNotNull( xmlFromTestResponse);
+			ErrorResponse responseFromTestXmlResponse = XmlUtility.create(xmlFromTestResponse, ErrorResponse.class);
+			Assert.assertNotNull( responseFromTestXmlResponse);
+			
+			ErrorResponse responseFromApiCallXml = XmlUtility.create(xmlFromApiCall, ErrorResponse.class);
+			Assert.assertNotNull( responseFromApiCallXml);
+			
+			String xmlFromResponseOfApiCallXml = XmlUtility.getXml(responseFromApiCallXml);
+			Assert.assertNotNull( xmlFromResponseOfApiCallXml);
+
+			Assert.assertEquals(xmlFromApiCall, xmlFromResponseOfApiCallXml);
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+	
 	private void testStringXmlUtilityNegative(String someValue, boolean nullCheck) {
 		String xmlBase = XmlUtility.escapeStringForXml( someValue);
 		String decoded = XmlUtility.descapeStringForXml(someValue);

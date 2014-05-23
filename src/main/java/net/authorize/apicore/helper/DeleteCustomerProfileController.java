@@ -7,9 +7,9 @@ import net.authorize.apicore.contract.v1.DeleteCustomerProfileResponse;
  * @author ramittal
  *
  */
-public class DeleteCustomerProfile extends ApiOperation<DeleteCustomerProfileRequest, DeleteCustomerProfileResponse> {
+public class DeleteCustomerProfileController extends ApiOperationBase<DeleteCustomerProfileRequest, DeleteCustomerProfileResponse> {
 
-	public DeleteCustomerProfile(DeleteCustomerProfileRequest apiRequest) {
+	public DeleteCustomerProfileController(DeleteCustomerProfileRequest apiRequest) {
 		super(apiRequest);
 	}
 

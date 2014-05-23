@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
 
 import net.authorize.Environment;
 import net.authorize.apicore.contract.v1.ANetApiRequest;
@@ -13,6 +14,7 @@ import net.authorize.apicore.contract.v1.ANetApiResponse;
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.MessagesType;
 import net.authorize.apicore.contract.v1.MessagesType.Message;
+import net.authorize.apicore.helper.ErrorResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -88,18 +90,29 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 				
 				try {
 					localResponse = XmlUtility.create(buffer.toString(), this.classType);
+				} catch(UnmarshalException ume) {
+					try {
+						//try deserializing to error message
+						localResponse = XmlUtility.create(buffer.toString(), ErrorResponse.class);
+					} catch(JAXBException jabex) {
+						response = createErrorResponse(httpResponse, jabex);
+					}
 				} catch(JAXBException jabex) {
 					response = createErrorResponse(httpResponse, jabex);
 				}
 				//check if error
 				if ( null == localResponse) {
-					response = XmlUtility.create(buffer.toString(), ANetApiResponse.class);
+					try {
+						response = XmlUtility.create(buffer.toString(), ANetApiResponse.class);
+					} catch(JAXBException jabex) {
+						response = createErrorResponse(httpResponse, jabex);
+					}
 				} else {
 					if (localResponse instanceof ANetApiResponse)
 					{
 						response = (ANetApiResponse) localResponse;
 					} else {
-						
+						LogHelper.warn( logger, "Unknown ResponseType: '%s'", localResponse);
 					}
 				}
 			}
@@ -140,7 +153,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 			String text = "Unknown Error";
 			if (null != httpResponse.getStatusLine())
 			{
-				logger.warn(String.format("Error deserializing response to '%s'", this.classType));
+				LogHelper.warn( logger, "Error deserializing response to '%s'", this.classType);
 
 				code = String.format("%d", httpResponse.getStatusLine().getStatusCode());
 				if (null != httpResponse.getStatusLine().getReasonPhrase()) { text = httpResponse.getStatusLine().getReasonPhrase();}
@@ -154,7 +167,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 			messages.add(errorMessage);
 			String code = "Error";
 			String text = "Unknown Error";
-			logger.error(String.format("Http request execute failed: '%s'", exception.getMessage()));
+			LogHelper.error( logger, "Http request execute failed: '%s'", exception.getMessage());
 			code = exception.getClass().getTypeName();
 			text = exception.getMessage();
 			
@@ -165,5 +178,6 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 	private void setErrorMessageValues(String code, String text) {
 		errorMessage.setCode(code);
 		errorMessage.setText(text);
+		LogHelper.warn(logger, "Adding ErrorMessage: Code: '%s', Text: '%s'", code, text);
 	}
 }	
