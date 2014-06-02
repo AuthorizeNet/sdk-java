@@ -56,6 +56,8 @@ public final class HttpUtility {
 
 		if(null != request) {
 			  postUrl = new URI(env.getXmlBaseUrl() + "/xml/v1/request.api");
+			  logger.info(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
+			  logger.info(String.format("Posting request to Url: '%s'", postUrl));
 			  httpPost = new HttpPost(postUrl);
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  

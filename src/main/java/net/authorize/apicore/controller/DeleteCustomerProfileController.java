@@ -1,7 +1,8 @@
-package net.authorize.apicore.helper;
+package net.authorize.apicore.controller;
 
 import net.authorize.apicore.contract.v1.DeleteCustomerProfileRequest;
 import net.authorize.apicore.contract.v1.DeleteCustomerProfileResponse;
+import net.authorize.apicore.controller.base.ApiOperationBase;
 
 /**
  * @author ramittal

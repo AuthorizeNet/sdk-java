@@ -1,7 +1,8 @@
-package net.authorize.apicore.helper;
+package net.authorize.apicore.controller;
 
 import net.authorize.apicore.contract.v1.ARBGetSubscriptionReportRequest;
 import net.authorize.apicore.contract.v1.ARBGetSubscriptionReportResponse;
+import net.authorize.apicore.controller.base.ApiOperationBase;
 
 public class ARBGetSubscriptionReportController extends ApiOperationBase<ARBGetSubscriptionReportRequest, ARBGetSubscriptionReportResponse> {
 

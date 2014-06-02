@@ -1,4 +1,4 @@
-package net.authorize.apicore.helper;
+package net.authorize.apicore.controller.base;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -53,8 +53,8 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		this.responseClass = this.getResponseType();
 		this.setApiRequest(apiRequest);
 		
-		logger.info(String.format("Creating instance for request:'%s' and response:'%s'\n", requestClass, responseClass));
-		logger.info(String.format("Request:'%s'\n", apiRequest));
+		logger.info(String.format("Creating instance for request:'%s' and response:'%s'", requestClass, responseClass));
+		logger.info(String.format("Request:'%s'", apiRequest));
 		validate();
 	}
 	
@@ -88,13 +88,13 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 	}
 
 	public void execute(Environment environment) {
-		logger.info(String.format("Got Request:'%s'\n", this.getApiRequest()));
+		logger.info(String.format("Executing Request:'%s'", this.getApiRequest()));
 		beforeExecute();
 
 		ANetApiResponse apiResponse = HttpUtility.postData(environment, this.getApiRequest(), this.responseClass);
 		if ( null != apiResponse)
 		{
-			logger.info(String.format("Got Response:'%s' for request:'%s'\n", apiResponse, this.getApiRequest()));
+			logger.info(String.format("Received Response:'%s' for request:'%s'", apiResponse, this.getApiRequest()));
 			if ( apiResponse.getClass() == responseClass)
 			{
 				@SuppressWarnings("unchecked")

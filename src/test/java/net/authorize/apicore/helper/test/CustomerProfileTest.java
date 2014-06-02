@@ -10,8 +10,8 @@ import net.authorize.apicore.contract.v1.DeleteCustomerProfileRequest;
 import net.authorize.apicore.contract.v1.DeleteCustomerProfileResponse;
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.ValidationModeEnum;
-import net.authorize.apicore.helper.CreateCustomerProfileController;
-import net.authorize.apicore.helper.DeleteCustomerProfileController;
+import net.authorize.apicore.controller.CreateCustomerProfileController;
+import net.authorize.apicore.controller.DeleteCustomerProfileController;
 
 import org.junit.After;
 import org.junit.AfterClass;

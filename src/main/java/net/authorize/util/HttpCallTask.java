@@ -14,7 +14,7 @@ import net.authorize.apicore.contract.v1.ANetApiResponse;
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.MessagesType;
 import net.authorize.apicore.contract.v1.MessagesType.Message;
-import net.authorize.apicore.helper.ErrorResponse;
+import net.authorize.apicore.controller.base.ErrorResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,6 +82,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 					}
 				}
 			}
+			LogHelper.info(logger, "Raw Response: '%s'", buffer.toString());
 			// handle HTTP errors
 			if (0 == buffer.length()) {
 				response = createErrorResponse(httpResponse, null);

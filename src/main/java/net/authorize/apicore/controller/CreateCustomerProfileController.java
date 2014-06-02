@@ -1,8 +1,9 @@
-package net.authorize.apicore.helper;
+package net.authorize.apicore.controller;
 
 import net.authorize.apicore.contract.v1.CreateCustomerProfileRequest;
 import net.authorize.apicore.contract.v1.CreateCustomerProfileResponse;
 import net.authorize.apicore.contract.v1.ValidationModeEnum;
+import net.authorize.apicore.controller.base.ApiOperationBase;
 
 public class CreateCustomerProfileController extends ApiOperationBase<CreateCustomerProfileRequest, CreateCustomerProfileResponse> {
 

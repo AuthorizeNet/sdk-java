@@ -1,4 +1,4 @@
-package net.authorize.apicore.helper;
+package net.authorize.apicore.controller.base;
 
 import java.util.List;
 
