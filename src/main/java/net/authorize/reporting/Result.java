@@ -12,6 +12,9 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheckType;
+import net.authorize.data.reporting.ReturnedItem;
+import net.authorize.data.reporting.Solution;
+import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Customer;
@@ -89,8 +92,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		NodeList batchlist_list = txn.getCurrentResponse().getDocument().getElementsByTagName(AuthNetField.ELEMENT_BATCH.getFieldName());
 
 		if(batchlist_list.getLength() == 0) {
-			return;
-		} else {
+        } else {
 			for(int i = 0; i < batchlist_list.getLength(); i++) {
 				Element batch_el = (Element)batchlist_list.item(i);
 				BatchDetails batchDetail = BatchDetails.createBatchDetail();
@@ -99,6 +101,9 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				batchDetail.setSettlementTimeUTC(getElementText(batch_el, AuthNetField.ELEMENT_SETTLEMENT_TIME_UTC.getFieldName()));
 				batchDetail.setSettlementState(SettlementStateType.fromValue(getElementText(batch_el, AuthNetField.ELEMENT_SETTLEMENT_STATE.getFieldName())));
 				batchDetail.setPaymentMethod(getElementText(batch_el, AuthNetField.ELEMENT_PAYMENT_METHOD.getFieldName()));
+				batchDetail.setMarketType(getElementText(batch_el, AuthNetField.ELEMENT_MARKET_TYPE.getFieldName()));
+				batchDetail.setProduct(getElementText(batch_el, AuthNetField.ELEMENT_PRODUCT.getFieldName()));
+				
 				// include statistics
 				NodeList statistics_list = batch_el.getElementsByTagName(AuthNetField.ELEMENT_STATISTIC.getFieldName());
 				for(int j = 0; j < statistics_list.getLength(); j++) {
@@ -151,8 +156,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		NodeList transactions_list = txn.getCurrentResponse().getDocument().getElementsByTagName(AuthNetField.ELEMENT_TRANSACTION.getFieldName());
 
 		if(transactions_list.getLength() == 0) {
-			return;
-		} else {
+        } else {
 			ArrayList<TransactionDetails> transactionDetailList = new ArrayList<TransactionDetails>();
 			for(int i = 0; i < transactions_list.getLength(); i++) {
 				Element transaction_el = (Element)transactions_list.item(i);
@@ -167,6 +171,10 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				transactionDetails.setAccountType(CardType.findByValue(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_TYPE.getFieldName())));
 				transactionDetails.setAccountNumber(getElementText(transaction_el, AuthNetField.ELEMENT_ACCOUNT_NUMBER.getFieldName()));
 				transactionDetails.setSettleAmount(getElementText(transaction_el, AuthNetField.ELEMENT_SETTLE_AMOUNT.getFieldName()));
+				//subscription
+				importSubscription(transaction_el, transactionDetails);
+				transactionDetails.setHasReturnedItems(getElementText(transaction_el, AuthNetField.ELEMENT_HAS_RETURNED_ITEMS.getFieldName()));
+
 				transactionDetailList.add(transactionDetails);
 			}
 			this.reportingDetails.setTransactionDetailList(transactionDetailList);
@@ -224,6 +232,11 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 			batchDetail.setSettlementTimeLocal(getElementText(batch_el, AuthNetField.ELEMENT_SETTLEMENT_TIME_LOCAL.getFieldName()));
 			batchDetail.setSettlementTimeUTC(getElementText(batch_el, AuthNetField.ELEMENT_SETTLEMENT_TIME_UTC.getFieldName()));
 			batchDetail.setSettlementState(SettlementStateType.fromValue(getElementText(batch_el, AuthNetField.ELEMENT_SETTLEMENT_STATE.getFieldName())));
+			//should we not add the payment method here
+			//batchDetail.setPaymentMethod(getElementText(batch_el, AuthNetField.ELEMENT_PAYMENT_METHOD.getFieldName()));
+			batchDetail.setMarketType(getElementText(batch_el, AuthNetField.ELEMENT_MARKET_TYPE.getFieldName()));
+			batchDetail.setProduct(getElementText(batch_el, AuthNetField.ELEMENT_PRODUCT.getFieldName()));
+			
 			transactionDetails.setBatch(batchDetail);
 		}
 
@@ -379,8 +392,74 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		// customer ip
 		transactionDetails.setCustomerIP(getElementText(transaction_el, AuthNetField.ELEMENT_CUSTOMER_IP.getFieldName()));
 		this.getReportingDetails().getTransactionDetailList().add(transactionDetails);
+		
+		//subscription
+		importSubscription(transaction_el, transactionDetails);
+		importReturnedItems(transaction_el, transactionDetails);
+		importSolutionId(transaction_el, transactionDetails);
 	}
 
+	/**
+	 * @param transaction_el
+	 * @param transactionDetails
+	 */
+	private void importSubscription(Element transaction_el, TransactionDetails transactionDetails) {
+
+		NodeList subscription_nl = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SUBSCRIPTION.getFieldName());
+		if ( null != subscription_nl && 1 == subscription_nl.getLength())
+		{
+			Element subscription_el = (Element) subscription_nl.item(0);
+			Subscription subscription = Subscription.createSubscription();
+			subscription.setId(getElementText( subscription_el, AuthNetField.ELEMENT_ID.getFieldName()));
+			subscription.setPayNum(getElementText( subscription_el, AuthNetField.ELEMENT_PAYMENT_NUM.getFieldName()));
+			transactionDetails.setSubscription(subscription);
+		}
+	}
+
+	/**
+	 * @param transaction_el
+	 * @param transactionDetails
+	 */
+	private void importReturnedItems(Element transaction_el, TransactionDetails transactionDetails) {
+		
+		ArrayList<ReturnedItem> returnedItems = new ArrayList<ReturnedItem>();
+		NodeList returnedItems_list = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_RETURNED_ITEMS.getFieldName());
+		for(int j = 0; j < returnedItems_list.getLength(); j++) {
+
+			Element returnedItem_el = (Element) returnedItems_list.item(j);
+			ReturnedItem returnedItem = ReturnedItem.createReturnedItem();
+			returnedItem.setId(getElementText(returnedItem_el, AuthNetField.ELEMENT_ID.getFieldName()));
+			returnedItem.setDateUTC(getElementText(returnedItem_el, AuthNetField.ELEMENT_RETURNED_ITEMS_DATE_UTC.getFieldName()));
+			returnedItem.setDateLocal(getElementText(returnedItem_el, AuthNetField.ELEMENT_RETURNED_ITEMS_DATE_LOCAL.getFieldName()));
+			returnedItem.setCode(getElementText(returnedItem_el, AuthNetField.ELEMENT_CODE.getFieldName()));
+			returnedItem.setDescription(getElementText(returnedItem_el, AuthNetField.ELEMENT_DESCRIPTION.getFieldName()));
+
+			returnedItems.add(returnedItem);
+		}
+		//set returned-items element only if returnItem is/are found
+		if (returnedItems.size() > 0)
+		{
+			transactionDetails.setReturnedItems(returnedItems);
+		}
+	}
+
+	/**
+	 * @param transaction_el
+	 * @param transactionDetails
+	 */
+	private void importSolutionId(Element transaction_el, TransactionDetails transactionDetails) {
+
+		NodeList solution_nl = transaction_el.getElementsByTagName(AuthNetField.ELEMENT_SOLUTION.getFieldName());
+		if ( null != solution_nl && 1 == solution_nl.getLength())
+		{
+			Element solution_el = (Element) solution_nl.item(0);
+			Solution solution = Solution.createSolution();
+			solution.setId(getElementText( solution_el, AuthNetField.ELEMENT_ID.getFieldName()));
+			solution.setName(getElementText( solution_el, AuthNetField.ELEMENT_NAME.getFieldName()));
+			transactionDetails.setSolution(solution);
+		}
+	}
+	
 	/**
 	 * Import the response messages into the result.
 	 */
@@ -432,9 +511,8 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 	 */
 	public void printMessages() {
 		System.out.println("Result Code: " + (resultCode != null ? resultCode : "No result code"));
-		for(int i = 0; i < messages.size(); i++){
-			Message message = (Message)messages.get(i);
-			System.out.println(message.getCode() + " - " + message.getText());
-		}
+        for (Message message : messages) {
+            System.out.println(message.getCode() + " - " + message.getText());
+        }
 	}
 }

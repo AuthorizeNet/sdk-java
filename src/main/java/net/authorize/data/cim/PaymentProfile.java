@@ -1,12 +1,17 @@
 package net.authorize.data.cim;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.CustomerType;
 import net.authorize.data.xml.Payment;
 
-public class PaymentProfile {
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class PaymentProfile implements Serializable {
+	private static final long serialVersionUID = 1L;
 
     protected CustomerType customerType;
     protected Address billTo;

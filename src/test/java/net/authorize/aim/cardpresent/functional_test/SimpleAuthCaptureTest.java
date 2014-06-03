@@ -10,10 +10,10 @@ import net.authorize.ResponseReasonCode;
 import net.authorize.TransactionType;
 import net.authorize.UnitTestData;
 import net.authorize.aim.Transaction;
+import net.authorize.aim.cardpresent.PrepaidCard;
 import net.authorize.aim.cardpresent.Result;
 import net.authorize.data.Customer;
 import net.authorize.data.Order;
-import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 
@@ -79,11 +79,15 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		Assert.assertEquals(1, result.getResponseReasonCodes().size());
 		Assert.assertEquals(ResponseReasonCode.RRC_1_1, result.getResponseReasonCodes().get(0));
 		Assert.assertEquals("This transaction has been approved.", result.getResponseReasonCodes().get(0).getReasonText());
-		Assert.assertEquals("000000", result.getAuthCode());
-		Assert.assertEquals("0", result.getTransId());
-		Assert.assertTrue(result.isTestMode());
+		Assert.assertNotSame("000000", result.getAuthCode());
+		Assert.assertNotSame("0", result.getTransId());
+		//Assert.assertTrue(result.isTestMode());
 		Assert.assertTrue(result.getTarget().getCreditCard().getCreditCardNumber().startsWith("XXXX"));
 		Assert.assertEquals(CardType.VISA, result.getTarget().getCreditCard().getCardType());
+
+		//validate prepaid card, if present
+		//AssertPrepaidCard( result.getPrepaidCard());
+		//Assert.assertNotNull( result.getSplitTenderId());
 	}
 
 	// auth
@@ -137,4 +141,11 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		SimpleAuthCaptureTest.transactionId = result.getTransId();
 	}
 
+	public static void AssertPrepaidCard( PrepaidCard prepaidCard)
+	{
+		Assert.assertNotNull(prepaidCard);
+		Assert.assertTrue( 0 < prepaidCard.getRequestedAmount());
+		Assert.assertTrue( 0 < prepaidCard.getApprovedAmount());
+		Assert.assertTrue( 0 < prepaidCard.getBalanceAmountOnCard());
+	}
 }

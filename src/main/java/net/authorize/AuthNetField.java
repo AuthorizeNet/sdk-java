@@ -85,6 +85,7 @@ public enum AuthNetField {
 	ELEMENT_FAX_NUMBER("faxNumber"),
 	ELEMENT_FIRST_NAME("firstName"),
 	ELEMENT_FIRST_SETTLEMENT_DATE("firstSettlementDate"),
+	ELEMENT_HAS_RETURNED_ITEMS("hasReturnedItems"),
 	ELEMENT_ID("id"),
 	ELEMENT_IDS("ids"),
 	ELEMENT_INCLUDE_STATISTICS("includeStatistics"),
@@ -96,6 +97,7 @@ public enum AuthNetField {
 	ELEMENT_LENGTH("length"),
 	ELEMENT_LINE_ITEM("lineItem"),
 	ELEMENT_LINE_ITEMS("lineItems"),
+	ELEMENT_MARKET_TYPE("marketType"),
 	ELEMENT_MERCHANT_AUTHENTICATION("merchantAuthentication"),
 	ELEMENT_MERCHANT_CUSTOMER_ID("merchantCustomerId"),
 	ELEMENT_MESSAGE("message"),
@@ -108,8 +110,14 @@ public enum AuthNetField {
 	ELEMENT_PAYMENT_PROFILE("paymentProfile"),
 	ELEMENT_PAYMENT_PROFILES("paymentProfiles"),
 	ELEMENT_PAYMENT_SCHEDULE("paymentSchedule"),
+	ELEMENT_PAYMENT_NUM("payNum"),
 	ELEMENT_PHONE_NUMBER("phoneNumber"),
+	ELEMENT_PREPAID_CARD("PrepaidCard"),
+	ELEMENT_PREPAID_CARD_REQUESTED_AMOUNT("RequestedAmount"),
+	ELEMENT_PREPAID_CARD_APPROVED_AMOUNT("ApprovedAmount"),
+	ELEMENT_PREPAID_CARD_BALANCE_ON_CARD("BalanceOnCard"),
 	ELEMENT_PREPAID_BALANCE_REMAINING("prepaidBalanceRemaining"),
+	ELEMENT_PRODUCT("product"),	
 	ELEMENT_PROFILE("profile"),
 	ELEMENT_PROFILE_TRANS_AUTH_ONLY("profileTransAuthOnly"),
 	ELEMENT_PURCHASE_ORDER_NUMBER("purchaseOrderNumber"),
@@ -128,8 +136,11 @@ public enum AuthNetField {
 	ELEMENT_RESPONSE_REASON_CODE("responseReasonCode"),
 	ELEMENT_RESPONSE_REASON_DESCRIPTION("responseReasonDescription"),
 	ELEMENT_RESULT_CODE("resultCode"),
+	ELEMENT_RETURNED_ITEMS("returnedItems"),
 	ELEMENT_RETURNED_ITEM_AMOUNT("returnedItemAmount"),
 	ELEMENT_RETURNED_ITEM_COUNT("returnedItemCount"),
+	ELEMENT_RETURNED_ITEMS_DATE_UTC("dateUTC"),
+	ELEMENT_RETURNED_ITEMS_DATE_LOCAL("dateLocal"),
 	ELEMENT_ROUTING_NUMBER("routingNumber"),
 	ELEMENT_SETTLE_AMOUNT("settleAmount"),
 	ELEMENT_SETTLEMENT_STATE("settlementState"),
@@ -138,6 +149,7 @@ public enum AuthNetField {
 	ELEMENT_SHIP_TO("shipTo"),
 	ELEMENT_SHIP_TO_LIST("shipToList"),
 	ELEMENT_SHIPPING("shipping"),
+	ELEMENT_SOLUTION("solution"),
 	ELEMENT_SPLIT_TENDER_ID("splitTenderId"),
 	ELEMENT_SPLIT_TENDER_STATUS("splitTenderStatus"),
 	ELEMENT_START_DATE("startDate"),
@@ -282,6 +294,4 @@ public enum AuthNetField {
 	public String getFieldName() {
 		return fieldName;
 	}
-
-
 }

@@ -2,8 +2,11 @@ package net.authorize.data.xml;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import net.authorize.data.creditcard.CreditCard;
 
+@XmlRootElement
 public class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;
 

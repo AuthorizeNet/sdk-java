@@ -41,7 +41,7 @@ public class CardPresentXMLTest extends UnitTestData {
 	@Test
 	public void testApproval() {
 
-		String xml = "<?xml version=\"1.0\" ?><response><ResponseCode>1</ResponseCode><Messages><Message><Code>1</Code><Description><![CDATA[This transaction has been approved.]]></Description></Message></Messages><AuthCode><![CDATA[ABCD]]></AuthCode><AVSResultCode>P</AVSResultCode><CVVResultCode>M</CVVResultCode><TransID>106707002</TransID><RefTransID>0</RefTransID><TransHash>BC46B890B5495B0FB419DE97CB5DAE9C</TransHash><TestMode>0</TestMode><UserRef>XXYYZZ</UserRef></response>";
+		String xml = "<?xml version=\"1.0\" ?><response><ResponseCode>1</ResponseCode><Messages><Message><Code>1</Code><Description><![CDATA[This transaction has been approved.]]></Description></Message></Messages><AuthCode><![CDATA[ABCD]]></AuthCode><AVSResultCode>P</AVSResultCode><CVVResultCode>M</CVVResultCode><TransID>106707002</TransID><RefTransID>0</RefTransID><TransHash>BC46B890B5495B0FB419DE97CB5DAE9C</TransHash><TestMode>0</TestMode><UserRef>XXYYZZ</UserRef> <splitTenderId>12345</splitTenderId> <PrepaidCard> <RequestedAmount>456.78</RequestedAmount> <ApprovedAmount>123.45</ApprovedAmount> <BalanceOnCard>345.67</BalanceOnCard> </PrepaidCard> </response>";
 		BasicXmlDocument xmlResponse = new BasicXmlDocument();
 		xmlResponse.parseString(xml);
 
@@ -50,8 +50,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		creditCard.setTrack2(";1234123412341234=0305101193010877?");
 
 		// create transaction
-		Transaction authCaptureTransaction = merchant.createAIMTransaction(
-				TransactionType.AUTH_CAPTURE, totalAmount);
+		Transaction authCaptureTransaction = merchant.createAIMTransaction(TransactionType.AUTH_CAPTURE, totalAmount);
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
@@ -59,7 +58,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		Assert.assertEquals("1234123412341234=0305101193010877", authCaptureTransaction.getCreditCard().getTrack2());
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
-			(net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction>) net.authorize.aim.cardpresent.Result.createResult(authCaptureTransaction, xmlResponse);
+                Result.createResult(authCaptureTransaction, xmlResponse);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isApproved());
@@ -77,6 +76,11 @@ public class CardPresentXMLTest extends UnitTestData {
 		Assert.assertFalse(result.isAuthorizeNet());
 		Assert.assertFalse(result.isTestMode());
 		Assert.assertEquals("XXYYZZ", result.getUserRef());
+		
+		Assert.assertNotNull( result.getSplitTenderId());
+		Assert.assertEquals("12345",result.getSplitTenderId());
+		
+		net.authorize.aim.cardpresent.functional_test.SimpleAuthCaptureTest.AssertPrepaidCard( result.getPrepaidCard());
 	}
 
 	@Test
@@ -98,7 +102,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCreditCard(creditCard);
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
-			(net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction>) net.authorize.aim.cardpresent.Result.createResult(authCaptureTransaction, xmlResponse);
+                Result.createResult(authCaptureTransaction, xmlResponse);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isDeclined());
@@ -136,7 +140,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCreditCard(creditCard);
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
-			(net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction>) net.authorize.aim.cardpresent.Result.createResult(authCaptureTransaction, xmlResponse);
+                Result.createResult(authCaptureTransaction, xmlResponse);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isError());

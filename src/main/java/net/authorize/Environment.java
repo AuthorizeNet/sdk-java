@@ -104,4 +104,59 @@ public enum Environment {
 
 		return environment;
 	}
+	
+	/**
+	 * Reads a integer value from property file and/or the environment
+	 * Values in property file supersede the values set in environment
+	 * @param propertyName name of the integer property to read
+	 * @return int property value
+	 */
+	public static int getIntProperty( String propertyName) 
+	{
+		int value = 0;
+		String stringValue = getProperty(propertyName);
+		value = (net.authorize.util.StringUtils.parseInt(stringValue));
+		
+		return value;
+	}
+
+	/**
+	 * Reads a boolean value from property file and/or the environment
+	 * Values in property file supersede the values set in environment
+	 * @param propertyName name of the boolean property to read
+	 * @return boolean property value
+	 */
+	public static boolean getBooleanProperty( String propertyName) 
+	{
+		boolean value = false;
+		String stringValue = getProperty(propertyName);
+		if ( null != stringValue)
+		{
+			value = Boolean.parseBoolean(stringValue.trim()); 
+		}
+		
+		return value;
+	}
+
+	/**
+	 * Reads the value from property file and/or the environment
+	 * Values in property file supersede the values set in environment
+	 * @param propertyName name of the property to read
+	 * @return String property value
+	 */
+	public static String getProperty(String propertyName) {
+		String stringValue = null;
+		
+		String propValue = System.getProperty(propertyName);
+		String envValue = System.getenv(propertyName);
+		if ( null != propValue && propValue.trim().length() > 0 )
+		{
+			stringValue = propValue;
+		}
+		else if ( null != envValue && envValue.trim().length() > 0 )
+		{
+			stringValue = envValue;
+		}
+		return stringValue;
+	}
 }

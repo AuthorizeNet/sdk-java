@@ -1,7 +1,15 @@
 package net.authorize.data;
 
-public class Address {
+import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlRootElement
+@XmlType(namespace="net.authorize.data")
+public class Address implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	public static final int MAX_FIRST_NAME_LENGTH = 50;
 	public static final int MAX_LAST_NAME_LENGTH = 50;
 	public static final int MAX_COMPANY_LENGTH = 50;

@@ -18,6 +18,9 @@ public class BatchDetails {
 	private SettlementStateType settlementState;
 	private String paymentMethod;
 	private ArrayList<BatchStatistics> batchStatisticsList = new ArrayList<BatchStatistics>();
+	
+	private String marketType; //marketTypeEnum 
+	private String product; //productEnum 
 
 	public static BatchDetails createBatchDetail() {
 		return new BatchDetails();
@@ -141,6 +144,38 @@ public class BatchDetails {
 	 */
 	public void setPaymentMethod(String paymentMethod) {
 		this.paymentMethod = paymentMethod;
+	}
+
+	/**
+	 * marketTypeEnum 
+	 * @return marketTypeEnum 
+	 */
+	public String getMarketType() {
+		return marketType;
+	}
+
+	/**
+	 * marketTypeEnum 
+	 * @param marketType marketTypeEnum 
+	 */
+	public void setMarketType(String marketType) {
+		this.marketType = marketType;
+	}
+
+	/**
+	 * productEnum 
+	 * @return productEnum 
+	 */ 
+	public String getProduct() {
+		return product;
+	}
+
+	/**
+	 * productEnum 
+	 * @param product productEnum 
+	 */
+	public void setProduct(String product) {
+		this.product = product;
 	}
 
 }

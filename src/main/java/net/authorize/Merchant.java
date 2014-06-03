@@ -266,7 +266,7 @@ public class Merchant implements Serializable {
 	 *
 	 * @param transaction
 	 *
-	 * @return A Result<T> is returned with each post.
+	 * @return Result is returned with each post.
 	 *
 	 */
 	public net.authorize.Result<?> postTransaction(Transaction transaction) {

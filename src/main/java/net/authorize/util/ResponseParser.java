@@ -16,7 +16,7 @@ public class ResponseParser {
 	 * Take a string and parses it into a Map keyed on ResponseFields.
 	 *
 	 * @param responseString
-	 * @return Map<ResponseField,String> of response values.
+	 * @return dictionary of response values.
 	 */
 	public static Map<ResponseField, String> parseResponseString(String responseString) {
 		return parseResponseString(responseString, Transaction.TRANSACTION_FIELD_DELIMITER);
@@ -27,7 +27,7 @@ public class ResponseParser {
 	 *
 	 * @param responseString
 	 * @param delimiter
-	 * @return Map<ResponseField,String> of response values.
+	 * @return dictionary of response values.
 	 */
 	public static Map<ResponseField, String> parseResponseString(String responseString, String delimiter) {
 

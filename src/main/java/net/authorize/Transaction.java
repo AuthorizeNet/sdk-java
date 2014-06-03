@@ -3,6 +3,10 @@ package net.authorize;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import net.authorize.util.XmlUtility;
+
+import org.w3c.dom.Node;
+
 public abstract class Transaction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -33,6 +37,10 @@ public abstract class Transaction implements Serializable{
 		Transaction.TRANSACTION_FIELD_DELIMITER = transactionFieldDelimiter;
 	}
 
+	public String toNVPString() { return ""; }
+
+	public String toXMLString() { return ""; }
+
 	/**
 	 * Convenience method for overriding the encap char delimiter.
 	 *
@@ -44,7 +52,29 @@ public abstract class Transaction implements Serializable{
 		Transaction.ENCAP_CHAR_DELIMITER = encapCharDelimiter;
 	}
 
-	public String toNVPString() { return ""; }
+	/**
+	 * Try to encode string value as per proper xml requirements
+	 * Will  default to original value (without encoding) if there are any exceptions
+	 * @param document the document to create text node to
+	 * @param value string value to encode
+	 * @return Node with encoded text value appropriate for XML
+	 */
+	public static Node getEncodedString(net.authorize.util.BasicXmlDocument document, String value) {
+		String encodedValue = XmlUtility.escapeStringForXml(value);
+		Node node = document.getDocument().createTextNode(encodedValue);
+		
+		return node;
+	}
 
-	public String toXMLString() { return ""; }
+	/**
+	 * Try to decode string value from xml node as per proper xml requirements
+	 * @param node which is a text element 
+	 * @return decoded String value
+	 */
+	public static String getDecodedString(Node node) {
+		String value = node.getTextContent();
+		String decodedValue = XmlUtility.descapeStringForXml(value);
+		
+		return decodedValue;
+	}
 }

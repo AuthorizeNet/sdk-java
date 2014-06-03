@@ -1,12 +1,16 @@
 package net.authorize.data.cim;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import net.authorize.data.xml.Address;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public class CustomerProfile {
-
-    protected String merchantCustomerId;
+@XmlRootElement
+public class CustomerProfile implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	protected String merchantCustomerId;
     protected String description;
     protected String email;
     protected String customerProfileId;

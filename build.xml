@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="anet-java-sdk" default="compile" basedir=".">
-	<property name="version" value="1.8.0" />
+	<property name="version" value="1.8.2" />
 	<property name="dirs.base" value="${basedir}" />
 	<property name="src.dir" value="${basedir}/src/main/java" />
 	<property name="javadocs.dir" value="${basedir}/docs/javadocs" />
@@ -10,9 +10,14 @@
 	<property name="src.tests" value="${basedir}/src/test/java" />
 	<property name="resources.dir" value="${basedir}/resources" />
 	<property name="reports.tests" value="${src.tests}/reports" />
+	<property name="javac.version" value="1.5" />
+	<!--
+	<property file="${resources.dir}/build.properties"/>
+	-->
 	<!-- build.properties related info -->
 	<property file="${user.home}/build.properties" />
 	<property file="${user.home}/${ant.project.name}.properties" />
+
 	<property name="prop.message" value="must be defined, preferably in ${user.home}/build.properties or ${user.home}/${ant.project.name}.properties" />
 	<fail message="api.login.id ${prop.message}" unless="api.login.id" />
 	<fail message="transaction.key ${prop.message}" unless="transaction.key" />
@@ -22,6 +27,7 @@
 
 	<path id="classpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<pathelement path="${resources.dir}" />
 	</path>
 
 	<path id="junit-classpath">
@@ -31,18 +37,24 @@
 	</path>
 
 	<target name="clean">
-		<fileset dir="${build.dir}" includes="**/*.jar" />
-		<delete dir="${classes.dir}" />
+		<delete includeEmptyDirs="true" quiet="true">
+			<fileset dir="${classes.dir}" includes="**/*.*" />
+			<fileset dir="${build.dir}" includes="**/*.jar" />
+		</delete>
 	</target>
 
-	<target name="compile" depends="clean">
+	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac target="1.5" srcdir="${src.dir}" destdir="${classes.dir}" debug="true" optimize="true" includes="**/*.java" classpathref="classpath" />
+		<javac srcdir="${src.dir}"   destdir="${classes.dir}" debug="true" optimize="true"  includes="**/*.java" classpathref="classpath" includeantruntime="false" source="${javac.version}" target="${javac.version}">
+			<compilerarg value="-Xlint" />
+		</javac> 
 	</target>
 
 	<target name="compile-test" depends="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac target="1.5" srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" />
+		<javac srcdir="${src.tests}" destdir="${classes.dir}" debug="true" optimize="false" includes="**/*.java" classpathref="classpath" includeantruntime="false" source="${javac.version}" target="${javac.version}">
+			<compilerarg value="-Xlint" />
+		</javac> 
 	</target>
 
 	<target name="jar" depends="compile, compile-test">
@@ -50,21 +62,33 @@
 		<jar jarfile="${build.dir}/${ant.project.name}-${version}.jar">
 			<fileset dir="${classes.dir}">
 				<include name="**/*.class" />
-				<exclude name="**/test/*.class" />
+				<exclude name="**/*Test*.class" />
 			</fileset>
 		</jar>
-		<jar jarfile="${build.dir}/${ant.project.name}-test.jar">
+		<jar jarfile="${build.dir}/${ant.project.name}-test-${version}.jar">
 			<fileset dir="${classes.dir}">
-				<include name="**/test/*.class" />
+				<include name="**/*Test*.class" />
 			</fileset>
 		</jar>
+
+		<jar jarfile="${build.dir}/${ant.project.name}-src-${version}.jar">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${src.tests}">
+				<include name="**/*.java" />
+			</fileset>
+		</jar>
+		<!-- Make VeraCode happy by giving same binary file name to verify -->
+		<copy file="${build.dir}/${ant.project.name}-${version}.jar"      tofile="${build.dir}/${ant.project.name}.jar"/>
+		<copy file="${build.dir}/${ant.project.name}-test-${version}.jar" tofile="${build.dir}/${ant.project.name}-test.jar"/>
 	</target>
 
 	<target name="unit-test" depends="jar">
 		<delete dir="${reports.tests}" />
 		<mkdir dir="${reports.tests}" />
 
-		<junit printsummary="yes" failureProperty="test.failure">
+		<junit printsummary="yes" failureProperty="test.failure" showoutput="true">
 			<classpath>
 				<path refid="junit-classpath" />
 			</classpath>
@@ -77,12 +101,15 @@
 			<batchtest fork="yes" todir="${reports.tests}">
 				<fileset dir="${classes.dir}">
 					<include name="**/*Test*.class" />
-					<exclude name="**/UnitTestData.class" />
+					<!--include name="net/authorize/cim/functional_test/*Test*.class" /-->
+					<exclude name="**/UnitTestData.class, **/MyTest.class" />
 				</fileset>
 			</batchtest>
 		</junit>
 		<fail message="test failed" if="test.failure" />
 	</target>
+
+	<target name="test" depends="unit-test" />
 
 	<target name="javadoc" description="Create javadocs for all files">
 		<delete dir="${javadocs.dir}" />

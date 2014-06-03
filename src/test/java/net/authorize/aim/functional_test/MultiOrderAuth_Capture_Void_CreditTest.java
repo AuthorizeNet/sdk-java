@@ -124,8 +124,6 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		emailReceipt.setFooterEmailReceipt(footerEmailReceipt);
 		emailReceipt.setHeaderEmailReceipt(headerEmailReceipt);
 		emailReceipt.setMerchantEmail(merchantEmail);
-
-
 	}
 
 	/**
@@ -151,8 +149,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 
 		merchant.setAllowPartialAuth(true);
 		// create transaction
-		Transaction authCaptureTransaction = merchant.createAIMTransaction(
-				TransactionType.AUTH_ONLY, totalAmount);
+		Transaction authCaptureTransaction = merchant.createAIMTransaction(TransactionType.AUTH_ONLY, totalAmount);
 		creditCard.setCreditCardNumber("4222222222222");
 		customer.setZipPostalCode(magicSplitTenderZipCode);
 		authCaptureTransaction.setCustomer(customer);
@@ -163,8 +160,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		authCaptureTransaction.setEmailReceipt(emailReceipt);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
 
-		Result<Transaction> result = (Result<Transaction>)merchant
-				.postTransaction(authCaptureTransaction);
+		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 
 		MultiOrderAuth_Capture_Void_CreditTest.splitTenderId = result.getTarget().getResponseField(ResponseField.SPLIT_TENDER_ID);
 		Assert.assertNotNull(splitTenderId);
@@ -184,8 +180,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		authCaptureTransaction.setEmailReceipt(emailReceipt);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
 
-		result = (Result<Transaction>)merchant
-				.postTransaction(authCaptureTransaction);
+		result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 		Assert.assertTrue(result.isApproved());
 	}
 
@@ -193,9 +188,15 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 	@Test
 	public void testAuthOnly() {
 
+		getAuthCode();
+	}
+
+	/**
+	 * 
+	 */
+	private void getAuthCode() {
 		// create transaction
-		Transaction authCaptureTransaction = merchant.createAIMTransaction(
-				TransactionType.AUTH_ONLY, totalAmount);
+		Transaction authCaptureTransaction = merchant.createAIMTransaction(TransactionType.AUTH_ONLY, totalAmount);
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
@@ -204,14 +205,12 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		authCaptureTransaction.setEmailReceipt(emailReceipt);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
 
-		Result<Transaction> result = (Result<Transaction>)merchant
-				.postTransaction(authCaptureTransaction);
+		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isApproved());
 		Assert.assertEquals(ResponseCode.APPROVED, result.getResponseCode());
-		Assert.assertEquals(ResponseReasonCode.RRC_1_1, result
-				.getReasonResponseCode());
+		Assert.assertEquals(ResponseReasonCode.RRC_1_1, result.getReasonResponseCode());
 		Assert.assertNotNull(result.getTarget().getAuthorizationCode());
 		Assert.assertNotNull(result.getTarget().getTransactionId());
 		Assert.assertNotNull(result.getTarget().getCreditCard().getAvsCode());
@@ -222,6 +221,17 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 	// capture
 	@Test
 	public void testCaptureOnly() {
+		
+		getCapture();
+	}
+
+	/**
+	 * 
+	 */
+	private void getCapture() {
+		if ( null == MultiOrderAuth_Capture_Void_CreditTest.authCode) { getAuthCode(); }
+		Assert.assertNotNull("Dependent on AuthCode from test 'testAuthOnly', which is null", MultiOrderAuth_Capture_Void_CreditTest.authCode);
+		
 		// create transaction
 		Transaction captureTransaction = merchant.createAIMTransaction(
 				TransactionType.CAPTURE_ONLY, totalAmount);
@@ -252,6 +262,10 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 	// void
 	@Test
 	public void testVoid() {
+		
+		if ( null == MultiOrderAuth_Capture_Void_CreditTest.transactionId) { getCapture(); }
+		Assert.assertNotNull( "Dependent on transactionId from test 'testCaptureOnly' which is null", MultiOrderAuth_Capture_Void_CreditTest.transactionId);
+		
 		// create transaction
 		Transaction voidTransaction = merchant.createAIMTransaction(
 				TransactionType.VOID, totalAmount);
@@ -284,6 +298,9 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 	 */
 	@Test
 	public void testCredit() {
+
+		if ( null == MultiOrderAuth_Capture_Void_CreditTest.transactionId) { getCapture(); }
+		Assert.assertNotNull( "Dependent on transactionId from test 'testCaptureOnly' which is null", MultiOrderAuth_Capture_Void_CreditTest.transactionId);
 
 		// create transaction
 		Transaction creditTransaction = merchant.createAIMTransaction(

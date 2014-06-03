@@ -8,6 +8,7 @@ net.authorize.data.arb
 net.authorize.data.cim
 net.authorize.data.creditcard
 net.authorize.data.echeck
+net.authorize.data.reporting
 net.authorize.data.xml
 net.authorize.data.xml.reporting
 net.authorize.reporting

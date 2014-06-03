@@ -1,8 +1,5 @@
 package net.authorize.aim.cardpresent;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import net.authorize.AuthNetField;
@@ -14,7 +11,12 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.xml.reporting.CardCodeResponseType;
 import net.authorize.util.BasicXmlDocument;
+import net.authorize.util.LogHelper;
+import net.authorize.util.XmlUtility;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -25,6 +27,7 @@ import org.w3c.dom.NodeList;
 public class Result<T> extends net.authorize.Result<T> {
 
 	private static final long serialVersionUID = 1L;
+	private static Log logger = LogFactory.getLog(Result.class);
 
 	protected ResponseCode responseCode = null;
 	protected ArrayList<ResponseReasonCode> responseReasonCodes = new ArrayList<ResponseReasonCode>();
@@ -37,6 +40,8 @@ public class Result<T> extends net.authorize.Result<T> {
 	private String transHash;
 	private boolean testMode;
 	private String userRef;
+	private PrepaidCard prepaidCard;
+	private String splitTenderId;  
 	protected BasicXmlDocument xmlResponseDocument;
 
 	protected Result() { }
@@ -58,7 +63,10 @@ public class Result<T> extends net.authorize.Result<T> {
 			result.importTransHash(targetTransaction);
 			result.importTestMode(targetTransaction);
 			result.importUserRef(targetTransaction);
-
+			
+			result.importSplitTenderId( targetTransaction);
+			result.importPrepaidCard(targetTransaction);			
+		
 			// update target credit card information
 			CreditCard creditCard = targetTransaction.getCreditCard();
 			if(creditCard != null) {
@@ -304,9 +312,8 @@ public class Result<T> extends net.authorize.Result<T> {
 				txn.getCurrentResponse().getDocumentElement(),
 				AuthNetField.ELEMENT__TEST_MODE.getFieldName());
 
-		this.testMode = "1".equals(_testMode)?true:false;
+		this.testMode = "1".equals(_testMode);
 	}
-
 
 	/**
 	 * Import the UserRef.
@@ -361,21 +368,72 @@ public class Result<T> extends net.authorize.Result<T> {
 	    String amount = ((Transaction)this.target).getRequestMap().get(AuthNetField.X_AMOUNT.getFieldName());
         String MD5Value = ((Transaction)this.target).getMD5Value();
         String apiLoginId = ((Transaction)this.target).getRequestMap().get(AuthNetField.X_LOGIN.getFieldName());
-        String md5Check = null;
-
-	    try {
-		    MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-		    String s = MD5Value + apiLoginId + getTransId() + amount;
-		    digest.update(s.getBytes());
-		    md5Check = new BigInteger(1,digest.digest()).toString(16).toUpperCase();
-		    while(md5Check.length() < 32) {
-		    	md5Check = "0" + md5Check;
-		    }
-	    } catch (NoSuchAlgorithmException nsae) {
-	    	//
-	    }
-
-	    return md5Check != null && md5Check.equalsIgnoreCase(getTransHash());
+        String transId = getTransId();
+        String transHash = getTransHash();
+       
+        return net.authorize.Result.isAuthorizeNetResponse(MD5Value, apiLoginId, amount, transId, transHash);
+	}
+	
+	public PrepaidCard getPrepaidCard() {
+		return this.prepaidCard;
 	}
 
+	public void setPrepaidCard(PrepaidCard prepaidCard) {
+		this.prepaidCard = prepaidCard;
+	}
+
+	public String getSplitTenderId() {
+		return this.splitTenderId;
+	}
+
+	public void setSplitTenderId(String splitTenderId) {
+		this.splitTenderId = splitTenderId;
+	}
+
+	private void importSplitTenderId(Transaction txn) {
+		String splitTenderId = (BasicXmlDocument.getElementText(
+						txn.getCurrentResponse().getDocumentElement(),
+						AuthNetField.ELEMENT_SPLIT_TENDER_ID.getFieldName()));
+		this.splitTenderId = splitTenderId;
+	}
+
+	private void importPrepaidCard(Transaction txn) {
+		final String prepaidElementName = AuthNetField.ELEMENT_PREPAID_CARD.getFieldName();
+		
+		Document document = txn.getCurrentResponse().getDocument();
+		NodeList prepaidCard_list = document.getElementsByTagName(prepaidElementName);
+
+		int cardCount = prepaidCard_list.getLength();
+		if ( 0 < cardCount) {
+			//look at the first element
+			Element prepaidCard_el = (Element) prepaidCard_list.item(0);
+			String requestedAmount = BasicXmlDocument.getElementText(prepaidCard_el,AuthNetField.ELEMENT_PREPAID_CARD_REQUESTED_AMOUNT.getFieldName());
+			String approvedAmount = BasicXmlDocument.getElementText(prepaidCard_el,AuthNetField.ELEMENT_PREPAID_CARD_APPROVED_AMOUNT.getFieldName());
+			String balanceOnCard = BasicXmlDocument.getElementText(prepaidCard_el,AuthNetField.ELEMENT_PREPAID_CARD_BALANCE_ON_CARD.getFieldName());
+			PrepaidCard prepaidCard = getPrepaidCardFromElement(prepaidCard_el);
+			if ( null == prepaidCard) {
+				prepaidCard = PrepaidCard.createPrepaidCard(requestedAmount, approvedAmount, balanceOnCard);
+			}
+			
+			this.setPrepaidCard(prepaidCard);
+			//log if there are additional elements found
+			if ( cardCount > 1) {
+				LogHelper.warn( logger, "Found more than one element named: '%s' in result: '%s'", prepaidElementName, prepaidCard_list.toString());
+			}
+		}
+	}
+
+	private static PrepaidCard  getPrepaidCardFromElement(Element prepaidCardElement) {
+		PrepaidCard prepaidCard = null;
+
+		if ( null != prepaidCardElement) {
+			try {
+				prepaidCard = XmlUtility.create(prepaidCardElement.toString(), PrepaidCard.class);
+			}
+			catch (Exception e) {
+				LogHelper.warn( logger, "Error de-serializing XML to PrepaidCard: '%s', ErrorMessage: '%s'", prepaidCardElement.toString(), e.getMessage());
+			}
+		}
+		return prepaidCard;
+	}
 }

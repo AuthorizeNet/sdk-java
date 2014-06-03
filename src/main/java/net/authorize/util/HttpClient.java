@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,8 +18,10 @@ import net.authorize.Transaction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
@@ -28,10 +31,18 @@ import org.apache.http.protocol.HTTP;
  *
  */
 public class HttpClient {
+	private static Log logger = LogFactory.getLog(HttpClient.class);
 	
-
 	public static final String ENCODING = "UTF-8";
+	static boolean proxySet = false;
 
+	static boolean UseProxy = Environment.getBooleanProperty(Constants.HTTPS_USE_PROXY);
+	static String ProxyHost = Environment.getProperty(Constants.HTTPS_PROXY_HOST);
+	static int ProxyPort = Environment.getIntProperty(Constants.HTTPS_PROXY_PORT);
+	
+	static {
+		LogHelper.info(logger, "Use Proxy: '%s'", UseProxy);
+	}
 	/**
 	 * Creates the http post object for an environment and transaction container.
 	 *
@@ -42,7 +53,7 @@ public class HttpClient {
 	 * @throws Exception
 	 */
 	private static HttpPost createHttpPost(Environment env, Transaction transaction) throws Exception {
-		URI postUrl = null;
+		URI postUrl;
 		HttpPost httpPost = null;
 
 		if(transaction instanceof net.authorize.aim.Transaction ||
@@ -77,7 +88,7 @@ public class HttpClient {
 	 *
 	 * @param transaction
 	 * @param responseString
-	 * @return Map<ResponseField, String> container
+	 * @return container map containing semi-processed data after request was posted
 	 * @throws UnsupportedEncodingException
 	 */
 	private static Map<ResponseField, String> createResponseMap(Transaction transaction, String responseString)
@@ -103,7 +114,7 @@ public class HttpClient {
 	 *
 	 * @param environment
 	 * @param transaction
-	 * @return Return a HashMap<ResponseField> that contains semi-processed data after a request was posted.
+	 * @return container map containing semi-processed data after request was posted
 	 */
 	public static Map<ResponseField, String> execute(Environment environment, Transaction transaction) {
 		Map<ResponseField, String> responseMap = new HashMap<ResponseField, String>();
@@ -112,19 +123,19 @@ public class HttpClient {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 
+				setProxyIfRequested(httpClient);
+
 				// create the HTTP POST object
 				HttpPost httpPost = createHttpPost(environment, transaction);
 
-
-
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
-				String rawResponseString = "";
+				String rawResponseString;
 				if(httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = httpResponse.getEntity();
 
 					// get the raw data being received
-					InputStream instream = (InputStream)entity.getContent();
+					InputStream instream = entity.getContent();
 					rawResponseString = convertStreamToString(instream);
 				}
 				// handle HTTP errors
@@ -139,9 +150,11 @@ public class HttpClient {
 
 				httpClient.getConnectionManager().shutdown();
 
-				responseMap = HttpClient.createResponseMap(transaction, rawResponseString);
-			} catch (Exception e) {
+				String cleanResponseString = XmlUtility.descapeStringForXml(rawResponseString);
 				
+				responseMap = HttpClient.createResponseMap(transaction, cleanResponseString);
+			} catch (Exception e) {
+				LogHelper.warn(logger, "Exception getting response: '%s': '%s', '%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
 			}
 		}
 
@@ -158,19 +171,29 @@ public class HttpClient {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	    StringBuilder sb = new StringBuilder();
 
-	    String line = null;
+	    String line;
 	    try {
 	        while ((line = reader.readLine()) != null) {
-	            sb.append(line + "\n");
+	            sb.append(line).append("\n");
 	        }
 	    } catch (IOException e) {
-	        e.printStackTrace();
+	    	LogHelper.warn(logger, "Exception reading data from Stream: '%s'", e.getMessage());
 	    } finally {
-	        try {
-	            is.close();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+	    	if ( null != reader){
+	    		try {
+	    			reader.close();
+		        } catch (IOException e) {
+		        	LogHelper.warn(logger, "Exception closing BufferedReader: '%s'", e.getMessage());
+		        }
+	    	}
+
+	    	if ( null != is) {
+		    	try {
+		            is.close();
+		        } catch (IOException e) {
+		        	LogHelper.warn(logger, "Exception closing InputStream: '%s'", e.getMessage());
+		        }
+	    	}
 	    }
 	    return sb.toString();
 	}
@@ -181,7 +204,7 @@ public class HttpClient {
 	 *
 	 * @param environment
 	 * @param transaction
-	 * @return Return a HashMap<ResponseField> that contains semi-processed data after a request was posted.
+	 * @return BasicXmlDocument containing semi-processed data after request was posted
 	 */
 	public static BasicXmlDocument executeXML(Environment environment, Transaction transaction) {
 		BasicXmlDocument response = new BasicXmlDocument();
@@ -190,18 +213,19 @@ public class HttpClient {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 
+				setProxyIfRequested(httpClient);
+				
 				// create the HTTP POST object
 				HttpPost httpPost = createHttpPost(environment, transaction);
 
-
 				// execute the request
 				HttpResponse httpResponse = httpClient.execute(httpPost);
-				String rawResponseString = "";
+				String rawResponseString;
 				if(httpResponse != null && httpResponse.getStatusLine().getStatusCode() == 200) {
 					HttpEntity entity = httpResponse.getEntity();
 
 					// get the raw data being received
-					InputStream instream = (InputStream)entity.getContent();
+					InputStream instream = entity.getContent();
 					rawResponseString = convertStreamToString(instream);
 				}
 				else {
@@ -248,11 +272,26 @@ public class HttpClient {
 					return null;
 				}
 			} catch (Exception e) {
-				
+				LogHelper.warn(logger, "Exception getting response: '%s': '%s', '%s'", e.getMessage(), e.getCause(), Arrays.toString(e.getStackTrace()));
 			}
 		}
 
 		return response;
 	}
 
+	/**
+	 * if proxy use is requested, set http-client appropriately 
+	 * @param httpClient the client to add proxy values to 
+	 */
+	public static void setProxyIfRequested(DefaultHttpClient httpClient) {
+		if ( UseProxy)
+		{
+			if ( !proxySet) {
+				LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
+				proxySet = true;
+			}
+			HttpHost proxyHttpHost = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);
+			httpClient.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxyHttpHost);
+		}
+	}
 }

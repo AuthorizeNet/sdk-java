@@ -73,5 +73,4 @@ public class Result<T> extends net.authorize.Result<T> {
 	public boolean isReview() {
 		return ResponseCode.REVIEW.equals(this.responseCode);
 	}
-
 }

@@ -21,6 +21,7 @@ import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Payment;
 import net.authorize.util.BasicXmlDocument;
 import net.authorize.util.StringUtils;
+import net.authorize.util.XmlUtility;
 
 import org.w3c.dom.Element;
 
@@ -129,8 +130,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the refId to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addRefId(BasicXmlDocument document) {
 		if(refId != null) {
 			Element ref_id_el = document.createElement(AuthNetField.ELEMENT_REFID.getFieldName());
@@ -143,8 +143,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer profile id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerProfileId(BasicXmlDocument document) {
 		if(customerProfile != null && customerProfile.getCustomerProfileId() != null) {
 			Element customer_profile_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_PROFILE_ID.getFieldName());
@@ -157,8 +156,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer address id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerAddressId(BasicXmlDocument document) {
 		if(this.paymentTransaction.getCustomerShippingAddressId() != null) {
 			Element customer_shipping_address_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_ADDRESS_ID.getFieldName());
@@ -170,8 +168,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer shipping address id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerShippingAddressId(BasicXmlDocument document) {
 		if(this.paymentTransaction.getCustomerShippingAddressId() != null) {
 			Element customer_shipping_address_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_SHIPPING_ADDRESS_ID.getFieldName());
@@ -184,8 +181,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the customer payment profile id to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCustomerPaymentProfileId(BasicXmlDocument document) {
 		if(this.paymentTransaction.getCustomerPaymentProfileId() != null) {
 			Element customer_payment_profile_id_el = document.createElement(AuthNetField.ELEMENT_CUSTOMER_PAYMENT_PROFILE_ID.getFieldName());
@@ -198,8 +194,7 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add the card code to the request.
 	 *
 	 * @param document
-	 * @param subscription
-	 */
+     */
 	private void addCardCode(BasicXmlDocument document) {
 		if(paymentTransaction != null && !StringUtils.isEmpty(paymentTransaction.getCardCode())) {
 			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
@@ -226,7 +221,8 @@ public class Transaction extends net.authorize.Transaction {
 
 			// description
 			Element description_el = document.createElement(AuthNetField.ELEMENT_DESCRIPTION.getFieldName());
-			description_el.appendChild(document.getDocument().createTextNode(this.customerProfile.getDescription()));
+			String description = XmlUtility.escapeStringForXml(this.customerProfile.getDescription());
+			description_el.appendChild(document.getDocument().createTextNode(description));
 			profile_el.appendChild(description_el);
 			// email
 			Element email_el = document.createElement(AuthNetField.ELEMENT_EMAIL.getFieldName());
@@ -251,7 +247,6 @@ public class Transaction extends net.authorize.Transaction {
 	 * Add payment profiles to the request profile.
 	 *
 	 * @param document
-	 * @param paymentProfiles
 	 * @param profile_el - if null handles the singular element case
 	 */
 	private void addPaymentProfiles(BasicXmlDocument document, Element profile_el) {
@@ -398,7 +393,8 @@ public class Transaction extends net.authorize.Transaction {
 			address_el.appendChild(lname_el);
 
 			Element company_el = document.createElement(AuthNetField.ELEMENT_COMPANY.getFieldName());
-			company_el.appendChild(document.getDocument().createTextNode(address.getCompany()));
+			String encodedCompany = XmlUtility.escapeStringForXml(address.getCompany());
+			company_el.appendChild(document.getDocument().createTextNode( encodedCompany));
 			address_el.appendChild(company_el);
 
 			Element address_line_el = document.createElement(AuthNetField.ELEMENT_ADDRESS.getFieldName());
@@ -497,8 +493,8 @@ public class Transaction extends net.authorize.Transaction {
 								shippingCharges.getTaxItemName()));
 					}
 					if(shippingCharges.getTaxDescription() != null) {
-						tax_description_el.appendChild(document.getDocument().createTextNode(
-								shippingCharges.getTaxDescription()));
+						String taxDescription = XmlUtility.escapeStringForXml(shippingCharges.getTaxDescription());
+						tax_description_el.appendChild(document.getDocument().createTextNode(taxDescription));
 					}
 					tax_el.appendChild(tax_amount_el);
 					tax_el.appendChild(tax_name_el);
@@ -519,8 +515,8 @@ public class Transaction extends net.authorize.Transaction {
 								shippingCharges.getFreightItemName()));
 					}
 					if(shippingCharges.getFreightDescription() != null) {
-						shipping_description_el.appendChild(document.getDocument().createTextNode(
-								shippingCharges.getFreightDescription()));
+						String freightDescription = XmlUtility.escapeStringForXml(shippingCharges.getFreightDescription());
+						shipping_description_el.appendChild(document.getDocument().createTextNode(freightDescription));
 					}
 					shipping_el.appendChild(shipping_amount_el);
 					shipping_el.appendChild(shipping_name_el);
@@ -538,7 +534,8 @@ public class Transaction extends net.authorize.Transaction {
 						name_el.appendChild(document.getDocument().createTextNode(orderItem.getItemName()));
 
 						Element description_el = document.createElement(AuthNetField.ELEMENT_DESCRIPTION.getFieldName());
-						description_el.appendChild(document.getDocument().createTextNode(orderItem.getItemDescription()));
+						String orderItemDescription = XmlUtility.escapeStringForXml(orderItem.getItemDescription());
+						description_el.appendChild(document.getDocument().createTextNode(orderItemDescription));
 
 						Element quantity_el = document.createElement(AuthNetField.ELEMENT_QUANTITY.getFieldName());
 						quantity_el.appendChild(document.getDocument().createTextNode(orderItem.getItemQuantity().toBigInteger().toString()));
@@ -610,7 +607,10 @@ public class Transaction extends net.authorize.Transaction {
 					Element description_el = document.createElement(AuthNetField.ELEMENT_DESCRIPTION.getFieldName());
 					Element purchase_order_number_el = document.createElement(AuthNetField.ELEMENT_PURCHASE_ORDER_NUMBER.getFieldName());
 					invoice_number_el.appendChild(document.getDocument().createTextNode(order.getInvoiceNumber()));
-					description_el.appendChild(document.getDocument().createTextNode(order.getDescription()));
+
+					String orderDescription = XmlUtility.escapeStringForXml(order.getDescription());
+					description_el.appendChild(document.getDocument().createTextNode(orderDescription));
+					
 					if(shippingCharges != null) {
 						purchase_order_number_el.appendChild(document.getDocument().createTextNode(shippingCharges.getPurchaseOrderNumber()));
 					}

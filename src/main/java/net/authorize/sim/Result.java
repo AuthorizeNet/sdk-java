@@ -1,9 +1,6 @@
 package net.authorize.sim;
 
 import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,23 +91,10 @@ public class Result implements Serializable {
 
 	    String amount = this.responseMap.get(ResponseField.AMOUNT.getFieldName()) != null ?
 	    	this.responseMap.get(ResponseField.AMOUNT.getFieldName()) : "0.00";
-
 	    String x_MD5_Hash = this.responseMap.get(ResponseField.MD5_HASH.getFieldName());
-	    String md5Check = null;
-
-	    try {
-		    MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-		    String s = merchantMD5Key + this.apiLoginId + this.responseMap.get(ResponseField.TRANSACTION_ID.getFieldName()) + amount;
-		    digest.update(s.getBytes());
-		    md5Check = new BigInteger(1,digest.digest()).toString(16).toUpperCase();
-		    while(md5Check.length() < 32) {
-		    	md5Check = "0" + md5Check;
-		    }
-	    } catch (NoSuchAlgorithmException nsae) {
-	    	//
-	    }
-
-	    return md5Check != null && md5Check.equalsIgnoreCase(x_MD5_Hash);
+	    String transId = this.responseMap.get(ResponseField.TRANSACTION_ID.getFieldName());
+	    
+	    return net.authorize.Result.isAuthorizeNetResponse(merchantMD5Key, this.apiLoginId, amount, transId, x_MD5_Hash);
 	}
 
 	public boolean isApproved() {

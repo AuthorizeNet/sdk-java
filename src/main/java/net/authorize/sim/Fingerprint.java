@@ -3,13 +3,14 @@ package net.authorize.sim;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import net.authorize.Merchant;
+import net.authorize.util.LogHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,7 +40,7 @@ public class Fingerprint {
 		Fingerprint fingerprint = new Fingerprint();
 
 		// a sequence number is randomly generated
-		Random generator = new Random();
+		SecureRandom generator = new SecureRandom();
 		fingerprint.sequence = Long.parseLong(sequence+""+generator.nextInt(1000));
 		// a timestamp is generated
 		fingerprint.timeStamp = System.currentTimeMillis() / 1000;
@@ -58,19 +59,19 @@ public class Fingerprint {
 				fingerprint.timeStamp + "^" + amount + "^";
 			byte[] result = mac.doFinal(inputstring.getBytes());
 			// Convert the result from byte[] to hexadecimal format
-			StringBuffer strbuf = new StringBuffer(result.length * 2);
-			for (int i = 0; i < result.length; i++) {
-				if (((int) result[i] & 0xff) < 0x10) {
-					strbuf.append("0");
-				}
-				strbuf.append(Long.toString((int) result[i] & 0xff, 16));
-			}
+			StringBuilder strbuf = new StringBuilder(result.length * 2);
+            for (byte aResult : result) {
+                if (((int) aResult & 0xff) < 0x10) {
+                    strbuf.append("0");
+                }
+                strbuf.append(Long.toString((int) aResult & 0xff, 16));
+            }
 			fingerprint.fingerprintHash = strbuf.toString();
 		} catch (NoSuchAlgorithmException nsae) {
-			logger.error("Fingerprint creation failed.", nsae);
+			LogHelper.error(logger, "Fingerprint creation failed.", nsae);
 
 		} catch (InvalidKeyException ike) {
-			logger.error("Fingerprint creation failed.", ike);
+			LogHelper.error(logger, "Fingerprint creation failed.", ike);
 
 		}
 

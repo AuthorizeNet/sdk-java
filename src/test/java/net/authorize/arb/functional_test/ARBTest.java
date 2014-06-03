@@ -1,10 +1,10 @@
 package net.authorize.arb.functional_test;
 
-
 import java.math.BigDecimal;
 
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
+import net.authorize.arb.Result;
 import net.authorize.arb.TransactionType;
 import net.authorize.data.Order;
 import net.authorize.data.arb.PaymentSchedule;
@@ -18,15 +18,13 @@ import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Customer;
 import net.authorize.data.xml.Payment;
-import net.authorize.arb.Result;
+import net.authorize.util.XmlUtility;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ARBTest extends UnitTestData {
-
-	private static String subscriptionId = null;
 
 	PaymentSchedule new_schedule;
 	CreditCard credit_card;
@@ -65,13 +63,13 @@ public class ARBTest extends UnitTestData {
 
 		// Create a billing info
 		//
-		billing_info = (Address) Address.createAddress();
+		billing_info = Address.createAddress();
 		billing_info.setFirstName(firstName + System.currentTimeMillis());
 		billing_info.setLastName(lastName);
 
 		// Create a shipping info
 		//
-		shipping_info = (Address) Address.createAddress();
+		shipping_info = Address.createAddress();
 		shipping_info.setFirstName(firstName + System.currentTimeMillis());
 		shipping_info.setLastName(lastName);
 		shipping_info.setCompany(company);
@@ -113,37 +111,26 @@ public class ARBTest extends UnitTestData {
 
 	@Test
 	public void testCreateSubscriptionCreditCard() {
-
-		// Create a new subscription request from the subscription object
-		// Returns XML document. Also holds internal pointer as current_request.
-		//
-		net.authorize.arb.Transaction transaction =
-		  merchant.createARBTransaction(TransactionType.CREATE_SUBSCRIPTION,
-					subscription);
-		net.authorize.arb.Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
-
-		Assert.assertNotNull(result);
-		result.printMessages();
-		Assert.assertTrue(result.isOk());
-		Assert.assertNotNull(result.getResultSubscriptionId());
-
-		subscriptionId = result.getResultSubscriptionId();
+		createCreditCardSubscription();
 	}
 
 	@Test
-	public void testUpdateSubscription() {
-		credit_card.setCreditCardNumber(creditCardNumber);
-		credit_card.setExpirationDate("2029-08");
+	public void testUpdateSubscription() throws Exception {
+		net.authorize.arb.Result<Transaction> result = createCreditCardSubscription();
 
-		subscription = Subscription.createSubscription();
-		subscription.setPayment(Payment.createPayment(credit_card));
-		subscription.setSubscriptionId(subscriptionId);
+		String xmlCc = XmlUtility.getXml(credit_card);
+		CreditCard newCreditCard = XmlUtility.create(xmlCc,  CreditCard.class);
+		newCreditCard.setCreditCardNumber(creditCardNumber);
+		newCreditCard.setExpirationDate("2029-08");
 
-		net.authorize.arb.Transaction transaction =
-			  merchant.createARBTransaction(TransactionType.UPDATE_SUBSCRIPTION,
-						subscription);
-		Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
+		String testSubscriptionId = result.getResultSubscriptionId();
+		String xmlSubs = XmlUtility.getXml(subscription);
+		Subscription newSubscription = XmlUtility.create(xmlSubs,  Subscription.class);
+		newSubscription.setPayment(Payment.createPayment(credit_card));
+		newSubscription.setSubscriptionId(testSubscriptionId);
 
+		net.authorize.arb.Transaction transaction = merchant.createARBTransaction(TransactionType.UPDATE_SUBSCRIPTION, newSubscription);
+		result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
@@ -151,13 +138,14 @@ public class ARBTest extends UnitTestData {
 
 	@Test
 	public void testGetSubscription() {
-		subscription = Subscription.createSubscription();
-		subscription.setSubscriptionId(subscriptionId);
+		net.authorize.arb.Result<Transaction> result = createCreditCardSubscription();
+		String testSubscriptionId = result.getResultSubscriptionId();
 
-		net.authorize.arb.Transaction transaction =
-			  merchant.createARBTransaction(TransactionType.GET_SUBSCRIPTION_STATUS,
-						subscription);
-		Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
+		Subscription newSubscription = Subscription.createSubscription();
+		newSubscription.setSubscriptionId(testSubscriptionId);
+
+		net.authorize.arb.Transaction transaction = merchant.createARBTransaction(TransactionType.GET_SUBSCRIPTION_STATUS, newSubscription);
+		result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
@@ -167,29 +155,20 @@ public class ARBTest extends UnitTestData {
 
 	@Test
 	public void testCancelSubscription() {
-		subscription = Subscription.createSubscription();
-		subscription.setSubscriptionId(subscriptionId);
+		net.authorize.arb.Result<Transaction> result = createCreditCardSubscription();
+		String testSubscriptionId = result.getResultSubscriptionId();
 
-		net.authorize.arb.Transaction transaction =
-			  merchant.createARBTransaction(TransactionType.CANCEL_SUBSCRIPTION,
-						subscription);
-		Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
+		Subscription newSubscription = Subscription.createSubscription();
+		newSubscription.setSubscriptionId(testSubscriptionId);
 
+		net.authorize.arb.Transaction transaction = merchant.createARBTransaction(TransactionType.CANCEL_SUBSCRIPTION, newSubscription);
+		result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
-	}
 
-	@Test
-	public void testGetSubscriptionII() {
-		subscription = Subscription.createSubscription();
-		subscription.setSubscriptionId(subscriptionId);
-
-		net.authorize.arb.Transaction transaction =
-			  merchant.createARBTransaction(TransactionType.GET_SUBSCRIPTION_STATUS,
-						subscription);
-		Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
-
+		transaction = merchant.createARBTransaction(TransactionType.GET_SUBSCRIPTION_STATUS, newSubscription);
+		result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
@@ -203,19 +182,26 @@ public class ARBTest extends UnitTestData {
 		// Create a new subscription request from the subscription object
 		// Returns XML document. Also holds internal pointer as current_request.
 		//
-		net.authorize.arb.Transaction transaction =
-		  merchant.createARBTransaction(TransactionType.CREATE_SUBSCRIPTION,
-					subscription);
+		net.authorize.arb.Transaction transaction = merchant.createARBTransaction(TransactionType.CREATE_SUBSCRIPTION, subscription);
 		Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
 		Assert.assertNotNull(result.getResultSubscriptionId());
-
-		subscriptionId = result.getResultSubscriptionId();
 	}
 
+	private net.authorize.arb.Result<Transaction> createCreditCardSubscription() {
+		// Create a new subscription request from the subscription object
+		//
+		subscription.setPayment(Payment.createPayment(credit_card));
+		net.authorize.arb.Transaction transaction = merchant.createARBTransaction(TransactionType.CREATE_SUBSCRIPTION, subscription);
+		net.authorize.arb.Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
+		Assert.assertNotNull(result);
+		result.printMessages();
+		Assert.assertTrue(result.isOk());
+		Assert.assertNotNull(result.getResultSubscriptionId());
 
-
+		return result;
+	}
 }

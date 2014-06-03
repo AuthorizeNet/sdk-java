@@ -38,20 +38,22 @@ public class FingerprintTest extends UnitTestData {
 
 	@Test
 	public void testMD5HashVerification() {
-		String x_MD5_Hash = "CCF694F4A97B54462CE6329BEF6B0901";
+		// MD5_Key and hash go in pair
+		String merchant_MD5_Key= "TEST_MD5";
+		String x_MD5_Hash = "A21E9635BC5A6B56E5E1121E49F27FAE"; 
 		String amount = "2.18";
 		String txnId = "2154896102";
 		String md5Check = null;
 
 		try {
-		    MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-		    String s = merchantMD5Key + merchant.getLogin() + txnId + amount;
+		    MessageDigest digest = java.security.MessageDigest.getInstance(  net.authorize.Result.MessageDigestAlgorithm);
+		    String s = merchant_MD5_Key + merchant.getLogin() + txnId + amount;
 		    digest.update(s.getBytes());
 		    md5Check = new BigInteger(1,digest.digest()).toString(16).toUpperCase();
 		} catch (Exception e) {
 
 		}
 	    Assert.assertNotNull(md5Check);
-		Assert.assertEquals(md5Check, x_MD5_Hash);
+		Assert.assertEquals(x_MD5_Hash, md5Check);
 	}
 }

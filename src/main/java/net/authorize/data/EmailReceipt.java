@@ -23,9 +23,9 @@ public class EmailReceipt implements Serializable {
 	private String footerEmailReceipt;
 	private String merchantEmail;
 
-	private EmailReceipt() { };
+	private EmailReceipt() { }
 
-	public static EmailReceipt createEmailReceipt() {
+    public static EmailReceipt createEmailReceipt() {
 
 		return new EmailReceipt();
 	}
@@ -96,7 +96,6 @@ public class EmailReceipt implements Serializable {
 	/**
 	 *
 	 * @param merchantEmail
-	 * @throws ValidationException
 	 */
 	public void setMerchantEmail(String merchantEmail) {
 		this.merchantEmail = merchantEmail;

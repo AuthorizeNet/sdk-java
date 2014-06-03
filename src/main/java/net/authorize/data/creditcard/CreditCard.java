@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import net.authorize.util.Luhn;
 
+@XmlRootElement
 /**
  * Credit card specific information.
  *
