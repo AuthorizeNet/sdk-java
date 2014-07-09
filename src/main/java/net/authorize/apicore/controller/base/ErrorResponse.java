@@ -13,7 +13,7 @@ import net.authorize.apicore.contract.v1.MessagesType;
  * @author ramittal
  *
  */
-public class ErrorResponse extends ANetApiResponse {
+abstract class ErrorResponse extends ANetApiResponse {
 	private static final long serialVersionUID = 1L;
 
 	public String toString() {

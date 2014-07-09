@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.MessagesType;
-import net.authorize.apicore.controller.base.ErrorResponse;
+import net.authorize.apicore.contract.v1.ErrorResponse;
 import net.authorize.data.reporting.Subscription;
 
 import org.junit.Assert;

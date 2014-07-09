@@ -46,7 +46,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		if ( null != this.getApiResponse())
 		{
 			logger.error(this.getApiResponse());
-			throw new IllegalStateException( "Request should be null");
+			throw new IllegalStateException( "Response should be null");
 		}
 		
 		this.requestClass = (Class<Q>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -91,22 +91,22 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		logger.info(String.format("Executing Request:'%s'", this.getApiRequest()));
 		beforeExecute();
 
-		ANetApiResponse apiResponse = HttpUtility.postData(environment, this.getApiRequest(), this.responseClass);
-		if ( null != apiResponse)
+		ANetApiResponse httpApiResponse = HttpUtility.postData(environment, this.getApiRequest(), this.responseClass);
+		if ( null != httpApiResponse)
 		{
-			logger.info(String.format("Received Response:'%s' for request:'%s'", apiResponse, this.getApiRequest()));
-			if ( apiResponse.getClass() == responseClass)
+			logger.info(String.format("Received Response:'%s' for request:'%s'", httpApiResponse, this.getApiRequest()));
+			if ( httpApiResponse.getClass() == responseClass)
 			{
 				@SuppressWarnings("unchecked")
-				S response = (S) apiResponse;
+				S response = (S) httpApiResponse;
 				this.setApiResponse( response);
 				logger.info(String.format("Setting response: '%s'", response));				
-			} else if (apiResponse.getClass() == ErrorResponse.class) {
-				this.setErrorResponse(apiResponse);
-				logger.info(String.format("Received ErrorResponse:'%s'", apiResponse));
+			} else if (httpApiResponse.getClass() == net.authorize.apicore.contract.v1.ErrorResponse.class) {
+				this.setErrorResponse(httpApiResponse);
+				logger.info(String.format("Received ErrorResponse:'%s'", httpApiResponse));
 			} else {
-				this.setErrorResponse(apiResponse);
-				logger.error(String.format("Invalid response:'%s'", apiResponse));
+				this.setErrorResponse(httpApiResponse);
+				logger.error(String.format("Invalid response:'%s'", httpApiResponse));
 			}
 			this.setResultStatus();
 			

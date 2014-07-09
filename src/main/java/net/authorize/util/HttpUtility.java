@@ -62,7 +62,7 @@ public final class HttpUtility {
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
-			  logger.debug(String.format("Request: '%s'", xmlRequest));
+			  logger.info(String.format("Request: '\n%s\n'", xmlRequest));
 			  httpPost.setEntity(new StringEntity(xmlRequest));
 		}
 

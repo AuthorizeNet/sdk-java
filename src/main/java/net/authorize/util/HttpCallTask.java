@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
@@ -14,7 +15,8 @@ import net.authorize.apicore.contract.v1.ANetApiResponse;
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.MessagesType;
 import net.authorize.apicore.contract.v1.MessagesType.Message;
-import net.authorize.apicore.controller.base.ErrorResponse;
+import net.authorize.apicore.contract.v1.ObjectFactory;
+//import net.authorize.apicore.controller.base.ErrorResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -94,13 +96,17 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 				} catch(UnmarshalException ume) {
 					try {
 						//try deserializing to error message
-						localResponse = XmlUtility.create(buffer.toString(), ErrorResponse.class);
+						localResponse = XmlUtility.create(buffer.toString(), net.authorize.apicore.contract.v1.ErrorResponse.class);
 					} catch(JAXBException jabex) {
 						response = createErrorResponse(httpResponse, jabex);
 					}
 				} catch(JAXBException jabex) {
 					response = createErrorResponse(httpResponse, jabex);
 				}
+				
+				//ObjectFactory factory = new ObjectFactory();
+				//JAXBElement<ANetApiResponse> error = factory.createErrorResponse();
+			    
 				//check if error
 				if ( null == localResponse) {
 					try {
