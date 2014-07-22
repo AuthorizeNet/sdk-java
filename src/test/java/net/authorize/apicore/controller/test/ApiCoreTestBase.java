@@ -61,7 +61,8 @@ public abstract class ApiCoreTestBase {
 	
 	protected static HashMap<String, String> errorMessages = null;
 	
-	static Environment environment = Environment.HOSTED_VM;
+	//static Environment environment = Environment.HOSTED_VM;
+	static Environment environment = Environment.SANDBOX;
 	static Merchant cnpMerchant = null;
 	static Merchant cpMerchant = null;
 	static String CnpApiLoginIdKey = null;
@@ -122,13 +123,13 @@ public abstract class ApiCoreTestBase {
 		{
 			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
 		}
-		
+		/*
 		//hosted vm
 		CnpApiLoginIdKey = "7zc5c7YBTE";
 		CnpTransactionKey = "5kPE8v6wdL6Dj56V";
 		CpApiLoginIdKey = "5S7uk9Qu";
 		CpTransactionKey = "359DNfGD5K6Kzz49";
-		
+		*/
 		cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
 		cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
 

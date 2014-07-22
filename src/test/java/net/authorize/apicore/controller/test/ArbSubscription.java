@@ -56,15 +56,14 @@ public class ArbSubscription extends ApiCoreTestBase {
 	@Test
 	public void testGetSubscriptionList() throws DatatypeConfigurationException {
 
-		String subscriptionId = "12";
-		/*
+		//String subscriptionId = "12";
+
 		String subscriptionId = createSubscription(cnpMerchantAuthenticationType);
 		ARBSubscriptionStatusEnum newStatus = getSubscription(cnpMerchantAuthenticationType, subscriptionId);
 		Assert.assertEquals(ARBSubscriptionStatusEnum.ACTIVE, newStatus);
 
 		LogHelper.info(logger, "Getting Subscription List for SubscriptionId: %s", subscriptionId);
 
-		*/
 		ARBGetSubscriptionListRequest listRequest = setupSubscriptionListRequest(cnpMerchantAuthenticationType);
 		ARBGetSubscriptionListResponse listResponse = executeTestRequestWithSuccess(listRequest, ARBGetSubscriptionListController.class, environment);
 
@@ -82,13 +81,12 @@ public class ArbSubscription extends ApiCoreTestBase {
 					aSubscription.getId(), aSubscription.getStatus(), aSubscription.getPaymentMethod(), aSubscription.getAmount(), aSubscription.getAccountNumber());
 			if ( subsId == aSubscription.getId()) { found = true;}
 		}
-/*
+
 		cancelSubscription(cnpMerchantAuthenticationType, subscriptionId);
 		Assert.assertTrue(found);
 		//validate the status of subscription to make sure it is in-activated
 		ARBSubscriptionStatusEnum cancelStatus = getSubscription(cnpMerchantAuthenticationType, subscriptionId);
 		Assert.assertEquals(ARBSubscriptionStatusEnum.CANCELED, cancelStatus);
-		*/
 	}
 
 

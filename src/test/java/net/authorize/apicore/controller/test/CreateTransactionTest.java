@@ -44,7 +44,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		super.tearDown();
 	}
 
-	//SKIP FOR NOW @Test
+	@Test
 	public void testAuthCaptureTogetherCreateTransactionRequest() {
 		
 		TransactionRequestType transactionRequestType = new TransactionRequestType();
