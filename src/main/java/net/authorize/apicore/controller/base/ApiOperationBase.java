@@ -1,6 +1,7 @@
 package net.authorize.apicore.controller.base;
 
 import java.lang.reflect.ParameterizedType;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ import org.apache.commons.logging.LogFactory;
 public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetApiResponse> implements IApiOperation<Q, S> {
 
 	protected static Log logger = LogFactory.getLog(ApiOperationBase.class);
+
+	private static Environment environment = null;
+	private static MerchantAuthenticationType merchantAuthentication = null;
 	
 	private Q apiRequest = null;
 	private S apiResponse = null;
@@ -82,13 +86,50 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		this.errorResponse = errorResponse;
 	}
 
+	public static Environment getEnvironment() {
+		return environment;
+	}
+
+	public static void setEnvironment(Environment environment) {
+		ApiOperationBase.environment = environment;
+	}
+
+	public static MerchantAuthenticationType getMerchantAuthentication() {
+		return merchantAuthentication;
+	}
+
+	public static void setMerchantAuthentication(
+			MerchantAuthenticationType merchantAuthentication) {
+		ApiOperationBase.merchantAuthentication = merchantAuthentication;
+	}
+
+	public S executeWithApiResponse() {
+		return this.executeWithApiResponse(ApiOperationBase.getEnvironment());
+	}
+
 	public S executeWithApiResponse(Environment environment) {
 		this.execute(environment);
 		return this.getApiResponse();
 	}
 
+	final String nullEnvironmentErrorMessage = "Environment not set. Set environment using setter or use overloaded method to pass appropriate environment";
+
+	public void execute() {
+		if ( null == ApiOperationBase.getEnvironment())
+		{
+			throw new InvalidParameterException(nullEnvironmentErrorMessage);
+		} 
+		else
+		{
+			this.execute( ApiOperationBase.getEnvironment());
+		}
+	}
+	
 	public void execute(Environment environment) {
 		logger.info(String.format("Executing Request:'%s'", this.getApiRequest()));
+		
+		if ( null == environment) throw new InvalidParameterException(nullEnvironmentErrorMessage);
+		
 		beforeExecute();
 
 		ANetApiResponse httpApiResponse = HttpUtility.postData(environment, this.getApiRequest(), this.responseClass);
@@ -164,9 +205,9 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 	private void validate() {
 
 		ANetApiRequest request = this.getApiRequest();
-		
+
 		//validate not nulls
-		if ( null == request.getMerchantAuthentication()) throw new NullPointerException("MerchantAuthentication cannot be null");
+		validateAndSetMerchantAuthentication();
 
 		//validate nulls
 		MerchantAuthenticationType merchantAuthenticationType = request.getMerchantAuthentication();
@@ -183,5 +224,21 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 //	    merchantAuthenticationType.setImpersonationAuthentication(impersonationAuthenticationType);
 
 		validateRequest();
+	}
+	
+	private void validateAndSetMerchantAuthentication() {
+
+		ANetApiRequest request = this.getApiRequest();
+		if ( null == request.getMerchantAuthentication())
+		{
+			if ( null != ApiOperationBase.getMerchantAuthentication())
+			{
+				request.setMerchantAuthentication(ApiOperationBase.getMerchantAuthentication());
+			}
+			else
+			{
+				throw new NullPointerException("MerchantAuthentication cannot be null");
+			}
+		}
 	}
 }

@@ -12,6 +12,7 @@ import net.authorize.apicore.contract.v1.MessageTypeEnum;
  *
  */
 public interface IApiOperation<Q extends ANetApiRequest, S extends ANetApiResponse> {
+	public void execute(); 
 	public void execute(Environment environment); 
 	public List<String> getResults();
 	public MessageTypeEnum getResultCode();	
