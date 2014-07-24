@@ -16,6 +16,7 @@ public enum TransactionType {
 	GET_CUSTOMER_PROFILE("getCustomerProfileRequest"),
 	GET_CUSTOMER_PAYMENT_PROFILE("getCustomerPaymentProfileRequest"),
 	GET_CUSTOMER_SHIPPING_ADDRESS("getCustomerShippingAddressRequest"),
+	GET_HOSTED_PROFILE_PAGE("getHostedProfilePageRequest"),
 	UPDATE_CUSTOMER_PROFILE("updateCustomerProfileRequest"),
 	UPDATE_CUSTOMER_PAYMENT_PROFILE("updateCustomerPaymentProfileRequest"),
 	UPDATE_CUSTOMER_SHIPPING_ADDRESS("updateCustomerShippingAddressRequest"),
