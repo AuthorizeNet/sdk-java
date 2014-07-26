@@ -4,6 +4,8 @@ import org.apache.commons.logging.Log;
 
 public final class LogHelper {
 
+	public static String LineSeparator = System.getProperty("line.separator");
+	
 	private LogHelper() {
 	}
 

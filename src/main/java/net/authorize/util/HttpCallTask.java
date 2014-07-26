@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
@@ -15,8 +14,6 @@ import net.authorize.apicore.contract.v1.ANetApiResponse;
 import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.MessagesType;
 import net.authorize.apicore.contract.v1.MessagesType.Message;
-import net.authorize.apicore.contract.v1.ObjectFactory;
-//import net.authorize.apicore.controller.base.ErrorResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+//import net.authorize.apicore.controller.base.ErrorResponse;
 
 /**
  * Callable task to make http calls in future 
@@ -79,7 +77,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 				
 						HttpEntity entity = httpResponse.getEntity();
 						// get the raw data being received
-						InputStream instream = (InputStream)entity.getContent();
+						InputStream instream = entity.getContent();
 						buffer.append(HttpUtility.convertStreamToString(instream));
 					}
 				}

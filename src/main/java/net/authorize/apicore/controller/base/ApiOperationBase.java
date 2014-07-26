@@ -14,6 +14,7 @@ import net.authorize.apicore.contract.v1.MessageTypeEnum;
 import net.authorize.apicore.contract.v1.MessagesType;
 import net.authorize.apicore.contract.v1.MessagesType.Message;
 import net.authorize.util.HttpUtility;
+import net.authorize.util.LogHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -152,7 +153,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 			this.setResultStatus();
 			
 		} else {
-			logger.info(String.format("Got a 'null' Response for request:'%s'\n", this.getApiRequest()));
+			logger.info(String.format("Got a 'null' Response for request:'%s'%s", this.getApiRequest(), LogHelper.LineSeparator));
 		}
 		afterExecute();
 	}

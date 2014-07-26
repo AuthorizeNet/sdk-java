@@ -18,6 +18,7 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.echeck.BankAccountType;
 import net.authorize.data.echeck.ECheckType;
 import net.authorize.util.Constants;
+import net.authorize.util.LogHelper;
 
 public abstract class UnitTestData {
 	protected static String apiLoginID ;
@@ -192,7 +193,7 @@ public abstract class UnitTestData {
 			
 			/*
 			if ( !property.toLowerCase().contains("password")) {
-				System.out.printf("Values: %s, Property='%s', Environment='%s'\n", property, propValue, envValue);
+				System.out.printf("Values: %s, Property='%s', Environment='%s'%s", property, propValue, envValue, LogHelper.LineSeparator);
 			}
 			*/
 			if (null != propValue) {
@@ -230,15 +231,15 @@ public abstract class UnitTestData {
 				{
 					URLConnection conn = ( new URL(url)).openConnection();
 					conn.connect();
-					//System.out.printf( "Connection to %s is ok \n", url);
+					//System.out.printf( "Connection to %s is ok %s", url, LogHelper.LineSeparator);
 					conn = null;
 					url = null;
 				}
 				internetAccessible = true;
 			} catch (final MalformedURLException e) {
-				//System.err.printf("MalformedURLException accessing: %s, Message: %s\n", url.toString(), e.getMessage());
+				//System.err.printf("MalformedURLException accessing: %s, Message: %s%s", url.toString(), e.getMessage(), LogHelper.LineSeparator);
 			} catch (final IOException e) {
-				//System.err.printf("IOException accessing: %s, Message: %s\n", url.toString(), e.getMessage());
+				//System.err.printf("IOException accessing: %s, Message: %s%s", url.toString(), e.getMessage(), LogHelper.LineSeparator);
 			}
 		}
 		

@@ -62,7 +62,7 @@ public final class HttpUtility {
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
-			  logger.info(String.format("Request: '\n%s\n'", xmlRequest));
+			  logger.info(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
 			  httpPost.setEntity(new StringEntity(xmlRequest));
 		}
 
@@ -115,10 +115,6 @@ public final class HttpUtility {
 			throw new NullPointerException("Unable to create BomStriper from the input stream");
 		}
 			
-		InputStreamReader isr = new InputStreamReader(bomStripperStream) ;
-		BufferedReader reader = new BufferedReader(isr);
-	    StringBuilder sb = new StringBuilder();
-
 	    //strip BOM if exists, the funny upto 3 bytes at the begining of stream identifying the char encoding 
     	try {
     		bomStripperStream.skipBOM();
@@ -127,10 +123,16 @@ public final class HttpUtility {
 		} 
 
 	    String line = null;
+		InputStreamReader isr = null;
+		BufferedReader reader = null;
+	    StringBuilder sb = null;
 	    //read the stream
 	    try {
+			isr = new InputStreamReader(bomStripperStream) ;
+			reader = new BufferedReader(isr);
+		    sb = new StringBuilder();
 	        while ((line = reader.readLine()) != null) {
-	            sb.append(line + "\n");
+	            sb.append(line).append(LogHelper.LineSeparator);
 	        }
 	    } catch (IOException e) {
 			logger.warn(String.format("Exception reading data from Stream: '%s'", e.getMessage()));
