@@ -173,7 +173,8 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 			String code = "Error";
 			String text = "Unknown Error";
 			LogHelper.error( logger, "Http request execute failed: '%s'", exception.getMessage());
-			code = exception.getClass().getTypeName();
+			code = exception.getClass().getCanonicalName();
+			//code = exception.getClass().getTypeName();// requires java1.8
 			text = exception.getMessage();
 			
 			setErrorMessageValues(code, text);
