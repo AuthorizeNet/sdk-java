@@ -30,6 +30,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 	protected String refId;
 	protected ArrayList<String> customerProfileIdList = new ArrayList<String>();
 	protected CustomerProfile customerProfile;
+	protected String token;
 
 	protected ArrayList<String> customerPaymentProfileIdList = new ArrayList<String>();
 	protected ArrayList<PaymentProfile> paymentProfileList = new ArrayList<PaymentProfile>();
@@ -62,6 +63,8 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 				case GET_CUSTOMER_SHIPPING_ADDRESS:
 					result.importShippingAddress(targetTransaction);
 					break;
+				case GET_HOSTED_PROFILE_PAGE:
+					result.importToken(targetTransaction);
 				default:
 					break;
 			}
@@ -117,6 +120,14 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 		}
 	}
 
+	/**
+	 * Import the hosted profile page token.
+	 */
+	private void importToken(Transaction txn) {
+		this.token = getElementText(
+				txn.getCurrentResponse().getDocument().getDocumentElement(), AuthNetField.ELEMENT_TOKEN.getFieldName());
+	}
+	
 	/**
 	 * Import the customer payment profile id (list).
 	 */
@@ -438,6 +449,13 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 	 */
 	public String getRefId() {
 		return refId;
+	}
+	
+	/**
+	 * @return the hosted profile page token
+	 */
+	public String getToken() {
+		return token;
 	}
 
 	/**

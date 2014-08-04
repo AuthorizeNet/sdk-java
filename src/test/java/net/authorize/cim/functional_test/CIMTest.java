@@ -16,6 +16,7 @@ import net.authorize.data.Order;
 import net.authorize.data.OrderItem;
 import net.authorize.data.ShippingCharges;
 import net.authorize.data.cim.CustomerProfile;
+import net.authorize.data.cim.HostedProfileSettingType;
 import net.authorize.data.cim.PaymentProfile;
 import net.authorize.data.cim.PaymentTransaction;
 import net.authorize.data.creditcard.AVSCode;
@@ -514,6 +515,28 @@ public class CIMTest extends UnitTestData {
 		Assert.assertEquals(country, shippingAddress.getCountry());
 		Assert.assertEquals(phone, shippingAddress.getPhoneNumber());
 		Assert.assertEquals(fax, shippingAddress.getFaxNumber());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetHostedProfilePageRequest() {
+		// get a token to access hosted profile pages
+		net.authorize.cim.Transaction transaction =
+		  merchant.createCIMTransaction(TransactionType.GET_HOSTED_PROFILE_PAGE);
+
+		transaction.setRefId(refId);
+		transaction.setCustomerProfileId(customerId);
+		transaction.addHostedProfileSetting(HostedProfileSettingType.HOSTED_PROFILE_PAGE_BORDER_VISIBLE, "false");
+		transaction.addHostedProfileSetting(HostedProfileSettingType.HOSTED_PROFILE_IFRAME_COMMUNICATOR_URL, "http://localhost");
+
+		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+
+		Assert.assertNotNull(result);
+	    result.printMessages();
+		Assert.assertTrue(result.isOk());
+		Assert.assertNotNull(result.getRefId());
+		Assert.assertNotNull(result.getToken());
+
 	}
 
 	@SuppressWarnings("unchecked")

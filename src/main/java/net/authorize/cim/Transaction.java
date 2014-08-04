@@ -15,6 +15,7 @@ import net.authorize.data.ShippingCharges;
 import net.authorize.data.cim.CustomerProfile;
 import net.authorize.data.cim.PaymentProfile;
 import net.authorize.data.cim.PaymentTransaction;
+import net.authorize.data.cim.HostedProfileSettingType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
@@ -42,6 +43,7 @@ public class Transaction extends net.authorize.Transaction {
 	private ArrayList<PaymentProfile> paymentProfileList = new ArrayList<PaymentProfile>();
 	private PaymentTransaction paymentTransaction;
 	protected Map<String, String> extraOptions = Collections.synchronizedMap(new HashMap<String, String>());
+	protected Map<HostedProfileSettingType, String> hostedProfileSettings = Collections.synchronizedMap(new HashMap<HostedProfileSettingType, String>());
 
 	private ValidationModeType validationMode = ValidationModeType.NONE;
 	private BasicXmlDocument currentRequest = null;
@@ -691,6 +693,31 @@ public class Transaction extends net.authorize.Transaction {
 			}
 		}
 	}
+	
+	/**
+	 * Add hosted profile settings to the document.
+	 *
+	 * @param document
+	 */
+	private void addHostedProfileSettings(BasicXmlDocument document) {
+		if(this.hostedProfileSettings != null && this.hostedProfileSettings.size() > 0) {
+			Element hp_settings_el = document.createElement(AuthNetField.ELEMENT_HOSTED_PROFILE_SETTINGS.getFieldName());
+			for(HostedProfileSettingType key : hostedProfileSettings.keySet()) {
+				Element setting_el = document.createElement(AuthNetField.ELEMENT_SETTING.getFieldName());
+				
+				Element setting_name_el = document.createElement(AuthNetField.ELEMENT_SETTING_NAME.getFieldName());
+				setting_name_el.appendChild(document.getDocument().createTextNode(key.getValue()));
+				setting_el.appendChild(setting_name_el);
+				
+				Element setting_value_el = document.createElement(AuthNetField.ELEMENT_SETTING_VALUE.getFieldName());
+				setting_value_el.appendChild(document.getDocument().createTextNode(hostedProfileSettings.get(key)));
+				setting_el.appendChild(setting_value_el);
+				
+				hp_settings_el.appendChild(setting_el);
+			}
+			document.getDocumentElement().appendChild(hp_settings_el);
+		}
+	}
 
 	/**
 	 * Add the split tender id and status to the document.
@@ -749,6 +776,9 @@ public class Transaction extends net.authorize.Transaction {
 			break;
 		case GET_CUSTOMER_SHIPPING_ADDRESS :
 			getCustomerShippingAddress();
+			break;
+		case GET_HOSTED_PROFILE_PAGE :
+			getHostedProfilePage();
 			break;
 		case UPDATE_CUSTOMER_PROFILE :
 			updateCustomerProfile();
@@ -862,6 +892,21 @@ public class Transaction extends net.authorize.Transaction {
 		addAuthentication(document);
 		addCustomerProfileId(document);
 		addCustomerAddressId(document);
+		currentRequest = document;
+	}
+	
+	/**
+	 * Get hosted profile page request.
+	 */
+	private void getHostedProfilePage() {
+		BasicXmlDocument document = new BasicXmlDocument();
+		document.parseString("<" + TransactionType.GET_HOSTED_PROFILE_PAGE.getValue()
+				+ " xmlns = \"" + XML_NAMESPACE + "\" />");
+
+		addAuthentication(document);
+		addRefId(document);
+		addCustomerProfileId(document);
+		addHostedProfileSettings(document);
 		currentRequest = document;
 	}
 
@@ -1191,5 +1236,27 @@ public class Transaction extends net.authorize.Transaction {
 			this.extraOptions = Collections.synchronizedMap(new HashMap<String, String>());
 		}
 		this.extraOptions.put(key, value);
+	}
+	
+	/**
+	 * Sets the hosted profile settings.
+	 *
+	 * @param settings the settings to set
+	 */
+	public void setHostedProfileSettings(Map<HostedProfileSettingType, String> settings) {
+		this.hostedProfileSettings = settings;
+	}
+	
+	/**
+	 * Add hosted profile setting to the hosted profile settings map.
+	 * 
+	 * @param settingName
+	 * @param settingValue
+	 */
+	public void addHostedProfileSetting(HostedProfileSettingType settingName, String settingValue) {
+		if(this.hostedProfileSettings == null) {
+			this.hostedProfileSettings = Collections.synchronizedMap(new HashMap<HostedProfileSettingType, String>());
+		}
+		this.hostedProfileSettings.put(settingName, settingValue);
 	}
 }
