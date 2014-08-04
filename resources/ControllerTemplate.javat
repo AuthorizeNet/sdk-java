@@ -1,9 +1,9 @@
-package net.authorize.apicore.controller;
+package net.authorize.api.controller;
 
-import net.authorize.apicore.contract.v1.APICONTROLLERNAMERequest;
-import net.authorize.apicore.contract.v1.APICONTROLLERNAMEResponse;
-import net.authorize.apicore.contract.v1.ValidationModeEnum;
-import net.authorize.apicore.controller.base.ApiOperationBase;
+import net.authorize.api.contract.v1.APICONTROLLERNAMERequest;
+import net.authorize.api.contract.v1.APICONTROLLERNAMEResponse;
+import net.authorize.api.contract.v1.ValidationModeEnum;
+import net.authorize.api.controller.base.ApiOperationBase;
 
 public class APICONTROLLERNAMEController extends ApiOperationBase<APICONTROLLERNAMERequest, APICONTROLLERNAMEResponse> {
 

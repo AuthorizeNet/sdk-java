@@ -9,11 +9,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 
 import net.authorize.Environment;
-import net.authorize.apicore.contract.v1.ANetApiRequest;
-import net.authorize.apicore.contract.v1.ANetApiResponse;
-import net.authorize.apicore.contract.v1.MessageTypeEnum;
-import net.authorize.apicore.contract.v1.MessagesType;
-import net.authorize.apicore.contract.v1.MessagesType.Message;
+import net.authorize.api.contract.v1.ANetApiRequest;
+import net.authorize.api.contract.v1.ANetApiResponse;
+import net.authorize.api.contract.v1.MessageTypeEnum;
+import net.authorize.api.contract.v1.MessagesType;
+import net.authorize.api.contract.v1.MessagesType.Message;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-//import net.authorize.apicore.controller.base.ErrorResponse;
+//import net.authorize.api.controller.base.ErrorResponse;
 
 /**
  * Callable task to make http calls in future 
@@ -94,7 +94,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 				} catch(UnmarshalException ume) {
 					try {
 						//try deserializing to error message
-						localResponse = XmlUtility.create(buffer.toString(), net.authorize.apicore.contract.v1.ErrorResponse.class);
+						localResponse = XmlUtility.create(buffer.toString(), net.authorize.api.contract.v1.ErrorResponse.class);
 					} catch(JAXBException jabex) {
 						response = createErrorResponse(httpResponse, jabex);
 					}

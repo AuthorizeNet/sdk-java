@@ -16,8 +16,8 @@ import java.util.concurrent.Future;
 import javax.xml.bind.JAXBException;
 
 import net.authorize.Environment;
-import net.authorize.apicore.contract.v1.ANetApiRequest;
-import net.authorize.apicore.contract.v1.ANetApiResponse;
+import net.authorize.api.contract.v1.ANetApiRequest;
+import net.authorize.api.contract.v1.ANetApiResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
