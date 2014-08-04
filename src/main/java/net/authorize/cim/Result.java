@@ -65,6 +65,7 @@ public class Result<T> extends net.authorize.xml.Result<T> {
 					break;
 				case GET_HOSTED_PROFILE_PAGE:
 					result.importToken(targetTransaction);
+					break;
 				default:
 					break;
 			}
