@@ -1,6 +1,9 @@
 net.authorize
 net.authorize.aim
 net.authorize.aim.cardpresent
+net.authorize.api.contract.v1
+net.authorize.api.controller
+net.authorize.api.controller.base
 net.authorize.arb
 net.authorize.cim
 net.authorize.data
