@@ -74,20 +74,26 @@ public final class XmlUtility {
 		{
 	        JAXBContext ctx = JAXBContext.newInstance(classType);
 	        Unmarshaller um = ctx.createUnmarshaller();
-	        Object unmarshaled = um.unmarshal(new StringReader(xml));
-	        if ( null != unmarshaled)
-	        {
-	        	try {
-	        		entity = classType.cast(unmarshaled);
-	        	} catch (ClassCastException cce) {
-	        		if (unmarshaled instanceof JAXBElement) {
-	        			@SuppressWarnings("rawtypes")
-						JAXBElement element = (JAXBElement) unmarshaled;
-	        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
-	        				entity = (T) element.getValue();
-	        			}
-	        		}
-	        	}
+	        try {
+		        Object unmarshaled = um.unmarshal(new StringReader(xml));
+		        if ( null != unmarshaled)
+		        {
+		        	try {
+		        		entity = classType.cast(unmarshaled);
+		        	} catch (ClassCastException cce) {
+		        		if (unmarshaled instanceof JAXBElement) {
+		        			@SuppressWarnings("rawtypes")
+							JAXBElement element = (JAXBElement) unmarshaled;
+		        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
+		        				entity = (T) element.getValue();
+		        			}
+		        		}
+		        	}
+		        }
+	        } catch (JAXBException jaxbe) {
+	        	LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
+	        	LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
+	        	throw jaxbe;
 	        }
 		}
 

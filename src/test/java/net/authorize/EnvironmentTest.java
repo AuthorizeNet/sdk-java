@@ -36,7 +36,7 @@ public class EnvironmentTest extends UnitTestData {
 			
 			for (String property : UnitTestData.getPropertiesList()) {
 				if ( !property.toLowerCase().contains("password")) {
-					System.out.printf("Property '%s'\n", property);
+					System.out.printf("Property '%s'%s", property, net.authorize.util.LogHelper.LineSeparator);
 				}
 			}
 		}

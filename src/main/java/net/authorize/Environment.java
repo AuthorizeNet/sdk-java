@@ -33,11 +33,14 @@ package net.authorize;
  *  transactions, submit a $0.00 value instead, if the processor accepts it.
  */
 public enum Environment {
-	SANDBOX("https://test.authorize.net","https://apitest.authorize.net","https://test.authorize.net"),
-	SANDBOX_TESTMODE("https://test.authorize.net","https://apitest.authorize.net","https://test.authorize.net"),
+	SANDBOX("https://sandbox.authorize.net","https://apitest.authorize.net","https://sandbox.authorize.net"),
+	SANDBOX_TESTMODE("https://sandbox.authorize.net","https://apitest.authorize.net","https://sandbox.authorize.net"),
 	PRODUCTION("https://secure.authorize.net","https://api.authorize.net","https://cardpresent.authorize.net"),
 	PRODUCTION_TESTMODE("https://secure.authorize.net","https://api.authorize.net","https://cardpresent.authorize.net"),
+	LOCAL_VM("http://WW725RAMITTAL1","http://WW725RAMITTAL1/xml/v1/request.api","http://WW725RAMITTAL1/xml/v1/request.api"),
+	HOSTED_VM("http://WW758AKALGI02.qa.intra","http://WW758AKALGI02.qa.intra/xml/v1/request.api","http://WW758AKALGI02.qa.intra/xml/v1/request.api"),
 	CUSTOM(null,null,null);
+	//http://ww725ramittal1.qa.intra/xml/v1/request.api	
 
 	private String baseUrl;
 	private String xmlBaseUrl;
