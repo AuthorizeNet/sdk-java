@@ -4,8 +4,8 @@ import net.authorize.sim.LinkMethod;
 
 /**
  * The hosted receipt page provides the customer with the status of their transaction and can include a
- * link back to the merchant’s website. It can be customized to reflect the look and feel of the
- * merchant’s website.
+ * link back to the merchant's website. It can be customized to reflect the look and feel of the
+ * merchant's website.
  *
  */
 public class HostedReceiptPageSettings {

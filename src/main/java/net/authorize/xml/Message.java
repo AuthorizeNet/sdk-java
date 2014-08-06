@@ -37,7 +37,7 @@ public class Message{
 
 	/**
 	 * Message result code.  Contains additional information about the results
-	 * of the request.  An “Ok” result code indicates that the request was
+	 * of the request.  An 'Ok' result code indicates that the request was
 	 * processed and accepted without error.
 	 *
 	 * @return String

@@ -114,7 +114,7 @@
 	<target name="javadoc" description="Create javadocs for all files">
 		<delete dir="${javadocs.dir}" />
 		<mkdir dir="${javadocs.dir}" />
-		<javadoc destdir="${javadocs.dir}" author="true" version="true" use="true" windowtitle="Authorize.Net Java SDK" verbose="off" serialwarn="off">
+		<javadoc destdir="${javadocs.dir}" author="true" version="true" encoding="UTF-8" use="true" windowtitle="Authorize.Net Java SDK" verbose="off" serialwarn="off">
 
 			<classpath>
 				<fileset id="libFiles" dir="lib">

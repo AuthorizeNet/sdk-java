@@ -2,7 +2,7 @@ package net.authorize.sim.data;
 
 /**
  * When using the hosted payment form, settings can be configured to match the look of
- * the merchant’s website.  The purpose of this class is just that - to
+ * the merchant's website.  The purpose of this class is just that - to
  * store the hosted payment form settings.
  */
 public class HostedPaymentFormSettings {
