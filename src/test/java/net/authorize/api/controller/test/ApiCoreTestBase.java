@@ -1,12 +1,19 @@
 package net.authorize.api.controller.test;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.xml.datatype.DatatypeFactory;
@@ -38,11 +45,13 @@ import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
 import net.authorize.api.contract.v1.NameAndAddressType;
+import net.authorize.api.contract.v1.ObjectFactory;
 import net.authorize.api.contract.v1.OrderType;
 import net.authorize.api.contract.v1.PayPalType;
 import net.authorize.api.contract.v1.PaymentScheduleType;
 import net.authorize.api.contract.v1.PaymentType;
 import net.authorize.api.controller.base.ApiOperationBase;
+import net.authorize.api.controller.base.IApiOperation;
 import net.authorize.data.xml.reporting.ReportingDetails;
 import net.authorize.util.Constants;
 import net.authorize.util.DateUtil;
@@ -50,6 +59,8 @@ import net.authorize.util.LogHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -106,6 +117,8 @@ public abstract class ApiCoreTestBase {
 	PaymentType paymentOne = null;
 	PayPalType payPalOne = null;
 	
+	protected Mockery mockContext = null;
+	protected static ObjectFactory factory = null;
 	private Random random = new Random();
 	static {
 		//getPropertyFromNames get the value from properties file or environment
@@ -123,17 +136,18 @@ public abstract class ApiCoreTestBase {
 		{
 			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
 		}
-		/*
+/*
 		//hosted vm
 		CnpApiLoginIdKey = "7zc5c7YBTE";
 		CnpTransactionKey = "5kPE8v6wdL6Dj56V";
 		CpApiLoginIdKey = "5S7uk9Qu";
 		CpTransactionKey = "359DNfGD5K6Kzz49";
-		*/
+*/
 		cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
 		cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
 
 		errorMessages = new HashMap<String, String>();
+		factory = new ObjectFactory();
 	}
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -153,6 +167,9 @@ public abstract class ApiCoreTestBase {
 
 	@Before
 	public void setUp() throws Exception {
+		
+		 mockContext = new Mockery();
+
 		//initialize counter
 		counter = random.nextInt((int) Math.pow(2, 24));
 		counterStr = getRandomString("");
@@ -506,5 +523,91 @@ public abstract class ApiCoreTestBase {
 		
 		return errorMessage;
 		
+	}
+	
+	protected <Q extends ANetApiRequest, S extends ANetApiResponse> void setMockControllerExpectations(
+			final IApiOperation<Q, S> mockController,
+			final Q mockRequest,
+			final S mockResponse,
+			final ANetApiResponse errorResponse, 
+			final List<String> results,
+			final MessageTypeEnum messageType) {
+		
+		final net.authorize.Environment mockEnvironment = net.authorize.Environment.CUSTOM;
+		mockContext.checking( new Expectations() {{
+			oneOf(mockController).execute();
+			oneOf(mockController).execute(mockEnvironment);
+			oneOf(mockController).getApiResponse(); will (returnValue(mockResponse));
+			oneOf(mockController).executeWithApiResponse(); will (returnValue(mockResponse));
+			oneOf(mockController).executeWithApiResponse(mockEnvironment); will (returnValue(mockResponse));
+			oneOf(mockController).getResults(); will (returnValue(results));
+			oneOf(mockController).getResultCode(); will (returnValue(messageType));
+			oneOf(mockController).getErrorResponse(); will (returnValue(errorResponse));
+		}});
+		
+		if (null != mockRequest && null != mockResponse)
+		{
+			mockResponse.setRefId( mockRequest.getRefId());
+		}
+		logger.info(String.format("Request: %s", mockRequest));
+		showProperties(mockRequest);
+		logger.info(String.format("Response: %s", mockResponse));
+		showProperties(mockResponse);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <Q extends ANetApiRequest, S extends ANetApiResponse> IApiOperation<Q, S> getMockController()
+	{
+		return mockContext.mock(IApiOperation.class);
+	}
+	
+	public static void showProperties(Object bean) {  
+		if ( null == bean)
+		{
+			return;
+		}
+		try {
+			BeanInfo info = Introspector.getBeanInfo(bean.getClass(), Object.class);	
+			PropertyDescriptor[] props = info.getPropertyDescriptors();  
+		    for (PropertyDescriptor pd : props) {  
+		        String name = pd.getName();  
+		        Method getter = pd.getReadMethod();  
+		        Class<?> type = pd.getPropertyType();  
+ 
+		        if (null != getter && !"class".equals(name))
+		        {
+			        Object value = getter.invoke(bean); 
+			        logger.info(String.format("Type: '%s', Name:'%s', Value:'%s'", type, name, value));  
+			        processCollections(type, name, value);
+			        //process compositions of custom classes
+			        if ( null != value && 0 <= type.toString().indexOf("net.authorize."))
+			        {
+			        	showProperties(value);
+			        }
+		        }
+		    }  
+		} catch (Exception e) {
+			logger.error(String.format("Exception during navigating properties: Message: %s, StackTrace: %s", e.getMessage(), e.getStackTrace()));
+		}  
+	} 
+	
+	public static void processCollections( Class<?> type, String name, Object value)
+	{
+         if ( null != type) { 
+    		if ( Collection.class.isAssignableFrom(type)) {
+    			logger.info(String.format("Iterating on Collection: '%s'", name));  
+		        for( Object aValue : (Collection<?>) value)
+		        {
+		        	showProperties(aValue);
+		        }        	
+    		}
+    		if ( Map.class.isAssignableFrom(type)) {
+    			logger.info(String.format("Iterating on Map: '%s'", name));  
+		        for( Object aValue : ((Map<?, ?>) value).values())
+		        {
+		        	showProperties(aValue);
+		        }        	
+    		}
+         }
 	}
 }
