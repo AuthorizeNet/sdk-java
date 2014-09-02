@@ -71,9 +71,9 @@ public abstract class ApiCoreTestBase {
 	protected static Log logger = LogFactory.getLog(ApiCoreTestBase.class);
 	
 	protected static HashMap<String, String> errorMessages = null;
-	
-	//static Environment environment = Environment.HOSTED_VM;
-	static Environment environment = Environment.SANDBOX;
+
+	//protected static Environment environment = Environment.HOSTED_VM;
+	protected static Environment environment = Environment.SANDBOX;
 	static Merchant cnpMerchant = null;
 	static Merchant cpMerchant = null;
 	static String CnpApiLoginIdKey = null;
@@ -90,36 +90,37 @@ public abstract class ApiCoreTestBase {
 	String nowString = null;
 	Date now = null;
 
-	String refId = null;
+	protected String refId = null;
 	int counter = 0;
-	String counterStr = null;
+	protected String counterStr = null;
 
-	MerchantAuthenticationType cnpMerchantAuthenticationType = null;
-	MerchantAuthenticationType cpMerchantAuthenticationType = null;
+	protected MerchantAuthenticationType cnpMerchantAuthenticationType = null;
+	protected MerchantAuthenticationType cpMerchantAuthenticationType = null;
 
-	ARBSubscriptionType arbSubscriptionOne = null;
-	ARBSubscriptionType arbSubscriptionTwo = null;
-	BankAccountType bankAccountOne = null;
-	CreditCardTrackType trackDataOne = null;
-	CreditCardType creditCardOne = null;
-	CustomerAddressType customerAddressOne = null;
-	CustomerDataType customerDataOne = null;
-	CustomerPaymentProfileType customerPaymentProfileOne = null;
-	CustomerProfileType customerProfileType = null;
-	CustomerType customerOne = null;
-	CustomerType customerTwo = null;
-	DriversLicenseType driversLicenseOne = null; 
-	EncryptedTrackDataType encryptedTrackDataOne = null;
-	NameAndAddressType nameAndAddressTypeOne = null;
-	NameAndAddressType nameAndAddressTypeTwo = null;
-	OrderType orderType = null;
-	PaymentScheduleType paymentScheduleTypeOne = null;
-	PaymentType paymentOne = null;
-	PayPalType payPalOne = null;
+	protected ARBSubscriptionType arbSubscriptionOne = null;
+	protected ARBSubscriptionType arbSubscriptionTwo = null;
+	protected BankAccountType bankAccountOne = null;
+	protected CreditCardTrackType trackDataOne = null;
+	protected CreditCardType creditCardOne = null;
+	protected CustomerAddressType customerAddressOne = null;
+	protected CustomerDataType customerDataOne = null;
+	protected CustomerPaymentProfileType customerPaymentProfileOne = null;
+	protected CustomerProfileType customerProfileType = null;
+	protected CustomerType customerOne = null;
+	protected CustomerType customerTwo = null;
+	protected DriversLicenseType driversLicenseOne = null; 
+	protected EncryptedTrackDataType encryptedTrackDataOne = null;
+	protected NameAndAddressType nameAndAddressTypeOne = null;
+	protected NameAndAddressType nameAndAddressTypeTwo = null;
+	protected OrderType orderType = null;
+	protected PaymentScheduleType paymentScheduleTypeOne = null;
+	protected PaymentType paymentOne = null;
+	protected PayPalType payPalOne = null;
 	
 	protected Mockery mockContext = null;
 	protected static ObjectFactory factory = null;
 	private Random random = new Random();
+	
 	static {
 		//getPropertyFromNames get the value from properties file or environment
 		CnpApiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
@@ -129,22 +130,31 @@ public abstract class ApiCoreTestBase {
 		CpTransactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_CP_TRANSACTION_KEY, Constants.PROP_CP_TRANSACTION_KEY);
 		CpMd5HashKey = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
 
-		if ((null == CnpApiLoginIdKey) ||
-			(null == CnpTransactionKey) ||
-			(null == CpApiLoginIdKey) ||
-			(null == CpTransactionKey))
-		{
-			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
-		}
-/*
-		//hosted vm
-		CnpApiLoginIdKey = "7zc5c7YBTE";
-		CnpTransactionKey = "5kPE8v6wdL6Dj56V";
-		CpApiLoginIdKey = "5S7uk9Qu";
-		CpTransactionKey = "359DNfGD5K6Kzz49";
-*/
-		cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
-		cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
+        //require only one cnp or cp merchant keys
+        if ((null != CnpApiLoginIdKey && null != CnpTransactionKey) ||
+            (null != CpApiLoginIdKey && null != CpTransactionKey))
+        {
+            logger.debug("At least one of CardPresent or CardNotPresent merchant keys are present.");
+        }
+        else
+	    {
+        	throw new IllegalArgumentException(
+        			"LoginId and/or TransactionKey have not been set. " + 
+        			"At least one of CardPresent or CardNotPresent merchant keys are required.");
+	    }
+		
+        if (null != CnpApiLoginIdKey && null != CnpTransactionKey)
+        {
+        	cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
+        }
+        if (null != CpApiLoginIdKey && null != CpTransactionKey)
+        {
+        	cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
+        }
+        if ( null == cnpMerchant && null == cpMerchant)
+        {
+        	Assert.fail("None of the cardPresent or cardNotPresent merchant logins have been set");
+        }
 
 		errorMessages = new HashMap<String, String>();
 		factory = new ObjectFactory();
