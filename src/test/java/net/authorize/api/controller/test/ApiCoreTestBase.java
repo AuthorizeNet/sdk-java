@@ -74,6 +74,7 @@ public abstract class ApiCoreTestBase {
 
 	//protected static Environment environment = Environment.HOSTED_VM;
 	protected static Environment environment = Environment.SANDBOX;
+	
 	static Merchant cnpMerchant = null;
 	static Merchant cpMerchant = null;
 	static String CnpApiLoginIdKey = null;
@@ -91,7 +92,7 @@ public abstract class ApiCoreTestBase {
 	Date now = null;
 
 	protected String refId = null;
-	int counter = 0;
+	protected int counter = 0;
 	protected String counterStr = null;
 
 	protected MerchantAuthenticationType cnpMerchantAuthenticationType = null;
