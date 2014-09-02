@@ -8,7 +8,7 @@ IF NOT EXIST "%SRCDIR%" (
 )
 SET CYGWIN=NODOSFILEWARNING
 SET OUTFILE=%TEMP%\AllGeneratedEnumTest.java
-SET TEMPLATE=%CD%\scripts\EnumTemplate.javat
+SET TEMPLATE=%CD%\resources\EnumTemplate.javat
 PUSHD "%SRCDIR%"
 grep -i "public enum" * | cut -f2 -d: | cut -c13- | cut -f1 -d" " > %TEMP%\enum.lst
 
