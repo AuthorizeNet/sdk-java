@@ -1,5 +1,7 @@
 Authorize.Net Java SDK
 ======================
+[![Build Status](https://travis-ci.org/ramittal/sdk-java.png?branch=master)](https://travis-ci.org/ramittal/sdk-java)
+
 ```
   <groupId>net.authorize</groupId>
   <artifactId>anet-java-sdk</artifactId>
