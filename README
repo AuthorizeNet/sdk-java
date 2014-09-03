@@ -1,6 +1,8 @@
 Authorize.Net Java SDK
 ======================
 
+[![Build Status](https://travis-ci.org/ramittal/sdk-java.png?branch=master)](https://travis-ci.org/ramittal/sdk-java)
+
 The Java SDK is meant to offer an alternate object-oriented model of
 development with the Authorize.net APIs (Version 3.1).  The SDK is based
 entirely off the name-value pair API, but performs the core payment activities
