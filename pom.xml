@@ -130,7 +130,7 @@
 				<include> **/mocktest/**.java</include>
 			</includes>
 		  <skipTests>false</skipTests>
-	  	  <forkCount>2</forkCount>
+	  	  <forkCount>1</forkCount>
           <systemPropertyVariables>
 		  	<API_LOGIN_ID>${api.login.id}</API_LOGIN_ID>
 		    <TRANSACTION_KEY>${transaction.key}</TRANSACTION_KEY>
