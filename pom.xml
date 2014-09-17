@@ -127,7 +127,7 @@
                 <version>2.7.2</version>
                 <configuration>
                     <includes>
-                        <include> **/mocktestremoved/**.java</include>
+                        <include> **/mocktest/**.java</include>
                     </includes>
                     <skipTests>false</skipTests>
                     <forkCount>1</forkCount>
