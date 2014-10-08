@@ -5,7 +5,7 @@ Authorize.Net Java SDK
 ```
   <groupId>net.authorize</groupId>
   <artifactId>anet-java-sdk</artifactId>
-  <version>1.8.2</version>
+  <version>LATEST</version>
 ```
 
 Prerequisites
@@ -38,6 +38,16 @@ Build process
            holds the API credentials for testing the SDK.
 
 
+
+  Build the SDK with Maven
+  ------------------------
+
+  To compile the SDK and create a jar...
+
+    $ mvn clean package
+
+
+
   Build the SDK with Ant
   ----------------------
 
@@ -53,14 +63,6 @@ Build process
   To create the javadocs...
 
     $ ant javadoc
-
-
-  Build the SDK with Maven
-  ------------------------
-
-  To compile the SDK and create a jar...
-
-    $ mvn clean package
 
 
 Test Code - Advanced Integration Method (AIM)
