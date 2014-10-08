@@ -9,9 +9,9 @@ import java.io.Serializable;
 public enum CardType implements Serializable {
 	VISA("Visa"),
 	MASTER_CARD("MasterCard"),
-	AMERICAN_EXPRESS("American Express"),
+	AMERICAN_EXPRESS("AmericanExpress"),
 	DISCOVER("Discover"),
-	DINERS_CLUB("Diners Club"),
+	DINERS_CLUB("DinersClub"),
 	JCB("JCB"),
 	ECHECK("eCheck"),	// added for the reporting API
 	UNKNOWN("");
