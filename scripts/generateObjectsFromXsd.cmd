@@ -2,6 +2,7 @@
 SETLOCAL
 @ECHO Starting %DATE%-%TIME%
 
+
 SET LOCALXSD=%TEMP%\AnetApiSchema.xsd
 SET LOCALWSDL=%TEMP%\AnetApiSchema.wsdl
 SET selection=N
@@ -9,7 +10,7 @@ CHOICE /C YN  /T 10 /D N /M "Fetch and update Schema/WSDL file from remote serve
 IF "%ERRORLEVEL%"=="1" (
 	@ECHO Fetching Schema/WSDL files 
 	SET %ERRORLEVEL%=
-    CALL getXsdWsdl.cmd %LOCALXSD% %LOCALWSDL%
+	CALL "%~dp0\getXsdWsdl.cmd" %LOCALXSD% %LOCALWSDL%
 	SET ERRORCODE=%ERRORLEVEL%
 	@ECHO GetXsdWsdl Call Exit Code:%ERRORCODE%
 	IF NOT "%ERRORLEVEL%"=="0" (
