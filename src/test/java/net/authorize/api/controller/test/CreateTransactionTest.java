@@ -393,7 +393,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		Assert.assertEquals( "E00001", getFirstErrorCode(failureResponse.getMessages()));
 */
 	}
-
+/*
 	@Test
 	public void testCreateProfileWithCreateTransactionRequest() {
 		
@@ -433,6 +433,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		Assert.assertSame(1, profileResponse.getCustomerShippingAddressIdList().getNumericString().size());
 		Assert.assertNotSame("0", profileResponse.getCustomerShippingAddressIdList().getNumericString().get(0));
 	}
+*/
 	
 	@Test
 	public void testSetupCustomersWithProfile() {
