@@ -37,8 +37,8 @@ public enum Environment {
 	SANDBOX_TESTMODE("https://test.authorize.net","https://apitest.authorize.net","https://test.authorize.net"),
 	PRODUCTION("https://secure.authorize.net","https://api.authorize.net","https://cardpresent.authorize.net"),
 	PRODUCTION_TESTMODE("https://secure.authorize.net","https://api.authorize.net","https://cardpresent.authorize.net"),
-	LOCAL_VM("http://WW725RAMITTAL1","http://WW725RAMITTAL1/xml/v1/request.api","http://WW725RAMITTAL1/xml/v1/request.api"),
-	HOSTED_VM("http://WW758AKALGI02.qa.intra","http://WW758AKALGI02.qa.intra/xml/v1/request.api","http://WW758AKALGI02.qa.intra/xml/v1/request.api"),
+	LOCAL_VM(null,null,null);
+	HOSTED_VM(null,null,null);
 	CUSTOM(null,null,null);
 	//http://ww725ramittal1.qa.intra/xml/v1/request.api	
 
