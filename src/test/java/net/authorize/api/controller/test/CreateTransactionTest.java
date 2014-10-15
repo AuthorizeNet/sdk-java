@@ -1,8 +1,18 @@
 package net.authorize.api.controller.test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import junit.framework.Assert;
+import net.authorize.Environment;
+import net.authorize.Merchant;
+import net.authorize.aim.Transaction;
+import net.authorize.api.contract.v1.CreateProfileResponse;
 import net.authorize.api.contract.v1.CreateTransactionRequest;
 import net.authorize.api.contract.v1.CreateTransactionResponse;
+import net.authorize.api.contract.v1.CreditCardMaskedType;
+import net.authorize.api.contract.v1.CreditCardTrackType;
+import net.authorize.api.contract.v1.CreditCardType;
 import net.authorize.api.contract.v1.CustomerAddressType;
 import net.authorize.api.contract.v1.CustomerPaymentProfileType;
 import net.authorize.api.contract.v1.CustomerProfilePaymentType;
@@ -10,11 +20,15 @@ import net.authorize.api.contract.v1.CustomerProfileType;
 import net.authorize.api.contract.v1.MerchantAuthenticationType;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.NameAndAddressType;
+import net.authorize.api.contract.v1.ObjectFactory;
 import net.authorize.api.contract.v1.PaymentProfile;
+import net.authorize.api.contract.v1.PaymentType;
+import net.authorize.api.contract.v1.TransRetailInfoType;
 import net.authorize.api.contract.v1.TransactionRequestType;
 import net.authorize.api.contract.v1.TransactionResponse;
 import net.authorize.api.contract.v1.TransactionTypeEnum;
 import net.authorize.api.controller.CreateTransactionController;
+import net.authorize.data.creditcard.CreditCard;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -379,6 +393,46 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		Assert.assertEquals( "E00001", getFirstErrorCode(failureResponse.getMessages()));
 */
 	}
+
+	@Test
+	public void testCreateProfileWithCreateTransactionRequest() {
+		
+		TransactionRequestType transactionRequestType = factory.createTransactionRequestType();
+		transactionRequestType.setTransactionType( TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
+		transactionRequestType.setAmount( setValidTransactionAmount(counter));
+		transactionRequestType.setPayment( paymentOne);
+		transactionRequestType.setOrder( orderType);
+		transactionRequestType.setCustomer( customerDataOne);
+		transactionRequestType.setBillTo( customerAddressOne);
+		transactionRequestType.setShipTo( customerAddressOne);
+		
+		CustomerProfilePaymentType profilePayment = factory.createCustomerProfilePaymentType();
+		profilePayment.setCreateProfile(true);
+		transactionRequestType.setProfile(profilePayment);
+ 
+		CreateTransactionRequest createRequest = factory.createCreateTransactionRequest();
+		createRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		createRequest.setRefId(refId);
+		createRequest.setTransactionRequest(transactionRequestType);
+
+		CreateTransactionResponse createResponse = executeTestRequestWithSuccess(createRequest, CreateTransactionController.class, environment);
+		processTransactionResponse(createResponse);
+		Assert.assertNotNull(createResponse.getTransactionResponse());
+		CreateProfileResponse profileResponse = createResponse.getProfileResponse();
+		Assert.assertNotNull(profileResponse);
+		Assert.assertNotNull(profileResponse.getCustomerProfileId());
+		Assert.assertNotNull(profileResponse.getCustomerPaymentProfileIdList());
+		Assert.assertNotNull(profileResponse.getCustomerShippingAddressIdList());				
+		Assert.assertNotSame("0", profileResponse.getCustomerProfileId());
+		
+		Assert.assertNotNull(profileResponse.getCustomerPaymentProfileIdList().getNumericString());
+		Assert.assertSame(1, profileResponse.getCustomerPaymentProfileIdList().getNumericString().size());
+		Assert.assertNotSame("0", profileResponse.getCustomerPaymentProfileIdList().getNumericString().get(0));
+
+		Assert.assertNotNull(profileResponse.getCustomerShippingAddressIdList().getNumericString());
+		Assert.assertSame(1, profileResponse.getCustomerShippingAddressIdList().getNumericString().size());
+		Assert.assertNotSame("0", profileResponse.getCustomerShippingAddressIdList().getNumericString().get(0));
+	}
 	
 	@Test
 	public void testSetupCustomersWithProfile() {
@@ -538,7 +592,60 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	   }
 	}
 	
+	@Test
+	public void testCardPresentTransaction()
+	{
+		TransRetailInfoType retailInfo = factory.createTransRetailInfoType();
+		retailInfo.setDeviceType(net.authorize.DeviceType.VIRTUAL_TERMINAL.getValue());
+		retailInfo.setMarketType(net.authorize.MarketType.RETAIL.getValue());
+
+		String transactionId = null;
+	
+		{
+			TransactionRequestType transactionRequestType = factory.createTransactionRequestType();
+			transactionRequestType.setTransactionType( TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
+	
+			transactionRequestType.setRetail( retailInfo);
+	
+			BigDecimal amount = (new BigDecimal( 1.99)).setScale(3, RoundingMode.CEILING );
+			transactionRequestType.setAmount( amount);
+			CreditCardTrackType  trackData = factory.createCreditCardTrackType();
+			trackData.setTrack1("%B370000000000002^CARDUSER/JOHN^1803101000000000020000831000000?");
+			PaymentType payment = new PaymentType();
+			payment.setTrackData(trackData);
+			transactionRequestType.setPayment(payment );
+	
+			CreateTransactionRequest createRequest = factory.createCreateTransactionRequest();
+			createRequest.setMerchantAuthentication(cpMerchantAuthenticationType);
+			createRequest.setTransactionRequest(transactionRequestType);
+	
+			CreateTransactionResponse createResponse = executeTestRequestWithSuccess(createRequest, CreateTransactionController.class, environment);
+			processTransactionResponse(createResponse);
+			transactionId = createResponse.getTransactionResponse().getTransId();
+	        Assert.assertNotNull(transactionId);
+			logger.info(String.format("Created Transaction: %s ", transactionId));
+		}
+		
+        // Void the transaction
+        {
+			TransactionRequestType voidTransactionRequestType = factory.createTransactionRequestType();
+			voidTransactionRequestType.setTransactionType( TransactionTypeEnum.VOID_TRANSACTION.value());
+			voidTransactionRequestType.setRefTransId(transactionId);
+
+			CreateTransactionRequest createVoidRequest = factory.createCreateTransactionRequest();
+			createVoidRequest.setMerchantAuthentication(cpMerchantAuthenticationType);
+			createVoidRequest.setTransactionRequest(voidTransactionRequestType);
+	
+			CreateTransactionResponse voidResponse = executeTestRequestWithSuccess(createVoidRequest, CreateTransactionController.class, environment);
+			processTransactionResponse(voidResponse);
+	        Assert.assertNotNull(voidResponse.getTransactionResponse());
+	        Assert.assertNotNull(voidResponse.getTransactionResponse().getTransId());
+	        Assert.assertEquals(transactionId, voidResponse.getTransactionResponse().getTransId());
+			logger.info(String.format("Voided Transaction Id %s with ResponseTransId: %s ", transactionId, voidResponse.getTransactionResponse().getTransId()));
+        }
+	}
 }
+
 class CustomerProfileIdsHolder 
 {
 	CustomerProfileIdsHolder(){
