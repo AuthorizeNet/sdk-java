@@ -13,7 +13,7 @@ Prerequisites
   * Ant 1.6.2 or higher (build SDK only)
   * Maven 2.2.0 or higher (build SDK only)
 
-  Note: Support for building the SDK with either Ant or Maven has bee made.
+  Note: Support for building the SDK with either Ant or Maven has been made.
         Please see the respective build processes below.  All initial jars
         and docs were built with Ant however.
 
