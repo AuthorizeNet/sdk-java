@@ -767,6 +767,14 @@ public class ObjectFactory {
     public Paging createPaging() {
         return new Paging();
     }
+    
+    /**
+     * Create an instance of {@link CreateCustomerProfileFromTransactionRequest }
+     * 
+     */
+    public CreateCustomerProfileFromTransactionRequest createCreateCustomerProfileFromTransactionRequest() {
+        return new CreateCustomerProfileFromTransactionRequest();
+    }
 
     /**
      * Create an instance of {@link AuthenticateTestRequest }

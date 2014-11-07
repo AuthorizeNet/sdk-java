@@ -1,10 +1,12 @@
 package net.authorize;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -144,6 +146,21 @@ public abstract class UnitTestData {
 	//protected UnitTestData()
 	static
 	{
+		try{
+			Properties props = new Properties();
+			props.load(new FileInputStream("anet_java_sdk.properties"));
+		    Enumeration<Object> keys = props.keys();
+			while(keys.hasMoreElements())
+			{
+				String key = keys.nextElement().toString();
+				System.setProperty(key,props.getProperty(key.toString()));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		//getPropertyFromNames get the value from properties file or environment
 		apiLoginID = getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
 		transactionKey = getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
