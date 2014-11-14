@@ -37,8 +37,8 @@ public enum Environment {
 	SANDBOX_TESTMODE("https://test.authorize.net","https://apitest.authorize.net","https://test.authorize.net"),
 	PRODUCTION("https://secure.authorize.net","https://api.authorize.net","https://cardpresent.authorize.net"),
 	PRODUCTION_TESTMODE("https://secure.authorize.net","https://api.authorize.net","https://cardpresent.authorize.net"),
-	LOCAL_VM(null,null,null);
-	HOSTED_VM(null,null,null);
+	LOCAL_VM(null,null,null),
+	HOSTED_VM(null,null,null),
 	CUSTOM(null,null,null);
 	//http://ww725ramittal1.qa.intra/xml/v1/request.api	
 
