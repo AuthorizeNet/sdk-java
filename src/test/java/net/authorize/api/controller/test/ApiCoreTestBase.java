@@ -126,13 +126,13 @@ public abstract class ApiCoreTestBase {
         //require only one cnp or cp merchant keys
         if ((null != apiLoginIdKey && null != transactionKey) )
         {
-            logger.debug("At least one of CardPresent or CardNotPresent merchant keys are present.");
+            logger.debug("Merchant keys are present.");
         }
         else
 	    {
         	throw new IllegalArgumentException(
         			"LoginId and/or TransactionKey have not been set. " + 
-        			"At least one of CardPresent or CardNotPresent merchant keys are required.");
+        			"Merchant keys are required.");
 	    }
 		
         if (null != apiLoginIdKey && null != transactionKey)
