@@ -55,16 +55,13 @@ public class ArbSubscriptionTest extends ApiCoreTestBase {
 
 	@Test
 	public void testGetSubscriptionList() throws DatatypeConfigurationException {
-
-		//String subscriptionId = "42";
-
-		String subscriptionId = createSubscription(cnpMerchantAuthenticationType);
-		ARBSubscriptionStatusEnum newStatus = getSubscription(cnpMerchantAuthenticationType, subscriptionId);
+		String subscriptionId = createSubscription(merchantAuthenticationType);
+		ARBSubscriptionStatusEnum newStatus = getSubscription(merchantAuthenticationType, subscriptionId);
 		Assert.assertEquals(ARBSubscriptionStatusEnum.ACTIVE, newStatus);
 
 		LogHelper.info(logger, "Getting Subscription List for SubscriptionId: %s", subscriptionId);
 
-		ARBGetSubscriptionListRequest listRequest = setupSubscriptionListRequest(cnpMerchantAuthenticationType);
+		ARBGetSubscriptionListRequest listRequest = setupSubscriptionListRequest(merchantAuthenticationType);
 		ARBGetSubscriptionListResponse listResponse = executeTestRequestWithSuccess(listRequest, ARBGetSubscriptionListController.class, environment);
 
 		LogHelper.info( logger, "Subscription Count: %d", listResponse.getTotalNumInResultSet());		
@@ -82,19 +79,19 @@ public class ArbSubscriptionTest extends ApiCoreTestBase {
 			if ( subsId == aSubscription.getId()) { found = true;}
 		}
 
-		cancelSubscription(cnpMerchantAuthenticationType, subscriptionId);
+		cancelSubscription(merchantAuthenticationType, subscriptionId);
 		Assert.assertTrue(found);
 		//validate the status of subscription to make sure it is in-activated
-		ARBSubscriptionStatusEnum cancelStatus = getSubscription(cnpMerchantAuthenticationType, subscriptionId);
+		ARBSubscriptionStatusEnum cancelStatus = getSubscription(merchantAuthenticationType, subscriptionId);
 		Assert.assertEquals(ARBSubscriptionStatusEnum.CANCELED, cancelStatus);
 	}
 
 	@Test
 	public void testSubscription() throws Exception {
 		//cache the result
-		String subscriptionId = createSubscription(cnpMerchantAuthenticationType);
-		getSubscription(cnpMerchantAuthenticationType, subscriptionId);
-		cancelSubscription(cnpMerchantAuthenticationType, subscriptionId);
+		String subscriptionId = createSubscription(merchantAuthenticationType);
+		getSubscription(merchantAuthenticationType, subscriptionId);
+		cancelSubscription(merchantAuthenticationType, subscriptionId);
 	}
 
 	private ARBGetSubscriptionListRequest setupSubscriptionListRequest(MerchantAuthenticationType merchantAuthentication) {

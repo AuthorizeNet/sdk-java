@@ -50,7 +50,7 @@ public class CreateCustomerProfileFromTransactionTest  extends ApiCoreTestBase {
 	{
 		//Common code to set for all requests
 		ApiOperationBase.setEnvironment(environment);
-		ApiOperationBase.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
 		
 		CreateCustomerProfileFromTransactionRequest request = new CreateCustomerProfileFromTransactionRequest();
 		request.setTransId(createTransactionAndReturnId());

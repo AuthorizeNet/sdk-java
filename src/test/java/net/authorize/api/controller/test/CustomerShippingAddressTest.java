@@ -41,17 +41,17 @@ public class CustomerShippingAddressTest extends ApiCoreTestBase {
 	@Test
 	public void testProcessCreateAndDeleteCustomerShippingAddressRequest() {
 		//create a new customer profile
-		String customerProfileId = CustomerProfileTest.createCustomerProfile(cnpMerchantAuthenticationType, customerPaymentProfileOne, customerProfileType, refId);
+		String customerProfileId = CustomerProfileTest.createCustomerProfile(merchantAuthenticationType, customerPaymentProfileOne, customerProfileType, refId);
 		
 		//create a new customer shipping address
-		String customerShippingAddressId = createCustomerShippingAddress(cnpMerchantAuthenticationType, customerAddressOne, customerProfileId, refId);
+		String customerShippingAddressId = createCustomerShippingAddress(merchantAuthenticationType, customerAddressOne, customerProfileId, refId);
 		Assert.assertNotNull(customerShippingAddressId);
 		
 		//delete the customer profile created earlier
-		deleteCustomerShippingAddress(cnpMerchantAuthenticationType, customerProfileId, customerShippingAddressId, refId);
+		deleteCustomerShippingAddress(merchantAuthenticationType, customerProfileId, customerShippingAddressId, refId);
 
 		//delete the customer shipping address created earlier
-		CustomerProfileTest.deleteCustomerProfile(cnpMerchantAuthenticationType, customerProfileId, refId);
+		CustomerProfileTest.deleteCustomerProfile(merchantAuthenticationType, customerProfileId, refId);
 	}
 
 	static String createCustomerShippingAddress(MerchantAuthenticationType merchantAuthenticationType, CustomerAddressType customerAddressType, String customerProfileId, String referenceId) {

@@ -88,7 +88,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		//transactionRequestType.setUserFields( userFields);
  
 		CreateTransactionRequest createRequest = new CreateTransactionRequest();
-		createRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		createRequest.setMerchantAuthentication(merchantAuthenticationType);
 		createRequest.setRefId(refId);
 		createRequest.setTransactionRequest(transactionRequestType);
 
@@ -127,7 +127,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		//transactionRequestType.setUserFields( userFields);
  
 		CreateTransactionRequest createRequest = new CreateTransactionRequest();
-		createRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		createRequest.setMerchantAuthentication(merchantAuthenticationType);
 		createRequest.setRefId(refId);
 		createRequest.setTransactionRequest(transactionRequestType);
 
@@ -271,7 +271,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 
 	@Test
 	public void validateCreateTransactionNonExistingCustomerPaymentProfileId() {
-		CustomerProfileIdsHolder profileIdHolder = setupCustomersWithProfile(cnpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+		CustomerProfileIdsHolder profileIdHolder = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
 
 		int customerProfileId = Integer.valueOf(profileIdHolder.CustomerProfileId);
 		CustomerProfileElementsHolder holder = 
@@ -283,7 +283,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		transactionRequestType.setPayment( null);
 		transactionRequestType.setShipTo( null);
 		CreateTransactionResponse failureResponse = executeTestRequestWithFailure(createRequest, CreateTransactionController.class, environment);
-		teardownCustomersWithProfile(cnpMerchantAuthenticationType, profileIdHolder, refId);
+		teardownCustomersWithProfile(merchantAuthenticationType, profileIdHolder, refId);
 
 		validateErrorCode( failureResponse.getMessages(), "E00040");
 		final String errorMessage = "Customer Profile ID or Customer Payment Profile ID not found.";		
@@ -292,7 +292,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 
 	@Test
 	public void validateCreateTransactionNonExistingShippingProfileId() {
-		CustomerProfileIdsHolder profileIdHolder = setupCustomersWithProfile(cnpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+		CustomerProfileIdsHolder profileIdHolder = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
 
 		int customerProfileId = Integer.valueOf(profileIdHolder.CustomerProfileId);
 		int paymentProfileId = Integer.valueOf(profileIdHolder.CustomerPaymentProfileId);
@@ -305,7 +305,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		transactionRequestType.setPayment( null);
 		transactionRequestType.setShipTo( null);
 		CreateTransactionResponse failureResponse = executeTestRequestWithFailure(createRequest, CreateTransactionController.class, environment);
-		teardownCustomersWithProfile(cnpMerchantAuthenticationType, profileIdHolder, refId);
+		teardownCustomersWithProfile(merchantAuthenticationType, profileIdHolder, refId);
 
 		validateErrorCode( failureResponse.getMessages(), "E00040");
 		final String errorMessage = "Customer Shipping Address ID not found.";		
@@ -314,8 +314,8 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 
 	@Test
 	public void validateCreateTransactionMisMatchProfileIds() {
-		CustomerProfileIdsHolder profileIdHolder1 = setupCustomersWithProfile(cnpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
-		CustomerProfileIdsHolder profileIdHolder2 = setupCustomersWithProfile(cpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+		CustomerProfileIdsHolder profileIdHolder1 = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+		CustomerProfileIdsHolder profileIdHolder2 = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
 
 		int customerProfileId = Integer.valueOf(profileIdHolder1.CustomerProfileId);
 		int paymentProfileId = Integer.valueOf(profileIdHolder2.CustomerPaymentProfileId);
@@ -328,8 +328,8 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		transactionRequestType.setPayment( null);
 		transactionRequestType.setShipTo( null);
 		CreateTransactionResponse failureResponse = executeTestRequestWithFailure(createRequest, CreateTransactionController.class, environment);
-		teardownCustomersWithProfile(cpMerchantAuthenticationType, profileIdHolder2, refId);
-		teardownCustomersWithProfile(cnpMerchantAuthenticationType, profileIdHolder1, refId);
+		teardownCustomersWithProfile(merchantAuthenticationType, profileIdHolder2, refId);
+		teardownCustomersWithProfile(merchantAuthenticationType, profileIdHolder1, refId);
 
 		validateErrorCode( failureResponse.getMessages(), "E00040");
 		final String errorMessage = "Customer Profile ID or Customer Payment Profile ID not found.";		
@@ -338,8 +338,8 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	
 	//SKIP @Test
 	public void testProfileTestCreateTransactionRequest() {
-		CustomerProfileIdsHolder profileHolder1 = setupCustomersWithProfile(cnpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
-		CustomerProfileIdsHolder profileHolder2 = setupCustomersWithProfile(cpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+		CustomerProfileIdsHolder profileHolder1 = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+		CustomerProfileIdsHolder profileHolder2 = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
 			
 		CustomerProfileElementsHolder holder = setUpRequestForCreateTransaction(profileHolder1);
 		CreateTransactionRequest createRequest = holder.createRequest;
@@ -356,8 +356,8 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 
 		CreateTransactionResponse failureResponse = executeTestRequestWithFailure(createRequest, CreateTransactionController.class, environment);
 		
-		teardownCustomersWithProfile(cpMerchantAuthenticationType, profileHolder2, refId);
-		teardownCustomersWithProfile(cnpMerchantAuthenticationType, profileHolder1, refId);
+		teardownCustomersWithProfile(merchantAuthenticationType, profileHolder2, refId);
+		teardownCustomersWithProfile(merchantAuthenticationType, profileHolder1, refId);
 		Assert.assertEquals( "E00001", getFirstErrorCode(failureResponse.getMessages()));
 
 		
@@ -411,7 +411,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		transactionRequestType.setProfile(profilePayment);
  
 		CreateTransactionRequest createRequest = factory.createCreateTransactionRequest();
-		createRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		createRequest.setMerchantAuthentication(merchantAuthenticationType);
 		createRequest.setRefId(refId);
 		createRequest.setTransactionRequest(transactionRequestType);
 
@@ -437,11 +437,9 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	
 	@Test
 	public void testSetupCustomersWithProfile() {
-		CustomerProfileIdsHolder profileHolder1 = setupCustomersWithProfile(cnpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
-		CustomerProfileIdsHolder profileHolder2 = setupCustomersWithProfile(cpMerchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
-			
-		teardownCustomersWithProfile(cpMerchantAuthenticationType, profileHolder2, refId);
-		teardownCustomersWithProfile(cnpMerchantAuthenticationType, profileHolder1, refId);
+		CustomerProfileIdsHolder profileHolder1 = setupCustomersWithProfile(merchantAuthenticationType, customerProfileType, customerPaymentProfileOne, customerAddressOne, refId);
+					
+		teardownCustomersWithProfile(merchantAuthenticationType, profileHolder1, refId);
 	}
 	
 	private void processTransactionResponse( CreateTransactionResponse createResponse) {
@@ -534,7 +532,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		transactionRequestType.setOrder( orderType);
 		transactionRequestType.setCustomer( customerDataOne);
  
-		createRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		createRequest.setMerchantAuthentication(merchantAuthenticationType);
 		createRequest.setRefId(refId);
 		createRequest.setTransactionRequest(transactionRequestType);
 		
@@ -617,7 +615,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 			transactionRequestType.setPayment(payment );
 	
 			CreateTransactionRequest createRequest = factory.createCreateTransactionRequest();
-			createRequest.setMerchantAuthentication(cpMerchantAuthenticationType);
+			createRequest.setMerchantAuthentication(merchantAuthenticationType);
 			createRequest.setTransactionRequest(transactionRequestType);
 	
 			CreateTransactionResponse createResponse = executeTestRequestWithSuccess(createRequest, CreateTransactionController.class, environment);
@@ -634,7 +632,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 			voidTransactionRequestType.setRefTransId(transactionId);
 
 			CreateTransactionRequest createVoidRequest = factory.createCreateTransactionRequest();
-			createVoidRequest.setMerchantAuthentication(cpMerchantAuthenticationType);
+			createVoidRequest.setMerchantAuthentication(merchantAuthenticationType);
 			createVoidRequest.setTransactionRequest(voidTransactionRequestType);
 	
 			CreateTransactionResponse voidResponse = executeTestRequestWithSuccess(createVoidRequest, CreateTransactionController.class, environment);

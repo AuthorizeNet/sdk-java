@@ -25,8 +25,6 @@ import net.authorize.util.LogHelper;
 public abstract class UnitTestData {
 	protected static String apiLoginID ;
 	protected static String transactionKey ;
-	protected static String cp_apiLoginID ;
-	protected static String cp_transactionKey ;
 	protected static String merchantMD5Key ;
 	protected static Merchant merchant = null;
 	
@@ -164,22 +162,18 @@ public abstract class UnitTestData {
 		//getPropertyFromNames get the value from properties file or environment
 		apiLoginID = getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
 		transactionKey = getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
-		cp_apiLoginID = getPropertyFromNames(Constants.ENV_CP_API_LOGINID, Constants.PROP_CP_API_LOGINID);
-		cp_transactionKey = getPropertyFromNames(Constants.ENV_CP_TRANSACTION_KEY, Constants.PROP_CP_TRANSACTION_KEY);
 		merchantMD5Key = getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
 
 		if ((null == apiLoginID) ||
-			(null == transactionKey) ||
-			(null == cp_apiLoginID) ||
-			(null == cp_transactionKey))
+			(null == transactionKey) )
 		{
 			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
 		}
 		else
 		{
 			net.authorize.util.LogHelper.info( logger,
-					"PropertyValues: ApiLoginId:'%s', TransactionKey:'%s', CPApiLoginId:'%s', CPTransactionKey:'%s', MD5Key:'%s' ", 
-					apiLoginID, transactionKey, cp_apiLoginID, cp_transactionKey, merchantMD5Key);
+					"PropertyValues: ApiLoginId:'%s', TransactionKey:'%s', MD5Key:'%s' ", 
+					apiLoginID, transactionKey, merchantMD5Key);
 			merchant = Merchant.createMerchant( Environment.SANDBOX, apiLoginID, transactionKey);
 		}
 		if ( !internetAccessible()) {

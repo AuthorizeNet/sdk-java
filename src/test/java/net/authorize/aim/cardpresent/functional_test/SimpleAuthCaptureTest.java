@@ -51,7 +51,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 	    creditCard.setTrack1("%B4111111111111111^CARDUSER/JOHN^1803101000000000020000831000000?");
 	    creditCard.setTrack2(";4111111111111111=1803101000020000831?");
 
-	    merchant = Merchant.createMerchant(Environment.SANDBOX, cp_apiLoginID, cp_transactionKey);
+	    merchant = Merchant.createMerchant(Environment.SANDBOX, apiLoginID, transactionKey);
 	    merchant.setDeviceType(DeviceType.VIRTUAL_TERMINAL);
 	    merchant.setMarketType(MarketType.RETAIL);
 	    merchant.setMD5Value(merchantMD5Key);
