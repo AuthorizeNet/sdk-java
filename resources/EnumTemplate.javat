@@ -1,0 +1,7 @@
+
+        for ( ENUMNAME anEnum : ENUMNAME.values())
+        {
+            String aValue = anEnum.value();
+            ENUMNAME enumFromValue = ENUMNAME.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }

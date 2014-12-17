@@ -13,13 +13,9 @@ public final class Constants {
 	
 	public static final String ENV_API_LOGINID = "API_LOGIN_ID";
 	public static final String ENV_TRANSACTION_KEY = "TRANSACTION_KEY";
-	public static final String ENV_CP_API_LOGINID = "CP_API_LOGIN_ID";
-	public static final String ENV_CP_TRANSACTION_KEY = "CP_TRANSACTION_KEY";
 	public static final String ENV_MD5_HASHKEY = "MD5_HASH_KEY";
 
 	public static final String PROP_API_LOGINID = "api.login.id";
 	public static final String PROP_TRANSACTION_KEY = "transaction.key";
-	public static final String PROP_CP_API_LOGINID = "cp.api.login.id";
-	public static final String PROP_CP_TRANSACTION_KEY = "cp.transaction.key";
 	public static final String PROP_MD5_HASHKEY = "md5.hash.key";	
 }
