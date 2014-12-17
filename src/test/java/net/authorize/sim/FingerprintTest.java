@@ -40,7 +40,7 @@ public class FingerprintTest extends UnitTestData {
 	public void testMD5HashVerification() {
 		// MD5_Key and hash go in pair
 		String merchant_MD5_Key= "TEST_MD5";
-		String x_MD5_Hash = "A21E9635BC5A6B56E5E1121E49F27FAE"; 
+		String x_MD5_Hash = "72FAC6C5A143D3B11AB4B3429774BA0A"; 
 		String amount = "2.18";
 		String txnId = "2154896102";
 		String md5Check = null;

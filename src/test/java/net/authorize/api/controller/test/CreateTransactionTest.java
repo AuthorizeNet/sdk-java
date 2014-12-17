@@ -165,7 +165,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	@Test
 	public void validateCreateTransactionMissingPaymentWithShippingProfileId() {
 		//existing behavior
-		CustomerProfileElementsHolder holder = setUpRequestForCreateTransaction(counter, counter, counter);
+		CustomerProfileElementsHolder holder = setUpRequestForCreateTransaction(counter, counter, 0);
 		
 		CreateTransactionRequest createRequest = holder.createRequest;
 		CustomerProfilePaymentType customerProfilePaymentType = holder.customerProfilePaymentType;
@@ -176,6 +176,23 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 		transactionRequestType.setBillTo(null);
 		transactionRequestType.setPayment( null);
 		transactionRequestType.setShipTo( customerAddressOne);
+		CreateTransactionResponse failureResponse = executeTestRequestWithFailure(createRequest, CreateTransactionController.class, environment);
+		validateErrorCode( failureResponse.getMessages(), "E00027");
+	}
+	
+	@Test
+	public void validateCreateTransactionMissingPaymentWithShipTo() {
+		//existing behavior
+		CustomerProfileElementsHolder holder = setUpRequestForCreateTransaction(counter, counter, counter);
+		
+		CreateTransactionRequest createRequest = holder.createRequest;
+		CustomerProfilePaymentType customerProfilePaymentType = holder.customerProfilePaymentType;
+		customerProfilePaymentType.setPaymentProfile(null);
+		TransactionRequestType transactionRequestType = holder.transactionRequestType;
+
+		//add shipping profile with no payment ship to address
+		transactionRequestType.setBillTo(null);
+		transactionRequestType.setPayment( null);
 		CreateTransactionResponse failureResponse = executeTestRequestWithFailure(createRequest, CreateTransactionController.class, environment);
 		validateErrorCode( failureResponse.getMessages(), "E00027");
 	}
