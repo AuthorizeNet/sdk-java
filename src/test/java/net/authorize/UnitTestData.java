@@ -20,7 +20,6 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.echeck.BankAccountType;
 import net.authorize.data.echeck.ECheckType;
 import net.authorize.util.Constants;
-import net.authorize.util.LogHelper;
 
 public abstract class UnitTestData {
 	protected static String apiLoginID ;
@@ -146,7 +145,7 @@ public abstract class UnitTestData {
 	{
 		try{
 			Properties props = new Properties();
-			props.load(new FileInputStream("anet_java_sdk.properties"));
+			props.load(new FileInputStream("anet-java-sdk.properties"));
 		    Enumeration<Object> keys = props.keys();
 			while(keys.hasMoreElements())
 			{

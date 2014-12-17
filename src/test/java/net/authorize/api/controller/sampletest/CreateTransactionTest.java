@@ -9,33 +9,17 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import net.authorize.api.contract.v1.BankAccountType;
-import net.authorize.api.contract.v1.CreateCustomerProfileFromTransactionRequest;
-import net.authorize.api.contract.v1.CreateCustomerProfileResponse;
 import net.authorize.api.contract.v1.CreateTransactionRequest;
 import net.authorize.api.contract.v1.CreateTransactionResponse;
-import net.authorize.api.contract.v1.CreditCardTrackType;
 import net.authorize.api.contract.v1.CreditCardType;
-import net.authorize.api.contract.v1.CustomerDataType;
-import net.authorize.api.contract.v1.EncodingType;
-import net.authorize.api.contract.v1.EncryptedTrackDataType;
-import net.authorize.api.contract.v1.EncryptionAlgorithmType;
-import net.authorize.api.contract.v1.KeyBlock;
-import net.authorize.api.contract.v1.KeyManagementScheme;
-import net.authorize.api.contract.v1.KeyManagementScheme.DUKPT;
-import net.authorize.api.contract.v1.KeyValue;
 import net.authorize.api.contract.v1.MessageTypeEnum;
-import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.OpaqueDataType;
 import net.authorize.api.contract.v1.PayPalType;
 import net.authorize.api.contract.v1.PaymentType;
 import net.authorize.api.contract.v1.TransactionRequestType;
-import net.authorize.api.controller.CreateCustomerProfileFromTransactionConroller;
 import net.authorize.api.controller.CreateTransactionController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.test.ApiCoreTestBase;
-import net.authorize.data.Customer;
-import net.authorize.data.xml.BankAccount;
 
 public class CreateTransactionTest extends ApiCoreTestBase {
 

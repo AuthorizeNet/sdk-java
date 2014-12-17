@@ -22,19 +22,20 @@ Prerequisites
 Dependencies
 ============
 
-The SDK is offered with very few dependencies.
-
   * commons-logging-1.1.1.jar : logging
   * log4j-1.2.16.jar          : logging
   * httpclient-4.0.1.jar      : http communication with the payment gateway
   * httpcore-4.0.1.jar        : http communication with the payment gateway
   * junit-4.8.2.jar           : unit testing
+  * hamcrest-core-1.3.jar     : unit testing
+  * hamcrest-library-1.3.jar  : unit testing
+  * jmock-2.6.0.jar           : unit testing
 
 Build process
 ==============
 
   * Note:  To properly run the unit tests, please reference the
-           anet_java_sdk.properties.example file, which is a simple properties file that
+           anet-java-sdk.properties file, which is a simple properties file that
            holds the API credentials for testing the SDK.
 
 

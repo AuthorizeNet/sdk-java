@@ -105,7 +105,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
                 <version>1.0-alpha-2</version>
-                <!--
                 <executions>
                     <execution>
                         <phase>initialize</phase>
@@ -119,7 +118,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -134,16 +132,12 @@
                     <systemPropertyVariables>
                         <API_LOGIN_ID>${api.login.id}</API_LOGIN_ID>
                         <TRANSACTION_KEY>${transaction.key}</TRANSACTION_KEY>
-                        <CP_API_LOGIN_ID>${cp.api.login.id}</CP_API_LOGIN_ID>
-                        <CP_TRANSACTION_KEY>${cp.transaction.key}</CP_TRANSACTION_KEY>
                         <MD5_HASH_KEY>${md5.hash.key}</MD5_HASH_KEY>
                     </systemPropertyVariables>
                     <environmentVariables>
-                        <MD5_HASH_KEY>FIXME</MD5_HASH_KEY>
-                        <API_LOGIN_ID>FIXME</API_LOGIN_ID>
-                        <TRANSACTION_KEY>FIXME</TRANSACTION_KEY>
-                        <CP_API_LOGIN_ID>FIXME</CP_API_LOGIN_ID>
-                        <CP_TRANSACTION_KEY>FIXME</CP_TRANSACTION_KEY>
+                        <API_LOGIN_ID>API_LOGIN_ID</API_LOGIN_ID>
+                        <TRANSACTION_KEY>TRANSACTION_KEY</TRANSACTION_KEY>
+                        <MD5_HASH_KEY>MD5_HASH_KEY</MD5_HASH_KEY>
                     </environmentVariables>
                 </configuration>
             </plugin>
