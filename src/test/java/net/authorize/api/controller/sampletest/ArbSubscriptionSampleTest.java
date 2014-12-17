@@ -57,7 +57,7 @@ public class ArbSubscriptionSampleTest extends ApiCoreTestBase {
 
 		//Common code to set for all requests
 		ApiOperationBase.setEnvironment(environment);
-		ApiOperationBase.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
 		
 		//create
 		ARBCreateSubscriptionRequest createRequest = new ARBCreateSubscriptionRequest();
@@ -104,7 +104,7 @@ public class ArbSubscriptionSampleTest extends ApiCoreTestBase {
 
 		//cancel
 		ARBCancelSubscriptionRequest cancelRequest = new ARBCancelSubscriptionRequest();
-		cancelRequest.setMerchantAuthentication(cnpMerchantAuthenticationType);
+		cancelRequest.setMerchantAuthentication(merchantAuthenticationType);
 		cancelRequest.setRefId(refId);
 		cancelRequest.setSubscriptionId(subscriptionId);
 		//explicitly setting up the merchant id and environment 

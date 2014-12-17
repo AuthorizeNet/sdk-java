@@ -61,7 +61,7 @@ public class XmlUtilityTest {
 
 	@Test
 	public void testErrorResponse() {
-		final String xmlFromApiCall = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?><ErrorResponse xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"><messages><resultCode>Error</resultCode><message><code>E00003</code><text>The element 'ARBGetSubscriptionReportRequest' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd' has invalid child element 'OrderDescending' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'. List of possible elements expected: 'ExpDateHash, StartReportDate' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'.</text></message></messages></ErrorResponse>";
+		final String xmlFromApiCall = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><ErrorResponse xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"><messages><resultCode>Error</resultCode><message><code>E00003</code><text>The element 'ARBGetSubscriptionReportRequest' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd' has invalid child element 'OrderDescending' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'. List of possible elements expected: 'ExpDateHash, StartReportDate' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'.</text></message></messages></ErrorResponse>";
 
 		MessagesType.Message message = new MessagesType.Message();
 		message.setCode("E00003");
@@ -87,7 +87,9 @@ public class XmlUtilityTest {
 			String xmlFromResponseOfApiCallXml = XmlUtility.getXml(responseFromApiCallXml);
 			Assert.assertNotNull( xmlFromResponseOfApiCallXml);
 
-			Assert.assertEquals(xmlFromApiCall, xmlFromResponseOfApiCallXml);
+			//clean up spaces and line breaks for comparison
+			Assert.assertEquals(xmlFromApiCall.replaceAll("[ ]",""), 
+					xmlFromResponseOfApiCallXml.replaceAll("["+System.lineSeparator()+" ]", ""));
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}

@@ -51,11 +51,11 @@ public class CustomerProfileTest extends ApiCoreTestBase {
 	public void testProcessCreateAndDeleteCustomerProfileRequest() {
 		
 		//create a new customer profile
-		String customerProfileId = createCustomerProfile(cnpMerchantAuthenticationType, customerPaymentProfileOne, customerProfileType, refId);
+		String customerProfileId = createCustomerProfile(merchantAuthenticationType, customerPaymentProfileOne, customerProfileType, refId);
 		Assert.assertNotNull(customerProfileId);
 		
 		//delete the customer profile created earlier
-		deleteCustomerProfile(cnpMerchantAuthenticationType, customerProfileId, refId);
+		deleteCustomerProfile(merchantAuthenticationType, customerProfileId, refId);
 	}
 
 	static String createCustomerProfile(

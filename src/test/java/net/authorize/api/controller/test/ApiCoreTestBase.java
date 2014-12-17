@@ -75,14 +75,10 @@ public abstract class ApiCoreTestBase {
 	//protected static Environment environment = Environment.HOSTED_VM;
 	protected static Environment environment = Environment.SANDBOX;
 	
-	static Merchant cnpMerchant = null;
-	static Merchant cpMerchant = null;
-	static String CnpApiLoginIdKey = null;
-	static String CnpTransactionKey = null;
-	static String CnpMd5HashKey = null;
-	static String CpApiLoginIdKey = null;
-	static String CpTransactionKey = null;
-	static String CpMd5HashKey = null;
+	static Merchant merchant = null;
+	static String apiLoginIdKey = null;
+	static String transactionKey = null;
+	static String md5HashKey = null;
 	
 	DatatypeFactory datatypeFactory = null;
 	GregorianCalendar pastDate = null;
@@ -95,8 +91,7 @@ public abstract class ApiCoreTestBase {
 	protected int counter = 0;
 	protected String counterStr = null;
 
-	protected MerchantAuthenticationType cnpMerchantAuthenticationType = null;
-	protected MerchantAuthenticationType cpMerchantAuthenticationType = null;
+	protected MerchantAuthenticationType merchantAuthenticationType = null;
 
 	protected ARBSubscriptionType arbSubscriptionOne = null;
 	protected ARBSubscriptionType arbSubscriptionTwo = null;
@@ -124,37 +119,29 @@ public abstract class ApiCoreTestBase {
 	
 	static {
 		//getPropertyFromNames get the value from properties file or environment
-		CnpApiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
-		CnpTransactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
-		CnpMd5HashKey = null;
-		CpApiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_CP_API_LOGINID, Constants.PROP_CP_API_LOGINID);
-		CpTransactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_CP_TRANSACTION_KEY, Constants.PROP_CP_TRANSACTION_KEY);
-		CpMd5HashKey = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
+		apiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
+		transactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
+		md5HashKey = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
 
         //require only one cnp or cp merchant keys
-        if ((null != CnpApiLoginIdKey && null != CnpTransactionKey) ||
-            (null != CpApiLoginIdKey && null != CpTransactionKey))
+        if ((null != apiLoginIdKey && null != transactionKey) )
         {
-            logger.debug("At least one of CardPresent or CardNotPresent merchant keys are present.");
+            logger.debug("Merchant keys are present.");
         }
         else
 	    {
         	throw new IllegalArgumentException(
         			"LoginId and/or TransactionKey have not been set. " + 
-        			"At least one of CardPresent or CardNotPresent merchant keys are required.");
+        			"Merchant keys are required.");
 	    }
 		
-        if (null != CnpApiLoginIdKey && null != CnpTransactionKey)
+        if (null != apiLoginIdKey && null != transactionKey)
         {
-        	cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
+        	merchant = Merchant.createMerchant( environment, apiLoginIdKey, transactionKey);
         }
-        if (null != CpApiLoginIdKey && null != CpTransactionKey)
+        if ( null == merchant )
         {
-        	cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
-        }
-        if ( null == cnpMerchant && null == cpMerchant)
-        {
-        	Assert.fail("None of the cardPresent or cardNotPresent merchant logins have been set");
+        	Assert.fail("Merchant login is not set");
         }
 
 		errorMessages = new HashMap<String, String>();
@@ -194,14 +181,10 @@ public abstract class ApiCoreTestBase {
 		nowDate = new GregorianCalendar();
 		futureDate = new GregorianCalendar(2020, 12, 31);
 		
-		cnpMerchantAuthenticationType = new MerchantAuthenticationType() ;
-		cnpMerchantAuthenticationType.setName(CnpApiLoginIdKey);
-		cnpMerchantAuthenticationType.setTransactionKey(CnpTransactionKey);
+		merchantAuthenticationType = new MerchantAuthenticationType() ;
+		merchantAuthenticationType.setName(apiLoginIdKey);
+		merchantAuthenticationType.setTransactionKey(transactionKey);
 
-		cpMerchantAuthenticationType = new MerchantAuthenticationType() ;
-		cpMerchantAuthenticationType.setName(CpApiLoginIdKey);
-		cpMerchantAuthenticationType.setTransactionKey(CpTransactionKey);
-		
 //		merchantAuthenticationType.setSessionToken(getRandomString("SessionToken"));
 //		merchantAuthenticationType.setPassword(getRandomString("Password"));
 //	    merchantAuthenticationType.setMobileDeviceId(getRandomString("MobileDevice"));
