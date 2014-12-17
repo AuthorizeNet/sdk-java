@@ -1,0 +1,6 @@
+language:
+    java
+
+after_script:
+    print_surefire_reports.sh
+ 

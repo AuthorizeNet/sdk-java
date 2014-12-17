@@ -82,7 +82,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 					}
 				}
 			}
-			LogHelper.info(logger, "Raw Response: '%s'", buffer.toString());
+			LogHelper.debug(logger, "Raw Response: '%s'", buffer.toString());
 			// handle HTTP errors
 			if (0 == buffer.length()) {
 				response = createErrorResponse(httpResponse, null);
