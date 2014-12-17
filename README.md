@@ -74,7 +74,7 @@ capture basic auth/capture (product purchase) functionality, which most
 integrations are looking to get started with.
 
 A simple auth/capture can be performed with the following code (JSP) :
-''''
+````
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="java.util.Map" %>
   <%@ page import="net.authorize.Environment" %>
@@ -115,7 +115,7 @@ A simple auth/capture can be performed with the following code (JSP) :
       out.println(result.getReasonResponseCode() + " : " + result.getResponseText());
     }
   %>
-''''
+````
 
 Test Code - Advanced Integration Method (AIM) + Card Present
 ============================================================
@@ -124,7 +124,7 @@ There are some sample unit tests that are located in the test directory.  Simila
 to the AIM test, however they leverage the Card Present API.
 
 A simple auth/capture can be performed with the following code (JSP) :
-''''
+````
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="java.util.Map" %>
   <%@ page import="net.authorize.Environment" %>
@@ -171,13 +171,15 @@ A simple auth/capture can be performed with the following code (JSP) :
         result.getResponseReasonCodes().get(0).getReasonText());
     }
   %>
-''''
+````
+
 Test Code - Server Integration Method (SIM)
 ===========================================
 
 The SDK implementation for SIM is fairly concise.  To easily create a finger-
 print for your form POST, you can reference the following code :
 
+````
     Fingerprint fingerprint = Fingerprint.createFingerprint(
         "YOUR_API_LOGIN_ID",
         "YOUR_TRANSACTION_KEY",
@@ -188,18 +190,21 @@ print for your form POST, you can reference the following code :
     String x_fp_timestamp = fingerprint.getTimeStamp();
     String x_fp_hash = fingerprint.getFingerprintHash();
 
+````
 
 Parsing a Relay Response is performed by using the ResponseParser class.
 It takes as it's only method parameter a pipe (|) delimited string
 that represents the transaction response passed to the merchant by
 Authorize.net.
-
+````
     HashMap<ResponseField, String> responseMap =
         ResponseParser.parseResponseString(responseString);
+````
 
 Setting up the necessary data containers and getting a form that can be
 displayed directly on the page can be performed via the following code (JSP) :
 
+````
   <%@ page import="net.authorize.sim.*" %>
   <%@ page import="net.authorize.sim.button.*" %>
   <%@ page import="net.authorize.data.*" %>
@@ -231,7 +236,7 @@ displayed directly on the page can be performed via the following code (JSP) :
       <INPUT TYPE='HIDDEN' NAME='x_test_request' VALUE='FALSE'>
       <INPUT TYPE='SUBMIT' NAME='submit_button' VALUE='Submit' CLASS='null'>
     </FORM>
-
+````
 
 If you were to load this JSP in your browser and hit submit, you should be taken
 to a page on the Authorize.Net servers that contains a form asking for payment
@@ -248,10 +253,12 @@ your public facing MERCHANT_HOST domain name.  Note, you may want to alter the
 relayResponseUrl and place the jsp in a separate webapp container of your
 choosing.
 
-  ========
-  form.jsp
-  ========
+````
 
+  ==================
+  form.jsp
+  ==================
+  
   <%@ page import="net.authorize.sim.*" %>
   <%
      String apiLoginId = "YOUR_API_LOGIN_ID";
@@ -288,7 +295,7 @@ choosing.
    <INPUT TYPE='HIDDEN' NAME='notes' VALUE='extra hot please'>
    <INPUT TYPE='SUBMIT' NAME='buy_button' VALUE='BUY'>
   </FORM>
-
+````
 
 * Create a page that will receive the response.  We're calling this
 relay_response.jsp (referenced in the form above by the relayResponseUrl).
@@ -298,6 +305,7 @@ MD5_HASH_KEY.  Unless you have explicitly set this in the merchant interface:
 Account > Settings > Security Settings > MD5-Hash, leave this as an empty
 string.
 
+````
   ==================
   relay_response.jsp
   ==================
@@ -358,10 +366,12 @@ string.
   </body>
   </html>
 
+````
 
 * Create a page, called order_receipt.jsp, that will host the receipt
 information.  This is what the user will finally see.
 
+````
   =================
   order_receipt.jsp
   =================
@@ -415,7 +425,7 @@ information.  This is what the user will finally see.
   %>
   </body>
   </html>
-
+````
 
 Upon loading form.jsp and following the steps, you should have been able to
 successfully enter in your credit card information hit submit and receive a
@@ -429,6 +439,7 @@ capture basic create/update/cancel/get subscription recurring billing requests.
 
 A simple subscription creation can be performed with the following code (JSP) :
 
+````
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="net.authorize.Merchant" %>
   <%@ page import="net.authorize.Environment" %>
@@ -492,7 +503,7 @@ A simple subscription creation can be performed with the following code (JSP) :
       out.println("Message code/text: " + message.getCode() + " - " + message.getText() + "<br/>");
     }
   %>
-
+````
 
 Test Code - Customer Information Manager (CIM)
 ==============================================
@@ -503,6 +514,7 @@ information, including payment and address information.
 
 A simple customer profile can be created with the following code (JSP) :
 
+````
   <%@ page import="net.authorize.Merchant" %>
   <%@ page import="net.authorize.Environment" %>
   <%@ page import="net.authorize.Transaction" %>
@@ -563,7 +575,7 @@ A simple customer profile can be created with the following code (JSP) :
       out.println(message.getCode() + " - " + message.getText() + "<br>");
     }
   %>
-
+````
 
 Test Code - Transaction Details
 ===============================
@@ -572,7 +584,7 @@ There are some sample unit tests that are located in the test directory.  They
 capture requests that retrieve transaction data that was processed by Authorize.Net.
 
 A simple batch list request can be created with the following code (JSP) :
-
+````
   <%@ page import="net.authorize.Merchant" %>
   <%@ page import="net.authorize.Environment" %>
   <%@ page import="net.authorize.Transaction" %>
@@ -626,3 +638,5 @@ A simple batch list request can be created with the following code (JSP) :
       }
     }
   %>
+````
+
