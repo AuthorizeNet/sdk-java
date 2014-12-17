@@ -74,7 +74,7 @@ capture basic auth/capture (product purchase) functionality, which most
 integrations are looking to get started with.
 
 A simple auth/capture can be performed with the following code (JSP) :
-
+''''
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="java.util.Map" %>
   <%@ page import="net.authorize.Environment" %>
@@ -115,6 +115,7 @@ A simple auth/capture can be performed with the following code (JSP) :
       out.println(result.getReasonResponseCode() + " : " + result.getResponseText());
     }
   %>
+''''
 
 Test Code - Advanced Integration Method (AIM) + Card Present
 ============================================================
@@ -123,7 +124,7 @@ There are some sample unit tests that are located in the test directory.  Simila
 to the AIM test, however they leverage the Card Present API.
 
 A simple auth/capture can be performed with the following code (JSP) :
-
+''''
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="java.util.Map" %>
   <%@ page import="net.authorize.Environment" %>
@@ -170,7 +171,7 @@ A simple auth/capture can be performed with the following code (JSP) :
         result.getResponseReasonCodes().get(0).getReasonText());
     }
   %>
-
+''''
 Test Code - Server Integration Method (SIM)
 ===========================================
 
