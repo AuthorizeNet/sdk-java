@@ -1,12 +1,19 @@
 package net.authorize.api.controller.test;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.xml.datatype.DatatypeFactory;
@@ -38,11 +45,13 @@ import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
 import net.authorize.api.contract.v1.NameAndAddressType;
+import net.authorize.api.contract.v1.ObjectFactory;
 import net.authorize.api.contract.v1.OrderType;
 import net.authorize.api.contract.v1.PayPalType;
 import net.authorize.api.contract.v1.PaymentScheduleType;
 import net.authorize.api.contract.v1.PaymentType;
 import net.authorize.api.controller.base.ApiOperationBase;
+import net.authorize.api.controller.base.IApiOperation;
 import net.authorize.data.xml.reporting.ReportingDetails;
 import net.authorize.util.Constants;
 import net.authorize.util.DateUtil;
@@ -50,6 +59,8 @@ import net.authorize.util.LogHelper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -60,17 +71,14 @@ public abstract class ApiCoreTestBase {
 	protected static Log logger = LogFactory.getLog(ApiCoreTestBase.class);
 	
 	protected static HashMap<String, String> errorMessages = null;
+
+	//protected static Environment environment = Environment.HOSTED_VM;
+	protected static Environment environment = Environment.SANDBOX;
 	
-	//static Environment environment = Environment.HOSTED_VM;
-	static Environment environment = Environment.SANDBOX;
-	static Merchant cnpMerchant = null;
-	static Merchant cpMerchant = null;
-	static String CnpApiLoginIdKey = null;
-	static String CnpTransactionKey = null;
-	static String CnpMd5HashKey = null;
-	static String CpApiLoginIdKey = null;
-	static String CpTransactionKey = null;
-	static String CpMd5HashKey = null;
+	static Merchant merchant = null;
+	static String apiLoginIdKey = null;
+	static String transactionKey = null;
+	static String md5HashKey = null;
 	
 	DatatypeFactory datatypeFactory = null;
 	GregorianCalendar pastDate = null;
@@ -79,61 +87,65 @@ public abstract class ApiCoreTestBase {
 	String nowString = null;
 	Date now = null;
 
-	String refId = null;
-	int counter = 0;
-	String counterStr = null;
+	protected String refId = null;
+	protected int counter = 0;
+	protected String counterStr = null;
 
-	MerchantAuthenticationType cnpMerchantAuthenticationType = null;
-	MerchantAuthenticationType cpMerchantAuthenticationType = null;
+	protected MerchantAuthenticationType merchantAuthenticationType = null;
 
-	ARBSubscriptionType arbSubscriptionOne = null;
-	ARBSubscriptionType arbSubscriptionTwo = null;
-	BankAccountType bankAccountOne = null;
-	CreditCardTrackType trackDataOne = null;
-	CreditCardType creditCardOne = null;
-	CustomerAddressType customerAddressOne = null;
-	CustomerDataType customerDataOne = null;
-	CustomerPaymentProfileType customerPaymentProfileOne = null;
-	CustomerProfileType customerProfileType = null;
-	CustomerType customerOne = null;
-	CustomerType customerTwo = null;
-	DriversLicenseType driversLicenseOne = null; 
-	EncryptedTrackDataType encryptedTrackDataOne = null;
-	NameAndAddressType nameAndAddressTypeOne = null;
-	NameAndAddressType nameAndAddressTypeTwo = null;
-	OrderType orderType = null;
-	PaymentScheduleType paymentScheduleTypeOne = null;
-	PaymentType paymentOne = null;
-	PayPalType payPalOne = null;
+	protected ARBSubscriptionType arbSubscriptionOne = null;
+	protected ARBSubscriptionType arbSubscriptionTwo = null;
+	protected BankAccountType bankAccountOne = null;
+	protected CreditCardTrackType trackDataOne = null;
+	protected CreditCardType creditCardOne = null;
+	protected CustomerAddressType customerAddressOne = null;
+	protected CustomerDataType customerDataOne = null;
+	protected CustomerPaymentProfileType customerPaymentProfileOne = null;
+	protected CustomerProfileType customerProfileType = null;
+	protected CustomerType customerOne = null;
+	protected CustomerType customerTwo = null;
+	protected DriversLicenseType driversLicenseOne = null; 
+	protected EncryptedTrackDataType encryptedTrackDataOne = null;
+	protected NameAndAddressType nameAndAddressTypeOne = null;
+	protected NameAndAddressType nameAndAddressTypeTwo = null;
+	protected OrderType orderType = null;
+	protected PaymentScheduleType paymentScheduleTypeOne = null;
+	protected PaymentType paymentOne = null;
+	protected PayPalType payPalOne = null;
 	
+	protected Mockery mockContext = null;
+	protected static ObjectFactory factory = null;
 	private Random random = new Random();
+	
 	static {
 		//getPropertyFromNames get the value from properties file or environment
-		CnpApiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
-		CnpTransactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
-		CnpMd5HashKey = null;
-		CpApiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_CP_API_LOGINID, Constants.PROP_CP_API_LOGINID);
-		CpTransactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_CP_TRANSACTION_KEY, Constants.PROP_CP_TRANSACTION_KEY);
-		CpMd5HashKey = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
+		apiLoginIdKey = UnitTestData.getPropertyFromNames(Constants.ENV_API_LOGINID, Constants.PROP_API_LOGINID);
+		transactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
+		md5HashKey = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
 
-		if ((null == CnpApiLoginIdKey) ||
-			(null == CnpTransactionKey) ||
-			(null == CpApiLoginIdKey) ||
-			(null == CpTransactionKey))
-		{
-			throw new IllegalArgumentException("LoginId and/or TransactionKey have not been set.");
-		}
-		/*
-		//hosted vm
-		CnpApiLoginIdKey = "7zc5c7YBTE";
-		CnpTransactionKey = "5kPE8v6wdL6Dj56V";
-		CpApiLoginIdKey = "5S7uk9Qu";
-		CpTransactionKey = "359DNfGD5K6Kzz49";
-		*/
-		cnpMerchant = Merchant.createMerchant( environment, CnpApiLoginIdKey, CnpTransactionKey);
-		cpMerchant = Merchant.createMerchant( environment, CpApiLoginIdKey, CpTransactionKey);
+        //require only one cnp or cp merchant keys
+        if ((null != apiLoginIdKey && null != transactionKey) )
+        {
+            logger.debug("Merchant keys are present.");
+        }
+        else
+	    {
+        	throw new IllegalArgumentException(
+        			"LoginId and/or TransactionKey have not been set. " + 
+        			"Merchant keys are required.");
+	    }
+		
+        if (null != apiLoginIdKey && null != transactionKey)
+        {
+        	merchant = Merchant.createMerchant( environment, apiLoginIdKey, transactionKey);
+        }
+        if ( null == merchant )
+        {
+        	Assert.fail("Merchant login is not set");
+        }
 
 		errorMessages = new HashMap<String, String>();
+		factory = new ObjectFactory();
 	}
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -153,6 +165,9 @@ public abstract class ApiCoreTestBase {
 
 	@Before
 	public void setUp() throws Exception {
+		
+		 mockContext = new Mockery();
+
 		//initialize counter
 		counter = random.nextInt((int) Math.pow(2, 24));
 		counterStr = getRandomString("");
@@ -166,14 +181,10 @@ public abstract class ApiCoreTestBase {
 		nowDate = new GregorianCalendar();
 		futureDate = new GregorianCalendar(2020, 12, 31);
 		
-		cnpMerchantAuthenticationType = new MerchantAuthenticationType() ;
-		cnpMerchantAuthenticationType.setName(CnpApiLoginIdKey);
-		cnpMerchantAuthenticationType.setTransactionKey(CnpTransactionKey);
+		merchantAuthenticationType = new MerchantAuthenticationType() ;
+		merchantAuthenticationType.setName(apiLoginIdKey);
+		merchantAuthenticationType.setTransactionKey(transactionKey);
 
-		cpMerchantAuthenticationType = new MerchantAuthenticationType() ;
-		cpMerchantAuthenticationType.setName(CpApiLoginIdKey);
-		cpMerchantAuthenticationType.setTransactionKey(CpTransactionKey);
-		
 //		merchantAuthenticationType.setSessionToken(getRandomString("SessionToken"));
 //		merchantAuthenticationType.setPassword(getRandomString("Password"));
 //	    merchantAuthenticationType.setMobileDeviceId(getRandomString("MobileDevice"));
@@ -506,5 +517,91 @@ public abstract class ApiCoreTestBase {
 		
 		return errorMessage;
 		
+	}
+	
+	protected <Q extends ANetApiRequest, S extends ANetApiResponse> void setMockControllerExpectations(
+			final IApiOperation<Q, S> mockController,
+			final Q mockRequest,
+			final S mockResponse,
+			final ANetApiResponse errorResponse, 
+			final List<String> results,
+			final MessageTypeEnum messageType) {
+		
+		final net.authorize.Environment mockEnvironment = net.authorize.Environment.CUSTOM;
+		mockContext.checking( new Expectations() {{
+			oneOf(mockController).execute();
+			oneOf(mockController).execute(mockEnvironment);
+			oneOf(mockController).getApiResponse(); will (returnValue(mockResponse));
+			oneOf(mockController).executeWithApiResponse(); will (returnValue(mockResponse));
+			oneOf(mockController).executeWithApiResponse(mockEnvironment); will (returnValue(mockResponse));
+			oneOf(mockController).getResults(); will (returnValue(results));
+			oneOf(mockController).getResultCode(); will (returnValue(messageType));
+			oneOf(mockController).getErrorResponse(); will (returnValue(errorResponse));
+		}});
+		
+		if (null != mockRequest && null != mockResponse)
+		{
+			mockResponse.setRefId( mockRequest.getRefId());
+		}
+		logger.info(String.format("Request: %s", mockRequest));
+		showProperties(mockRequest);
+		logger.info(String.format("Response: %s", mockResponse));
+		showProperties(mockResponse);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <Q extends ANetApiRequest, S extends ANetApiResponse> IApiOperation<Q, S> getMockController()
+	{
+		return mockContext.mock(IApiOperation.class);
+	}
+	
+	public static void showProperties(Object bean) {  
+		if ( null == bean)
+		{
+			return;
+		}
+		try {
+			BeanInfo info = Introspector.getBeanInfo(bean.getClass(), Object.class);	
+			PropertyDescriptor[] props = info.getPropertyDescriptors();  
+		    for (PropertyDescriptor pd : props) {  
+		        String name = pd.getName();  
+		        Method getter = pd.getReadMethod();  
+		        Class<?> type = pd.getPropertyType();  
+ 
+		        if (null != getter && !"class".equals(name))
+		        {
+			        Object value = getter.invoke(bean); 
+			        logger.info(String.format("Type: '%s', Name:'%s', Value:'%s'", type, name, value));  
+			        processCollections(type, name, value);
+			        //process compositions of custom classes
+			        if ( null != value && 0 <= type.toString().indexOf("net.authorize."))
+			        {
+			        	showProperties(value);
+			        }
+		        }
+		    }  
+		} catch (Exception e) {
+			logger.error(String.format("Exception during navigating properties: Message: %s, StackTrace: %s", e.getMessage(), e.getStackTrace()));
+		}  
+	} 
+	
+	public static void processCollections( Class<?> type, String name, Object value)
+	{
+         if ( null != type) { 
+    		if ( Collection.class.isAssignableFrom(type)) {
+    			logger.info(String.format("Iterating on Collection: '%s'", name));  
+		        for( Object aValue : (Collection<?>) value)
+		        {
+		        	showProperties(aValue);
+		        }        	
+    		}
+    		if ( Map.class.isAssignableFrom(type)) {
+    			logger.info(String.format("Iterating on Map: '%s'", name));  
+		        for( Object aValue : ((Map<?, ?>) value).values())
+		        {
+		        	showProperties(aValue);
+		        }        	
+    		}
+         }
 	}
 }

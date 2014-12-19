@@ -14,9 +14,9 @@ public class MerchantTest extends UnitTestData {
 
 	@Test
 	public void setMerchantPartialAuth() {
-		Assert.assertFalse(merchant.isAllowPartialAuth());
-		merchant.setAllowPartialAuth(true);
-		Assert.assertTrue(merchant.isAllowPartialAuth());
+		boolean currentValue = merchant.isAllowPartialAuth();
+		merchant.setAllowPartialAuth(!currentValue);
+		Assert.assertTrue(merchant.isAllowPartialAuth()!=currentValue);
 	}
 
 }

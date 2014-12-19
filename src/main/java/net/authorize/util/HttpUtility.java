@@ -56,13 +56,13 @@ public final class HttpUtility {
 
 		if(null != request) {
 			  postUrl = new URI(env.getXmlBaseUrl() + "/xml/v1/request.api");
-			  logger.info(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
-			  logger.info(String.format("Posting request to Url: '%s'", postUrl));
+			  logger.debug(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
+			  logger.debug(String.format("Posting request to Url: '%s'", postUrl));
 			  httpPost = new HttpPost(postUrl);
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
-			  logger.info(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
+			  logger.debug(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
 			  httpPost.setEntity(new StringEntity(xmlRequest));
 		}
 
