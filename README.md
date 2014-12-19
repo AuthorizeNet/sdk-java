@@ -1,6 +1,6 @@
 Authorize.Net Java SDK
 ======================
-[![Build Status](https://travis-ci.org/AuthorizeNet/sdk-java.png?branch=future)]
+[![Build Status](https://travis-ci.org/AuthorizeNet/sdk-java.png?branch=master)]
 (https://travis-ci.org/AuthorizeNet/sdk-java)
 
 ```
