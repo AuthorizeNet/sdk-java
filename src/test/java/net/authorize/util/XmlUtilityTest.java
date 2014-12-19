@@ -88,8 +88,8 @@ public class XmlUtilityTest {
 			Assert.assertNotNull( xmlFromResponseOfApiCallXml);
 
 			//clean up spaces and line breaks for comparison
-			Assert.assertEquals(xmlFromApiCall.replaceAll("[ ]",""), 
-					xmlFromResponseOfApiCallXml.replaceAll("["+System.lineSeparator()+" ]", ""));
+			Assert.assertEquals(xmlFromApiCall.replaceAll("[ ]",""),
+					xmlFromResponseOfApiCallXml.replaceAll("["+System.getProperty("line.separator")+" ]", ""));
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
