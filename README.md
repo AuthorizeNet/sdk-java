@@ -75,7 +75,7 @@ capture basic auth/capture (product purchase) functionality, which most
 integrations are looking to get started with.
 
 A simple auth/capture can be performed with the following code (JSP) :
-````
+````jsp
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="java.util.Map" %>
   <%@ page import="net.authorize.Environment" %>
@@ -125,7 +125,7 @@ There are some sample unit tests that are located in the test directory.  Simila
 to the AIM test, however they leverage the Card Present API.
 
 A simple auth/capture can be performed with the following code (JSP) :
-````
+````jsp
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="java.util.Map" %>
   <%@ page import="net.authorize.Environment" %>
@@ -180,7 +180,7 @@ Test Code - Server Integration Method (SIM)
 The SDK implementation for SIM is fairly concise.  To easily create a finger-
 print for your form POST, you can reference the following code :
 
-````
+````java
     Fingerprint fingerprint = Fingerprint.createFingerprint(
         "YOUR_API_LOGIN_ID",
         "YOUR_TRANSACTION_KEY",
@@ -197,7 +197,7 @@ Parsing a Relay Response is performed by using the ResponseParser class.
 It takes as it's only method parameter a pipe (|) delimited string
 that represents the transaction response passed to the merchant by
 Authorize.net.
-````
+````java
     HashMap<ResponseField, String> responseMap =
         ResponseParser.parseResponseString(responseString);
 ````
@@ -205,7 +205,7 @@ Authorize.net.
 Setting up the necessary data containers and getting a form that can be
 displayed directly on the page can be performed via the following code (JSP) :
 
-````
+````jsp
   <%@ page import="net.authorize.sim.*" %>
   <%@ page import="net.authorize.sim.button.*" %>
   <%@ page import="net.authorize.data.*" %>
@@ -254,7 +254,7 @@ your public facing MERCHANT_HOST domain name.  Note, you may want to alter the
 relayResponseUrl and place the jsp in a separate webapp container of your
 choosing.
 
-````
+````jsp
 
   ==================
   form.jsp
@@ -306,7 +306,7 @@ MD5_HASH_KEY.  Unless you have explicitly set this in the merchant interface:
 Account > Settings > Security Settings > MD5-Hash, leave this as an empty
 string.
 
-````
+````jsp
   ==================
   relay_response.jsp
   ==================
@@ -372,7 +372,7 @@ string.
 * Create a page, called order_receipt.jsp, that will host the receipt
 information.  This is what the user will finally see.
 
-````
+````jsp
   =================
   order_receipt.jsp
   =================
@@ -440,7 +440,7 @@ capture basic create/update/cancel/get subscription recurring billing requests.
 
 A simple subscription creation can be performed with the following code (JSP) :
 
-````
+````jsp
   <%@ page import="java.math.BigDecimal" %>
   <%@ page import="net.authorize.Merchant" %>
   <%@ page import="net.authorize.Environment" %>
@@ -515,7 +515,7 @@ information, including payment and address information.
 
 A simple customer profile can be created with the following code (JSP) :
 
-````
+````jsp
   <%@ page import="net.authorize.Merchant" %>
   <%@ page import="net.authorize.Environment" %>
   <%@ page import="net.authorize.Transaction" %>
@@ -585,7 +585,7 @@ There are some sample unit tests that are located in the test directory.  They
 capture requests that retrieve transaction data that was processed by Authorize.Net.
 
 A simple batch list request can be created with the following code (JSP) :
-````
+````jsp
   <%@ page import="net.authorize.Merchant" %>
   <%@ page import="net.authorize.Environment" %>
   <%@ page import="net.authorize.Transaction" %>
