@@ -649,7 +649,7 @@ We’re exploring a new model of maintaining the SDKs which allows us to be more
 ````java
 
 public static void main( String[] args ) {
-MerchantAuthenticationType appleMerchAuthenticationType = new MerchantAuthenticationType();
+        MerchantAuthenticationType appleMerchAuthenticationType = new MerchantAuthenticationType();
         appleMerchAuthenticationType.setName("5KP3u95bQpv");
         appleMerchAuthenticationType.setTransactionKey("4Ktq966gC55GAX7S");
 
