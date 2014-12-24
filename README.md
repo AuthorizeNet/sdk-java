@@ -664,7 +664,7 @@ public static void main( String[] args ) {
 
 
         TransactionRequestType txnRequest = new TransactionRequestType();
-        txnRequest.setTransactionType("authOnlyTransaction");
+        txnRequest.setTransactionType(TransactionTypeEnum.AUTH_ONLY_TRANSACTION.value());
         txnRequest.setPayment(paymentType);
         txnRequest.setAmount(new BigDecimal(System.currentTimeMillis() % 100));
 
