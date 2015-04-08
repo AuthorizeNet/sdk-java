@@ -1,9 +1,11 @@
 package net.authorize.reporting.functional_test;
 
 import java.util.Calendar;
+import java.util.List;
 
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
+import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.reporting.BatchDetails;
 import net.authorize.data.xml.reporting.BatchStatistics;
 import net.authorize.data.xml.reporting.ReportingDetails;
@@ -12,34 +14,23 @@ import net.authorize.reporting.Result;
 import net.authorize.reporting.TransactionType;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class ReportingTest extends UnitTestData {
-
-	protected static String reportingBatchId = "";
-	protected static String reportingTransId = "";
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void getSettledBatchListRequestLive() {
 
 		// batch list request
-		net.authorize.reporting.Transaction transaction =
-		  merchant.createReportingTransaction(TransactionType.GET_SETTLED_BATCH_LIST);
-		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
-		reportingDetails.setBatchIncludeStatistics(true);
-		transaction.setReportingDetails(reportingDetails);
+		List<BatchDetails> batchDetailsList = getSettledBatchDetailsList();
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Assert.assertNotNull(batchDetailsList);
+		Assert.assertTrue(batchDetailsList.size() > 0);
 
-		Assert.assertNotNull(result);
-		result.printMessages();
-		Assert.assertTrue(result.isOk());
-		Assert.assertNotNull(result.getReportingDetails().getBatchDetailsList());
-		Assert.assertTrue(result.getReportingDetails().getBatchDetailsList().size() > 0);
-		for(BatchDetails batchDetail : result.getReportingDetails().getBatchDetailsList()) {
+		for(BatchDetails batchDetail : batchDetailsList) {
 			Assert.assertNotNull(batchDetail.getBatchId());
-			reportingBatchId = batchDetail.getBatchId();
 			Assert.assertNotNull(batchDetail.getSettlementState());
 			Assert.assertNotNull(batchDetail.getSettlementTimeLocal());
 			Assert.assertNotNull(batchDetail.getSettlementTimeUTC());
@@ -137,108 +128,178 @@ public class ReportingTest extends UnitTestData {
 	@Test
 	public void getTransactionListRequestLive() {
 
-		Assert.assertNotNull(reportingBatchId);
-		Assert.assertNotSame( "",reportingBatchId);
-		
-		// batch list request
-		net.authorize.reporting.Transaction transaction =
-		  merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_LIST);
-		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
-		reportingDetails.setBatchId(reportingBatchId);
+		/*-
+		 *  Precondition: there are settled batches in the AuthorizeNet service.
+		 */
+
+		// Find a batch id for an settled batch.
+		List<BatchDetails> batchDetailsList = getSettledBatchDetailsList();
+
+		Assert.assertNotNull(batchDetailsList);
+		Assume.assumeTrue(batchDetailsList.size() > 0); /*- precondition */
+		String batchId = batchDetailsList.get(0).getBatchId();
+
+		// Get transactions for the given batch id.
+		ReportingDetails reportingDetails = ReportingDetails
+				.createReportingDetails();
+		reportingDetails.setBatchId(batchId);
+
+		net.authorize.reporting.Transaction transaction = merchant
+				.createReportingTransaction(TransactionType.GET_TRANSACTION_LIST);
 		transaction.setReportingDetails(reportingDetails);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
-		Assert.assertNotNull(result.getReportingDetails().getTransactionDetailList());
-		Assert.assertTrue(result.getReportingDetails().getTransactionDetailList().size() > 0);
+
+		// Check the transactions.
+		Assert.assertNotNull(result.getReportingDetails()
+				.getTransactionDetailList());
+		Assert.assertTrue(result.getReportingDetails()
+				.getTransactionDetailList().size() > 0);
+
 		for(TransactionDetails transactionDetail : result.getReportingDetails().getTransactionDetailList()) {
 			Assert.assertNotNull(transactionDetail.getAccountNumber());
 			Assert.assertNotNull(transactionDetail.getTransId());
-			reportingTransId = transactionDetail.getTransId();
 			Assert.assertNotNull(transactionDetail.getAccountType());
 			Assert.assertNotNull(transactionDetail.getSettleAmount());
 			Assert.assertNotNull(transactionDetail.getSubmitTimeLocal());
 			Assert.assertNotNull(transactionDetail.getSubmitTimeUTC());
 			Assert.assertNotNull(transactionDetail.getTransactionStatus());
 
-			int count=0;
-			net.authorize.reporting.ReportingTest.AssertSubscription( count, transactionDetail);
+			Subscription subs = transactionDetail.getSubscription();
+			if (subs != null) {
+				Assert.assertTrue(0 < subs.getId());
+				Assert.assertTrue(0 < subs.getPayNum());
+			}
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void getUnsettledTransactionListRequest() {
 
-		//does not require any batch id, needs to have some transactions created
-		//if(reportingBatchId != null) 
-		{
-			// batch list request
-			net.authorize.reporting.Transaction transaction =
-			  merchant.createReportingTransaction(TransactionType.GET_UNSETTLED_TRANSACTION_LIST);
-			ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
-			transaction.setReportingDetails(reportingDetails);
+		/*-
+		 * Better that there are unsettled transactions in the AuthorizeNet
+		 * service.
+		 */
+		List<TransactionDetails> transactionDetails = getUnsettledTransactionDetails();
 
-			Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Assert.assertNotNull(transactionDetails);
+		Assert.assertTrue(transactionDetails.size() >= 0); /*- 0 is valid; better not. */
 
-			Assert.assertNotNull(result);
-			result.printMessages();
-			Assert.assertTrue(result.isOk());
-			Assert.assertNotNull(result.getReportingDetails().getTransactionDetailList());
-			Assert.assertTrue(result.getReportingDetails().getTransactionDetailList().size() >=0 );
-			int count=0;
-			for(TransactionDetails transactionDetail : result.getReportingDetails().getTransactionDetailList()) {
-				Assert.assertNotNull(transactionDetail.getAccountNumber());
-				Assert.assertNotNull(transactionDetail.getTransId());
-				reportingTransId = transactionDetail.getTransId();
-				Assert.assertNotNull(transactionDetail.getAccountType());
-				Assert.assertNotNull(transactionDetail.getSettleAmount());
-				Assert.assertNotNull(transactionDetail.getSubmitTimeLocal());
-				Assert.assertNotNull(transactionDetail.getSubmitTimeUTC());
-				Assert.assertNotNull(transactionDetail.getTransactionStatus());
+		for(TransactionDetails transactionDetail : transactionDetails) {
+			Assert.assertNotNull(transactionDetail.getAccountNumber());
+			Assert.assertNotNull(transactionDetail.getTransId());
+			Assert.assertNotNull(transactionDetail.getAccountType());
+			Assert.assertNotNull(transactionDetail.getSettleAmount());
+			Assert.assertNotNull(transactionDetail.getSubmitTimeLocal());
+			Assert.assertNotNull(transactionDetail.getSubmitTimeUTC());
+			Assert.assertNotNull(transactionDetail.getTransactionStatus());
 
-				net.authorize.reporting.ReportingTest.AssertSubscription( count, transactionDetail);
+			Subscription subs = transactionDetail.getSubscription();
+			if (subs != null) {
+				Assert.assertTrue(subs.getId() > 0);
+				Assert.assertTrue(subs.getPayNum() > 0);
 			}
 		}
-		/*
-		else 
-		{
-			Assert.assertTrue(true);
-			System.out.println("getUnsettledTransactionListRequest did not have a reporting batch id to query");
-		}
-		*/
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void getTransactionDetailsRequestLive() {
 
-		Assert.assertNotNull(reportingTransId);		
-		Assert.assertNotSame( "",reportingTransId);		
-		// batch list request
-		net.authorize.reporting.Transaction transaction =
-		  merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
-		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
-		reportingDetails.setTransactionId(reportingTransId);		
-		
-		
+
+		/*-
+		 * Precondition: there are unsettled transactions in the AuthorizeNet
+		 * service.
+		 */
+
+		// Find a transaction id for an unsettled transaction.
+		List<TransactionDetails> transactionDetails = getUnsettledTransactionDetails();
+
+		Assert.assertNotNull(transactionDetails);
+		Assume.assumeTrue(transactionDetails.size() > 0); /*- precondition */
+		String transId = transactionDetails.get(0).getTransId();
+
+		// Get the transaction detail for the given transaction id.
+		ReportingDetails reportingDetails = ReportingDetails
+				.createReportingDetails();
+		reportingDetails.setTransactionId(transId);
+
+		net.authorize.reporting.Transaction transaction = merchant
+				.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
 		transaction.setReportingDetails(reportingDetails);
 
-		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(transaction);
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
 
 		Assert.assertNotNull(result);
 		result.printMessages();
 		Assert.assertTrue(result.isOk());
-		Assert.assertNotNull(result.getReportingDetails().getTransactionDetailList());
-		Assert.assertTrue(result.getReportingDetails().getTransactionDetailList().size() > 0);
-		int count=0;
-		for(TransactionDetails transactionDetail : result.getReportingDetails().getTransactionDetailList()) {
-			Assert.assertNotNull(transactionDetail.getTransId());
 
-			net.authorize.reporting.ReportingTest.AssertSubscription( count, transactionDetail);
+		// Check the transaction detail.
+		Assert.assertNotNull(result.getReportingDetails()
+				.getTransactionDetailList());
+		Assert.assertTrue(result.getReportingDetails()
+				.getTransactionDetailList().size() == 1);
+
+		TransactionDetails transactionDetail = result.getReportingDetails()
+				.getTransactionDetailList().get(0);
+
+		Assert.assertNotNull(transactionDetail);
+		Assert.assertNotNull(transactionDetail.getTransId());
+
+		Subscription subs = transactionDetail.getSubscription();
+		if (subs != null) {
+			Assert.assertTrue(subs.getId() > 0);
+			Assert.assertTrue(subs.getPayNum() > 0);
 		}
+	}
+
+	private List<BatchDetails> getSettledBatchDetailsList() {
+
+		ReportingDetails reportingDetails = ReportingDetails
+				.createReportingDetails();
+		reportingDetails.setBatchIncludeStatistics(true);
+
+		net.authorize.reporting.Transaction transaction = merchant
+				.createReportingTransaction(TransactionType.GET_SETTLED_BATCH_LIST);
+		transaction.setReportingDetails(reportingDetails);
+
+		@SuppressWarnings("unchecked")
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
+
+		Assert.assertNotNull(result);
+		result.printMessages();
+		Assert.assertTrue(result.isOk());
+
+		List<BatchDetails> batchDetailsList = result.getReportingDetails()
+				.getBatchDetailsList();
+		return batchDetailsList;
+	}
+
+	private List<TransactionDetails> getUnsettledTransactionDetails() {
+
+		net.authorize.reporting.Transaction transaction = merchant
+				.createReportingTransaction(TransactionType.GET_UNSETTLED_TRANSACTION_LIST);
+		ReportingDetails reportingDetails = ReportingDetails
+				.createReportingDetails();
+		transaction.setReportingDetails(reportingDetails);
+
+		@SuppressWarnings("unchecked")
+		Result<Transaction> result = (Result<Transaction>) merchant
+				.postTransaction(transaction);
+
+		Assert.assertNotNull(result);
+		result.printMessages();
+		Assert.assertTrue(result.isOk());
+
+		List<TransactionDetails> transactionDetails = result
+				.getReportingDetails().getTransactionDetailList();
+		return transactionDetails;
 	}
 }

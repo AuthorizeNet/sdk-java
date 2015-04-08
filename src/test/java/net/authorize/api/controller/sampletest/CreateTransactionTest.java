@@ -7,6 +7,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import net.authorize.api.contract.v1.CreateTransactionRequest;
@@ -76,6 +77,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	}
 	
 	@Test
+	@Ignore("Temporarily disabled; There is an service-side issue with the firewall configuration.")
 	public void createTransactionWithPayPal()
 	{
 		PayPalType payPalData = new PayPalType();
