@@ -27,7 +27,7 @@ public class ReportingTest extends UnitTestData {
 		List<BatchDetails> batchDetailsList = getSettledBatchDetailsList();
 
 		Assert.assertNotNull(batchDetailsList);
-		Assert.assertTrue(batchDetailsList.size() > 0);
+		Assume.assumeTrue(batchDetailsList.size() > 0); /*- precondition */
 
 		for(BatchDetails batchDetail : batchDetailsList) {
 			Assert.assertNotNull(batchDetail.getBatchId());
