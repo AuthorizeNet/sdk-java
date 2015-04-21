@@ -92,12 +92,16 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	}
 	
 	@Test
-	@Ignore("Temporarily disabled; There is an service-side issue with the firewall configuration.")
 	public void createTransactionWithPayPal()
 	{
+		/*
+		 * Please enable the PayPal feature of your ANet account.
+		 */	    
 		PayPalType payPalData = new PayPalType();
 		payPalData.setPaypalLc("IT");
 		payPalData.setPaypalPayflowcolor("FFFF00");
+		payPalData.setSuccessUrl("https://success.anet.net");
+		payPalData.setCancelUrl("https://cancel.anet.net");
 		
 		PaymentType paymentType = new PaymentType();
 		paymentType.setPayPal(payPalData);

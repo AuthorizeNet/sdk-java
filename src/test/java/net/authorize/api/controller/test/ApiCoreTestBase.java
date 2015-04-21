@@ -253,8 +253,8 @@ public abstract class ApiCoreTestBase {
 		encryptedTrackDataOne.setFormOfPayment(keyBlock);
 
 		payPalOne = new PayPalType();
-		payPalOne.setSuccessUrl(getRandomString("http://success.anet.net"));
-		payPalOne.setCancelUrl(getRandomString("http://cancel.anet.net"));
+		payPalOne.setSuccessUrl(getRandomString("https://success.anet.net"));
+		payPalOne.setCancelUrl(getRandomString("https://cancel.anet.net"));
 		payPalOne.setPaypalLc(getRandomString("Lc"));
 		payPalOne.setPaypalHdrImg(getRandomString("Hdr"));
 		payPalOne.setPaypalPayflowcolor(getRandomString("flowClr"));
