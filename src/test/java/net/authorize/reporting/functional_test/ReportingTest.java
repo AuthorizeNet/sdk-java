@@ -10,6 +10,7 @@ import net.authorize.data.xml.reporting.BatchDetails;
 import net.authorize.data.xml.reporting.BatchStatistics;
 import net.authorize.data.xml.reporting.ReportingDetails;
 import net.authorize.data.xml.reporting.TransactionDetails;
+import net.authorize.data.xml.reporting.TransactionStatusType;
 import net.authorize.reporting.Result;
 import net.authorize.reporting.TransactionType;
 
@@ -191,18 +192,20 @@ public class ReportingTest extends UnitTestData {
 		Assert.assertTrue(transactionDetails.size() >= 0); /*- 0 is valid; better not. */
 
 		for(TransactionDetails transactionDetail : transactionDetails) {
-			Assert.assertNotNull(transactionDetail.getAccountNumber());
-			Assert.assertNotNull(transactionDetail.getTransId());
-			Assert.assertNotNull(transactionDetail.getAccountType());
-			Assert.assertNotNull(transactionDetail.getSettleAmount());
-			Assert.assertNotNull(transactionDetail.getSubmitTimeLocal());
-			Assert.assertNotNull(transactionDetail.getSubmitTimeUTC());
-			Assert.assertNotNull(transactionDetail.getTransactionStatus());
+			if (transactionDetail.getTransactionStatus() != TransactionStatusType.GENERAL_ERROR) {
+				Assert.assertNotNull(transactionDetail.getAccountNumber());
+				Assert.assertNotNull(transactionDetail.getTransId());
+				Assert.assertNotNull(transactionDetail.getAccountType());
+				Assert.assertNotNull(transactionDetail.getSettleAmount());
+				Assert.assertNotNull(transactionDetail.getSubmitTimeLocal());
+				Assert.assertNotNull(transactionDetail.getSubmitTimeUTC());
+				Assert.assertNotNull(transactionDetail.getTransactionStatus());
 
-			Subscription subs = transactionDetail.getSubscription();
-			if (subs != null) {
-				Assert.assertTrue(subs.getId() > 0);
-				Assert.assertTrue(subs.getPayNum() > 0);
+				Subscription subs = transactionDetail.getSubscription();
+				if (subs != null) {
+					Assert.assertTrue(subs.getId() > 0);
+					Assert.assertTrue(subs.getPayNum() > 0);
+				}
 			}
 		}
 	}
