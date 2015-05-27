@@ -18,7 +18,7 @@ import net.authorize.api.contract.v1.CustomerDataType;
 import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.PaymentType;
 import net.authorize.api.contract.v1.TransactionRequestType;
-import net.authorize.api.controller.CreateCustomerProfileFromTransactionConroller;
+import net.authorize.api.controller.CreateCustomerProfileFromTransactionController;
 import net.authorize.api.controller.CreateTransactionController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.test.ApiCoreTestBase;
@@ -54,7 +54,7 @@ public class CreateCustomerProfileFromTransactionTest  extends ApiCoreTestBase {
 		
 		CreateCustomerProfileFromTransactionRequest request = new CreateCustomerProfileFromTransactionRequest();
 		request.setTransId(createTransactionAndReturnId());
-		CreateCustomerProfileFromTransactionConroller createProfileController = new CreateCustomerProfileFromTransactionConroller(request);
+		CreateCustomerProfileFromTransactionController createProfileController = new CreateCustomerProfileFromTransactionController(request);
 		createProfileController.execute();
 		CreateCustomerProfileResponse response = createProfileController.getApiResponse();
 		
