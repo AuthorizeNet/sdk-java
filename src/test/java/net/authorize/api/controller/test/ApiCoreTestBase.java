@@ -363,7 +363,7 @@ public abstract class ApiCoreTestBase {
 	public void tearDown() throws Exception {
 	}
 
-	String getRandomString(String title) {
+	protected String getRandomString(String title) {
 		return String.format("%s%d", title, counter);
 
 	}
