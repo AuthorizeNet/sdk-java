@@ -80,6 +80,10 @@ public abstract class ApiCoreTestBase {
 	static String transactionKey = null;
 	static String md5HashKey = null;
 	
+	protected static String apiLoginIdKeyApplePay = null;
+	protected static String transactionKeyApplePay = null;
+	protected static String md5HashKeyApplePay = null;
+	
 	DatatypeFactory datatypeFactory = null;
 	GregorianCalendar pastDate = null;
 	GregorianCalendar nowDate = null;
@@ -123,6 +127,10 @@ public abstract class ApiCoreTestBase {
 		transactionKey = UnitTestData.getPropertyFromNames(Constants.ENV_TRANSACTION_KEY, Constants.PROP_TRANSACTION_KEY);
 		md5HashKey = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY, Constants.PROP_MD5_HASHKEY);
 
+		apiLoginIdKeyApplePay = UnitTestData.getPropertyFromNames(Constants.ENV_API_LOGINID_APPLEPAY, Constants.PROP_API_LOGINID_APPLEPAY);
+		transactionKeyApplePay = UnitTestData.getPropertyFromNames(Constants.ENV_TRANSACTION_KEY_APPLEPAY, Constants.PROP_TRANSACTION_KEY_APPLEPAY);
+		md5HashKeyApplePay = UnitTestData.getPropertyFromNames(Constants.ENV_MD5_HASHKEY_APPLEPAY, Constants.PROP_MD5_HASHKEY_APPLEPAY);
+
         //require only one cnp or cp merchant keys
         if ((null != apiLoginIdKey && null != transactionKey) )
         {
@@ -133,6 +141,18 @@ public abstract class ApiCoreTestBase {
         	throw new IllegalArgumentException(
         			"LoginId and/or TransactionKey have not been set. " + 
         			"Merchant keys are required.");
+	    }
+		
+        if ((null != apiLoginIdKeyApplePay && null != transactionKeyApplePay) )
+        {
+            logger.debug("Merchant ApplePay keys are present.");
+        }
+        else
+	    {
+        	// If one is null. make all equal to the regular key values.
+        	apiLoginIdKeyApplePay = apiLoginIdKey;
+        	transactionKeyApplePay = transactionKey;
+    		md5HashKeyApplePay = md5HashKey; 
 	    }
 		
         if (null != apiLoginIdKey && null != transactionKey)
@@ -233,8 +253,8 @@ public abstract class ApiCoreTestBase {
 		encryptedTrackDataOne.setFormOfPayment(keyBlock);
 
 		payPalOne = new PayPalType();
-		payPalOne.setSuccessUrl(getRandomString("http://success.anet.net"));
-		payPalOne.setCancelUrl(getRandomString("http://cancel.anet.net"));
+		payPalOne.setSuccessUrl(getRandomString("https://success.anet.net"));
+		payPalOne.setCancelUrl(getRandomString("https://cancel.anet.net"));
 		payPalOne.setPaypalLc(getRandomString("Lc"));
 		payPalOne.setPaypalHdrImg(getRandomString("Hdr"));
 		payPalOne.setPaypalPayflowcolor(getRandomString("flowClr"));
@@ -343,7 +363,7 @@ public abstract class ApiCoreTestBase {
 	public void tearDown() throws Exception {
 	}
 
-	String getRandomString(String title) {
+	protected String getRandomString(String title) {
 		return String.format("%s%d", title, counter);
 
 	}

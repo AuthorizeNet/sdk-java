@@ -15,7 +15,15 @@ public final class Constants {
 	public static final String ENV_TRANSACTION_KEY = "TRANSACTION_KEY";
 	public static final String ENV_MD5_HASHKEY = "MD5_HASH_KEY";
 
+	public static final String ENV_API_LOGINID_APPLEPAY = "API_LOGIN_ID_APPLEPAY";
+	public static final String ENV_TRANSACTION_KEY_APPLEPAY = "TRANSACTION_KEY_APPLEPAY";
+	public static final String ENV_MD5_HASHKEY_APPLEPAY = "MD5_HASH_KEY_APPLEPAY";
+
 	public static final String PROP_API_LOGINID = "api.login.id";
 	public static final String PROP_TRANSACTION_KEY = "transaction.key";
 	public static final String PROP_MD5_HASHKEY = "md5.hash.key";	
+
+	public static final String PROP_API_LOGINID_APPLEPAY = "api.login.id.applepay";
+	public static final String PROP_TRANSACTION_KEY_APPLEPAY = "transaction.key.applepay";
+	public static final String PROP_MD5_HASHKEY_APPLEPAY = "md5.hash.key.applepay";	
 }
