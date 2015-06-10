@@ -1,6 +1,9 @@
 package net.authorize.util;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.w3c.dom.*;
 public class XmlTreeUtil{
 
@@ -70,7 +73,7 @@ public class XmlTreeUtil{
 				NamedNodeMap attributes=node.getAttributes();
 				for(int i=0;i<attributes.getLength();i++){
 					Node current = attributes.item(i);
-					String attrSet=new String(" " + current.getNodeName() + "=\"" + current.getNodeValue() + "\"");
+					String attrSet=new String(" " + current.getNodeName() + "=\"" + escape(current.getNodeValue()) + "\"");
 					os.write(attrSet.getBytes());
 				}
 
@@ -97,7 +100,7 @@ public class XmlTreeUtil{
 				String value=node.getNodeValue();
 				if(value!=null){
 					value=value.trim();
-					os.write(value.getBytes());
+					os.write(escape(value).getBytes());
 				}
 				else{
 //					System.out.println(node.hasChildNodes());
@@ -117,5 +120,43 @@ public class XmlTreeUtil{
 			case Node.DOCUMENT_TYPE_NODE:
 				break;
 		}
+	}
+	/**
+	 * Performs basic XML escaping for text and attribute values.
+	 * 
+	 * @param s Original string to escape
+	 * @return XML escaped version of s
+	 */
+	private String escape(String s) {
+		if (s == null || s.length() == 0)
+			return s;
+		
+		StringBuilder buff = new StringBuilder();
+		
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			String escape = ESCAPE_MAP.get((int)c);
+			if (escape == null) {
+                if (c > 0x7F) 
+                	buff.append("&#").append(Integer.toString(c, 10)).append(";");
+                else
+                	buff.append(c);
+			}
+			else
+				buff.append("&").append(escape).append(";");
+		}
+		
+		return buff.toString();
+	}
+	
+	private static final Map<Integer, String> ESCAPE_MAP;
+	
+	static {
+		ESCAPE_MAP = new HashMap<Integer, String>();
+		ESCAPE_MAP.put(34, "quot");
+		ESCAPE_MAP.put(38, "amp");
+		ESCAPE_MAP.put(39, "apos");
+		ESCAPE_MAP.put(60, "lt");
+		ESCAPE_MAP.put(62, "gt");
 	}
 }
