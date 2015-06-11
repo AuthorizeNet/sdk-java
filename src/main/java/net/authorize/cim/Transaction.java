@@ -328,10 +328,15 @@ public class Transaction extends net.authorize.Transaction {
 			}			
 			
 			cc_el.appendChild(cc_exp_el);
-			                                                                 
-			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
-			card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));
-			cc_el.appendChild(card_code_el);
+
+			// Only include the card code when specified. Otherwise, if an empty element is submitted, the 
+			// request will be rejected due to XML schema validation.
+			String cardCode = credit_card.getCardCode();
+			if (cardCode != null && cardCode.length() > 0) {
+				Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
+				card_code_el.appendChild(document.getDocument().createTextNode(cardCode));
+				cc_el.appendChild(card_code_el);
+			}
 
 			payment_el.appendChild(cc_el);
 		}
