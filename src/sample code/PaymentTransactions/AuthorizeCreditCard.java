@@ -1,5 +1,3 @@
-//import 
-
 package PaymentTransactions;
 
 public class AuthorizeCreditCard {

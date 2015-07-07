@@ -11,7 +11,6 @@ public class Main {
 		SelectMethod();         // show the list of available methods
 		
 		//AuthorizeCreditCard.main(params);
-
 	}
 	
 	private static void SelectMethod()
@@ -33,7 +32,6 @@ public class Main {
 	
 	private static void ShowMethods()
     {
-
 		System.out.println("    VisaCheckoutDecrypt");
 		System.out.println("    VisaCheckoutTransaction");
 		System.out.println("    ChargeCreditCard");
