@@ -146,6 +146,15 @@ public class Main {
 
             	GetListSubscription.main(apiLoginId, transactionKey, RefID, SubscriptionID);
                 break;
+            case "GetSubscriptionStatus":
+            	System.out.println("Enter An RefID : ");
+            	RefID = user_input.next( );
+            	
+            	System.out.println("Enter An Subscription ID : ");
+            	SubscriptionID = user_input.next( );
+
+            	GetSubscriptionStatus.main(apiLoginId, transactionKey, RefID, SubscriptionID);
+                break;
             default:
                 break;
         }
