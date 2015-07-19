@@ -70,6 +70,9 @@ public class Main {
         String TransactionAmount;
         String TransactionID;
         
+        String RefID;
+        String SubscriptionID;
+        
         String processToRun;
         
         Scanner user_input = new Scanner( System.in );
@@ -90,7 +93,6 @@ public class Main {
             	System.out.println("Enter An Transaction ID : ");
                 TransactionID = user_input.next( );
 
-                user_input.close();
                 CapturePreviouslyAuthorizedAmount.main(apiLoginId, transactionKey, TransactionAmount, TransactionID);
                 break;
             case "RefundTransaction":
@@ -120,9 +122,20 @@ public class Main {
             case "VoidTransaction":
             	VoidTransaction.main(apiLoginId, transactionKey);
                 break;
+            case "CancelSubscription":
+            	System.out.println("Enter An Transaction Amount : ");
+            	RefID = user_input.next( );
+            	
+            	System.out.println("Enter An Transaction ID : ");
+            	SubscriptionID = user_input.next( );
+
+            	CancelSubscription.main(apiLoginId, transactionKey, RefID, SubscriptionID);
+                break;
             default:
                 break;
         }
+        
+        user_input.close();
     }
 
 }
