@@ -123,19 +123,28 @@ public class Main {
             	VoidTransaction.main(apiLoginId, transactionKey);
                 break;
             case "CancelSubscription":
-            	System.out.println("Enter An Transaction Amount : ");
+            	System.out.println("Enter An RefID : ");
             	RefID = user_input.next( );
             	
-            	System.out.println("Enter An Transaction ID : ");
+            	System.out.println("Enter An Subscription ID : ");
             	SubscriptionID = user_input.next( );
 
             	CancelSubscription.main(apiLoginId, transactionKey, RefID, SubscriptionID);
                 break;
             case "CreateSubscription":
-            	System.out.println("Enter An Transaction Amount : ");
+            	System.out.println("Enter An RefID : ");
             	RefID = user_input.next( );
   
             	CreateSubscription.main(apiLoginId, transactionKey, RefID);
+                break;
+            case "GetListSubscription":
+            	System.out.println("Enter An RefID : ");
+            	RefID = user_input.next( );
+            	
+            	System.out.println("Enter An Subscription ID : ");
+            	SubscriptionID = user_input.next( );
+
+            	GetListSubscription.main(apiLoginId, transactionKey, RefID, SubscriptionID);
                 break;
             default:
                 break;
