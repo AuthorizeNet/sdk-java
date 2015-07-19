@@ -1,10 +1,6 @@
 import java.util.Scanner;
-import PaymentTransactions.CaptureOnly;
-import PaymentTransactions.ChargeCreditCard;
-import PaymentTransactions.RefundTransaction;
-import PaymentTransactions.AuthorizeCreditCard;
-import PaymentTransactions.ChargeCustomerProfile;
-import PaymentTransactions.CapturePreviouslyAuthorizedAmount;
+import PaymentTransactions.*;
+
 
 public class Main {
 
@@ -59,6 +55,7 @@ public class Main {
         System.out.println("    GetSubscriptionStatus");
         System.out.println("    UpdateSubscription");
         System.out.println("    ChargeCustomerProfile");
+        System.out.println("    ChargeTokenizedCreditCard");
     }
 	
 	private static void RunMethod(String methodName)
@@ -108,6 +105,9 @@ public class Main {
                 break;
             case "ChargeCustomerProfile":
                 ChargeCustomerProfile.main(apiLoginId, transactionKey);
+                break;
+            case "ChargeTokenizedCreditCard":
+                ChargeTokenizedCreditCard.main(apiLoginId, transactionKey);
                 break;
             default:
                 break;
