@@ -3,8 +3,8 @@ import VisaCheckout.*;
 import PayPalExpress.*;
 import java.util.Scanner;
 import RecurringBilling.*;
-import TransactionReporting.GetBatchStatistics;
 import PaymentTransactions.*;
+import TransactionReporting.*;
 
 public class Main {
 
@@ -75,8 +75,6 @@ public class Main {
         
         String RefID;
         String SubscriptionID;
-        
-        String processToRun;
         
         Scanner user_input = new Scanner( System.in );
 
