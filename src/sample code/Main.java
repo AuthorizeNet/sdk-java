@@ -1,6 +1,6 @@
 import java.util.Scanner;
+import VisaCheckout.*;
 import PaymentTransactions.*;
-
 
 public class Main {
 
@@ -114,6 +114,9 @@ public class Main {
                 break;
             case "DebitBankAccount":
                 DebitBankAccount.main(apiLoginId, transactionKey);
+                break;
+            case "VoidTransaction":
+            	VoidTransaction.main(apiLoginId, transactionKey);
                 break;
             default:
                 break;
