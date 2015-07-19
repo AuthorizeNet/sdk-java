@@ -112,6 +112,9 @@ public class Main {
             case "CreditBankAccount":
                 CreditBankAccount.main(apiLoginId, transactionKey);
                 break;
+            case "DebitBankAccount":
+                DebitBankAccount.main(apiLoginId, transactionKey);
+                break;
             default:
                 break;
         }
