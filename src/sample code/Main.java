@@ -1,6 +1,7 @@
 import java.util.Scanner;
-import PaymentTransactions.AuthorizeCreditCard;
 import PaymentTransactions.CaptureOnly;
+import PaymentTransactions.RefundTransaction;
+import PaymentTransactions.AuthorizeCreditCard;
 import PaymentTransactions.CapturePreviouslyAuthorizedAmount;
 
 public class Main {
@@ -38,7 +39,7 @@ public class Main {
         System.out.println("    CaptureOnly");
         System.out.println("    AuthorizeCreditCard");
         System.out.println("    CapturePreviouslyAuthorizedAmount");
-        System.out.println("    Refund");
+        System.out.println("    RefundTransaction");
         System.out.println("    Void");
         System.out.println("    DebitBankAccount");
         System.out.println("    CreditBankAccount");
@@ -68,6 +69,8 @@ public class Main {
         String TransactionID;
         
         String processToRun;
+        
+        Scanner user_input = new Scanner( System.in );
 
         switch (methodName)
         {
@@ -78,7 +81,6 @@ public class Main {
                 CaptureOnly.main(apiLoginId, transactionKey);
                 break;
             case "CapturePreviouslyAuthorizedAmount":
-            	Scanner user_input = new Scanner( System.in );
             	
             	System.out.println("Enter An Transaction Amount : ");
             	TransactionAmount = user_input.next( );
@@ -88,6 +90,15 @@ public class Main {
 
                 user_input.close();
                 CapturePreviouslyAuthorizedAmount.main(apiLoginId, transactionKey, TransactionAmount, TransactionID);
+                break;
+            case "RefundTransaction":
+            	System.out.println("Enter An Transaction Amount : ");
+                TransactionAmount = user_input.next( );
+
+                System.out.println("Enter An Transaction ID : ");
+                TransactionID = user_input.next( );
+
+                RefundTransaction.main(apiLoginId, transactionKey, TransactionAmount, TransactionID);
                 break;
             default:
                 break;
