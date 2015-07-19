@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import PaymentTransactions.AuthorizeCreditCard;
+import PaymentTransactions.CaptureOnly;
+import PaymentTransactions.CapturePreviouslyAuthorizedAmount;
 
 public class Main {
 
@@ -8,9 +10,7 @@ public class Main {
 		
 		String[] params={};
 		
-		SelectMethod();         // show the list of available methods
-		
-		//AuthorizeCreditCard.main(params);
+		SelectMethod();         // show the list of available methods		
 	}
 	
 	private static void SelectMethod()
@@ -35,14 +35,26 @@ public class Main {
 		System.out.println("    VisaCheckoutDecrypt");
 		System.out.println("    VisaCheckoutTransaction");
 		System.out.println("    ChargeCreditCard");
-		System.out.println("    CaptureOnly");
-		System.out.println("    AuthorizeCreditCard");
-		System.out.println("    CapturePreviouslyAuthorizedAmount");
-		System.out.println("    Refund");
-		System.out.println("    Void");
-		System.out.println("    DebitBankAccount");
-		System.out.println("    CreditBankAccount");
-		System.out.println("    ChargeTokenizedCard");
+        System.out.println("    CaptureOnly");
+        System.out.println("    AuthorizeCreditCard");
+        System.out.println("    CapturePreviouslyAuthorizedAmount");
+        System.out.println("    Refund");
+        System.out.println("    Void");
+        System.out.println("    DebitBankAccount");
+        System.out.println("    CreditBankAccount");
+        System.out.println("    ChargeTokenizedCard");
+        System.out.println("    PayPalVoid");
+        System.out.println("    PayPalAuthorizeCapture");
+        System.out.println("    PayPalAuthorizeCaptureContinue");
+        System.out.println("    PayPalAuthorizeOnly");
+        System.out.println("    PayPalCredit");
+        System.out.println("    PayPalGetDetails");
+        System.out.println("    PayPalPriorAuthorizationCapture");
+        System.out.println("    CancelSubscription");
+        System.out.println("    CreateSubscription");
+        System.out.println("    GetSubscriptionList");
+        System.out.println("    GetSubscriptionStatus");
+        System.out.println("    UpdateSubscription");
     }
 	
 	private static void RunMethod(String methodName)
@@ -54,11 +66,28 @@ public class Main {
 
         String TransactionAmount;
         String TransactionID;
+        
+        String processToRun;
 
         switch (methodName)
         {
             case "AuthorizeCreditCard":
             	AuthorizeCreditCard.main(apiLoginId, transactionKey);
+                break;
+            case "CaptureOnly":
+                CaptureOnly.main(apiLoginId, transactionKey);
+                break;
+            case "CapturePreviouslyAuthorizedAmount":
+            	Scanner user_input = new Scanner( System.in );
+            	
+            	System.out.println("Enter An Transaction Amount : ");
+            	TransactionAmount = user_input.next( );
+            	
+            	System.out.println("Enter An Transaction ID : ");
+                TransactionID = user_input.next( );
+
+                user_input.close();
+                CapturePreviouslyAuthorizedAmount.main(apiLoginId, transactionKey, TransactionAmount, TransactionID);
                 break;
             default:
                 break;
