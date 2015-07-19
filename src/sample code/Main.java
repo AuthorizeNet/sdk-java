@@ -109,6 +109,9 @@ public class Main {
             case "ChargeTokenizedCreditCard":
                 ChargeTokenizedCreditCard.main(apiLoginId, transactionKey);
                 break;
+            case "CreditBankAccount":
+                CreditBankAccount.main(apiLoginId, transactionKey);
+                break;
             default:
                 break;
         }
