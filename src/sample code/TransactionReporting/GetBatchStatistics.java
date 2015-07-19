@@ -2,9 +2,9 @@ package TransactionReporting;
 
 public class GetBatchStatistics {
 
-	public static void main(String[] args) {
+	public static void main(String apiLoginId, String transactionKey) {
 		// TODO Auto-generated method stub
-
+		System.out.println("Get Batch Statistics Sample");
 	}
 
 }

@@ -3,6 +3,7 @@ import VisaCheckout.*;
 import PayPalExpress.*;
 import java.util.Scanner;
 import RecurringBilling.*;
+import TransactionReporting.GetBatchStatistics;
 import PaymentTransactions.*;
 
 public class Main {
@@ -58,6 +59,7 @@ public class Main {
         System.out.println("    GetSubscriptionStatus");
         System.out.println("    UpdateSubscription");
         System.out.println("    ChargeCustomerProfile");
+        System.out.println("    GetBatchStatistics");
         System.out.println("    ChargeTokenizedCreditCard");
     }
 	
@@ -164,6 +166,9 @@ public class Main {
             	SubscriptionID = user_input.next( );
 
             	UpdateSubscription.main(apiLoginId, transactionKey, RefID, SubscriptionID);
+                break;
+            case "GetBatchStatistics":
+            	GetBatchStatistics.main(apiLoginId, transactionKey);
                 break;
             default:
                 break;
