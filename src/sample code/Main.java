@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import PaymentTransactions.CaptureOnly;
+import PaymentTransactions.ChargeCreditCard;;
 import PaymentTransactions.RefundTransaction;
 import PaymentTransactions.AuthorizeCreditCard;
 import PaymentTransactions.CapturePreviouslyAuthorizedAmount;
@@ -99,6 +100,9 @@ public class Main {
                 TransactionID = user_input.next( );
 
                 RefundTransaction.main(apiLoginId, transactionKey, TransactionAmount, TransactionID);
+                break;
+            case "ChargeCreditCard":
+                ChargeCreditCard.main(apiLoginId, transactionKey);
                 break;
             default:
                 break;
