@@ -6,8 +6,6 @@ public class RefundTransaction {
 			String TransactionAmount, String TransactionID) {
 		// TODO Auto-generated method stub
 		System.out.println("Refund Transaction Sample");
-		
-		
 	}
 
 }
