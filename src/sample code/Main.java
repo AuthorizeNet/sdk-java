@@ -131,6 +131,12 @@ public class Main {
 
             	CancelSubscription.main(apiLoginId, transactionKey, RefID, SubscriptionID);
                 break;
+            case "CreateSubscription":
+            	System.out.println("Enter An Transaction Amount : ");
+            	RefID = user_input.next( );
+  
+            	CreateSubscription.main(apiLoginId, transactionKey, RefID);
+                break;
             default:
                 break;
         }
