@@ -6,7 +6,6 @@ public class AuthorizeCreditCard {
 		// TODO Auto-generated method stub
 		System.out.println("Authorize Credit Card Sample");
 		
-		
 	}
 
 }
