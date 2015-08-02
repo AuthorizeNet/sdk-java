@@ -257,10 +257,6 @@ public class HttpClient {
 
 				if(rawResponseString == null) return null;
 
-				if(Environment.SANDBOX.equals(environment) ||
-						Environment.SANDBOX_TESTMODE.equals(environment)) {
-					
-				}
 
 				int mark = rawResponseString.indexOf("<?xml");
 				if(mark == -1){

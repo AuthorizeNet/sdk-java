@@ -132,8 +132,7 @@ public class Merchant implements Serializable {
 	 */
 	public boolean isSandboxEnvironment() {
 		return (environment!=null&&
-			(Environment.SANDBOX.equals(this.environment) ||
-					Environment.SANDBOX_TESTMODE.equals(this.environment)));
+			(Environment.SANDBOX.equals(this.environment)));
 	}
 
 	/**
