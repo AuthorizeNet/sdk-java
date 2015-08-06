@@ -41,6 +41,7 @@ public class CustomerShippingAddressTest extends ApiCoreTestBase {
 	@Test
 	public void testProcessCreateAndDeleteCustomerShippingAddressRequest() {
 		//create a new customer profile
+		//String customerProfileId = CustomerProfileTest.createCustomerProfile(merchantAuthenticationType, customerPaymentProfileOne, customerProfileType, refId);
 		String customerProfileId = CustomerProfileTest.createCustomerProfile(merchantAuthenticationType, customerPaymentProfileOne, customerProfileType, refId);
 		
 		//create a new customer shipping address

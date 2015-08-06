@@ -121,6 +121,7 @@ public class CIMTest extends UnitTestData {
 
 		// add info
 		paymentProfileCC.setBillTo(billingInfo);
+		//creditCard.setCardCode("");
 		paymentProfileCC.addPayment(Payment.createPayment(creditCard));
 		
 		paymentProfileCC.setCustomerType(CustomerType.INDIVIDUAL);
@@ -238,6 +239,8 @@ public class CIMTest extends UnitTestData {
 		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PAYMENT_PROFILE);
 		setRefId(transaction);
 		transaction.setCustomerProfileId(result.getCustomerProfileId());
+		
+		
 		transaction.addPaymentProfile(paymentProfileCC);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 		result = (Result<Transaction>) merchant.postTransaction(transaction);
@@ -878,6 +881,28 @@ public class CIMTest extends UnitTestData {
 	}
 	
 	private String createdCustomerPaymentProfileId = null;
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void Issue46repro() {
+		String errormessage = "The 'AnetApi/xml/v1/schema/AnetApiSchema.xsd:cardCode' element is invalid - The value '' is invalid according to its datatype 'AnetApi/xml/v1/schema/AnetApiSchema.xsd:cardCode' - The Pattern constraint failed.";
+		
+		// instance variable setting it to empty will not affect other test cases as in setup it is set to "123"
+		creditCard.setCardCode("");
+		Result<Transaction> result = createCustomerProfile(customerProfile, paymentProfileBankAccount, ValidationModeType.TEST_MODE);
+
+		// Create a new customer payment profile
+		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PAYMENT_PROFILE);
+		setRefId(transaction);
+		transaction.setCustomerProfileId(result.getCustomerProfileId());
+		transaction.addPaymentProfile(paymentProfileCC);
+		transaction.setValidationMode(ValidationModeType.TEST_MODE);
+		result = (Result<Transaction>) merchant.postTransaction(transaction);
+		
+		Assert.assertTrue(result.isOk());
+	//	Assert.assertTrue(result.isError());
+	//	Assert.assertEquals(errormessage, result.getMessages().get(0).getText());
+	}
 }
 
 class MyReturnValuesTest {
@@ -904,6 +929,5 @@ class MyReturnValuesTest {
 		this.splitTenderId = splitTenderId;
 		this.transactionId = transactionId;
 		this.customerShippingAddressId = customerShippingAddressId;
-	}
-	
+	}	
 }

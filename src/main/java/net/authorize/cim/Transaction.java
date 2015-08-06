@@ -329,10 +329,12 @@ public class Transaction extends net.authorize.Transaction {
 			
 			cc_el.appendChild(cc_exp_el);
 			                                                                 
-			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
-			card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));
-			cc_el.appendChild(card_code_el);
-
+			if (!StringUtils.isEmpty(credit_card.getCardCode())) {                                                                   
+				Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());  
+				card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));  
+				cc_el.appendChild(card_code_el);  
+			}  
+			
 			payment_el.appendChild(cc_el);
 		}
 		else if (bank_account != null) {
