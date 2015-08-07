@@ -693,3 +693,5 @@ public static void main( String[] args ) {
 }
 
 ````
+### Visa Checkout
+Visa Checkout support is also available through the SDK using our new model and code samples are available at https://github.com/AuthorizeNet/sample-code-java/tree/master/src/main/java/net/authorize/sample/VisaCheckout

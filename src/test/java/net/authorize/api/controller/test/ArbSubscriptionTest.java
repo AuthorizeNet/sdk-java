@@ -56,34 +56,50 @@ public class ArbSubscriptionTest extends ApiCoreTestBase {
 	@Test
 	public void testGetSubscriptionList() throws DatatypeConfigurationException {
 		String subscriptionId = createSubscription(merchantAuthenticationType);
-		ARBSubscriptionStatusEnum newStatus = getSubscription(merchantAuthenticationType, subscriptionId);
-		Assert.assertEquals(ARBSubscriptionStatusEnum.ACTIVE, newStatus);
+		try {
+			ARBSubscriptionStatusEnum newStatus = getSubscription(merchantAuthenticationType, subscriptionId);
+			Assert.assertEquals(ARBSubscriptionStatusEnum.ACTIVE, newStatus);
 
-		LogHelper.info(logger, "Getting Subscription List for SubscriptionId: %s", subscriptionId);
+			LogHelper.info(logger, "Getting Subscription List for SubscriptionId: %s", subscriptionId);
 
-		ARBGetSubscriptionListRequest listRequest = setupSubscriptionListRequest(merchantAuthenticationType);
-		ARBGetSubscriptionListResponse listResponse = executeTestRequestWithSuccess(listRequest, ARBGetSubscriptionListController.class, environment);
+			boolean found = false;
+			int retryCount = 3;
+			do {
+				// Pause for about 15 seconds, so that the created subscription
+				// will be in the next service call.
+				try {
+					Thread.sleep(15000L);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 
-		LogHelper.info( logger, "Subscription Count: %d", listResponse.getTotalNumInResultSet());		
-		Assert.assertTrue( 0 < listResponse.getTotalNumInResultSet());
-		ArrayOfSubscription subscriptionsArray = listResponse.getSubscriptionDetails();
-		Assert.assertNotNull( subscriptionsArray);
+				ARBGetSubscriptionListRequest listRequest = setupSubscriptionListRequest(merchantAuthenticationType);
+				ARBGetSubscriptionListResponse listResponse = executeTestRequestWithSuccess(listRequest, ARBGetSubscriptionListController.class, environment);
 
-		boolean found = false;
-		int subsId = Integer.parseInt(subscriptionId);
+				LogHelper.info( logger, "Subscription Count: %d", listResponse.getTotalNumInResultSet());		
+				Assert.assertTrue( 0 < listResponse.getTotalNumInResultSet());
+				ArrayOfSubscription subscriptionsArray = listResponse.getSubscriptionDetails();
+				Assert.assertNotNull( subscriptionsArray);
+
+				int subsId = Integer.parseInt(subscriptionId);
 		
-		for( SubscriptionDetail aSubscription : subscriptionsArray.getSubscriptionDetail()) {
-			Assert.assertTrue( 0 < aSubscription.getId());
-			LogHelper.info( logger, "Subscription Id: %s, Status:%s, PaymentMethod: %s, Amount: %s, Account:%s", 
-					aSubscription.getId(), aSubscription.getStatus(), aSubscription.getPaymentMethod(), aSubscription.getAmount(), aSubscription.getAccountNumber());
-			if ( subsId == aSubscription.getId()) { found = true;}
-		}
+				for( SubscriptionDetail aSubscription : subscriptionsArray.getSubscriptionDetail()) {
+					Assert.assertTrue( 0 < aSubscription.getId());
+					LogHelper.info( logger, "Subscription Id: %s, Status:%s, PaymentMethod: %s, Amount: %s, Account:%s", 
+							aSubscription.getId(), aSubscription.getStatus(), aSubscription.getPaymentMethod(), aSubscription.getAmount(), aSubscription.getAccountNumber());
+					if ( subsId == aSubscription.getId()) { found = true;}
+				}
+			} while (!found && --retryCount > 0);
 
-		cancelSubscription(merchantAuthenticationType, subscriptionId);
-		Assert.assertTrue(found);
-		//validate the status of subscription to make sure it is in-activated
-		ARBSubscriptionStatusEnum cancelStatus = getSubscription(merchantAuthenticationType, subscriptionId);
-		Assert.assertEquals(ARBSubscriptionStatusEnum.CANCELED, cancelStatus);
+			Assert.assertTrue("Retried " + retryCount
+					+ " times, the subscription " + subscriptionId
+					+ " not found in the subscription list.", found);
+		} finally {
+			cancelSubscription(merchantAuthenticationType, subscriptionId);
+			//validate the status of subscription to make sure it is in-activated
+			ARBSubscriptionStatusEnum cancelStatus = getSubscription(merchantAuthenticationType, subscriptionId);
+			Assert.assertEquals(ARBSubscriptionStatusEnum.CANCELED, cancelStatus);
+		}
 	}
 
 	@Test

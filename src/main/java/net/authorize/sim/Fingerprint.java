@@ -35,7 +35,26 @@ public class Fingerprint {
 	 * @return A Fingerprint object.
 	 */
 	public static Fingerprint createFingerprint(String loginID,
-			String transactionKey, long sequence, String amount) {
+												String transactionKey,
+                                                long sequence,
+                                                String amount) {
+
+        return createFingerprint(loginID,transactionKey,sequence,amount,"");
+
+    }
+
+		/**
+         * Creates a fingerprint with raw data fields.
+         *
+         * @param loginID
+         * @param transactionKey
+         * @param sequence : this number will be concatenated with a random value
+         * @param amount
+         * @param currency
+         * @return A Fingerprint object.
+         */
+	public static Fingerprint createFingerprint(String loginID,
+			String transactionKey, long sequence, String amount, String currency) {
 
 		Fingerprint fingerprint = new Fingerprint();
 
@@ -56,7 +75,7 @@ public class Fingerprint {
 			Mac mac = Mac.getInstance("HmacMD5");
 			mac.init(key);
 			String inputstring = loginID + "^" + fingerprint.sequence + "^" +
-				fingerprint.timeStamp + "^" + amount + "^";
+				fingerprint.timeStamp + "^" + amount + "^" + currency;
 			byte[] result = mac.doFinal(inputstring.getBytes());
 			// Convert the result from byte[] to hexadecimal format
 			StringBuilder strbuf = new StringBuilder(result.length * 2);

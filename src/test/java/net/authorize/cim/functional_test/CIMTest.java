@@ -375,7 +375,6 @@ public class CIMTest extends UnitTestData {
 		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PROFILE_TRANSACTION);
 		transaction.setRefId(refId);
 		transaction.setCustomerProfileId(returnValues.customerProfileId);
-		transaction.setCustomerPaymentProfileId(returnValues.customerPaymentProfileId);
 		transaction.setCustomerShippingAddressId(returnValues.customerShippingAddressId);
 		paymentTransaction.setTransactionType(net.authorize.TransactionType.CAPTURE_ONLY);
 		paymentTransaction.setApprovalCode(returnValues.authCode);
@@ -525,7 +524,8 @@ public class CIMTest extends UnitTestData {
 		  merchant.createCIMTransaction(TransactionType.GET_HOSTED_PROFILE_PAGE);
 
 		transaction.setRefId(refId);
-		transaction.setCustomerProfileId(customerId);
+		String customerProfileId = getCustomerProfileId(customerProfile, paymentProfileCC, ValidationModeType.TEST_MODE);
+		transaction.setCustomerProfileId(customerProfileId);
 		transaction.addHostedProfileSetting(HostedProfileSettingType.HOSTED_PROFILE_PAGE_BORDER_VISIBLE, "false");
 		transaction.addHostedProfileSetting(HostedProfileSettingType.HOSTED_PROFILE_IFRAME_COMMUNICATOR_URL, "http://localhost");
 
@@ -896,7 +896,7 @@ class MyReturnValuesTest {
 			String customerPaymentProfileId,ArrayList<String> paymentList,
 			String authCode, String splitTenderId, String transactionId, String customerShippingAddressId			
 			) {
-		this.customerPaymentProfileId = customerPaymentProfileId;
+		this.customerProfileId = customerProfileId;
 		this.customerProfileResult = customerProfileResult;
 		this.customerPaymentProfileId = customerPaymentProfileId;
 		this.paymentList = paymentList;
