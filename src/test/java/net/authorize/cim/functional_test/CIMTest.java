@@ -121,7 +121,6 @@ public class CIMTest extends UnitTestData {
 
 		// add info
 		paymentProfileCC.setBillTo(billingInfo);
-		//creditCard.setCardCode("");
 		paymentProfileCC.addPayment(Payment.createPayment(creditCard));
 		
 		paymentProfileCC.setCustomerType(CustomerType.INDIVIDUAL);
@@ -130,8 +129,7 @@ public class CIMTest extends UnitTestData {
 		paymentProfileBankAccount.setBillTo(billingInfo);
 		paymentProfileBankAccount.addPayment(Payment.createPayment(bankAccount));
 		
-		
-		
+
 		customerProfile = CustomerProfile.createCustomerProfile();
 		customerProfile.setDescription(customerDescription);
 		customerProfile.setMerchantCustomerId("" + System.currentTimeMillis());
@@ -900,8 +898,6 @@ public class CIMTest extends UnitTestData {
 		result = (Result<Transaction>) merchant.postTransaction(transaction);
 		
 		Assert.assertTrue(result.isOk());
-	//	Assert.assertTrue(result.isError());
-	//	Assert.assertEquals(errormessage, result.getMessages().get(0).getText());
 	}
 }
 

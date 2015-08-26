@@ -45,34 +45,18 @@ public class TransactionDetailsTest extends ApiCoreTestBase {
 	{
 		//update accordingly
 		String transId = "2236685252";
-		
+
 		//transaction key and name  
 		TransactionDetailsType transactionDetailsType = getTransactionDetails(merchantAuthenticationType, transId);
 		
 		//get transId in transactionDetailsType
 		Assert.assertNotNull(transactionDetailsType);
 		
-		//get Authorized amount in transactionDetailsType
+		//get Authorized amount,CustomerIP,TransId, CardCodeResponse in transactionDetailsType
 		Assert.assertNotNull(transactionDetailsType.getAuthAmount());
-		
-		
-		//get CustomerIP in transactionDetailsType
 		Assert.assertNotNull(transactionDetailsType.getCustomerIP());
-		
-		//get TransIP in transactionDetailsType
-		//Assert.assertNotNull(transactionDetailsType.getTransId());
 		Assert.assertEquals(transId, transactionDetailsType.getTransId());
-		
-		
-		//get CustomerIP in CardCodeResponse
-		Assert.assertNotNull(transactionDetailsType.getCardCodeResponse());
-				
-		/*getTransactionDetails
-		if (transactionDetailsType.getAuthAmount() != null && transactionDetailsType.getSettleAmount() != null){
-			//System.out.println("reference Id " +refId);
-			
-		}*/
-		
+		Assert.assertNotNull(transactionDetailsType.getCardCodeResponse());		
 	}
 	
 	private TransactionDetailsType getTransactionDetails(MerchantAuthenticationType merchantAuthentication, String transId) {
@@ -80,8 +64,6 @@ public class TransactionDetailsTest extends ApiCoreTestBase {
 		GetTransactionDetailsRequest getRequest = new GetTransactionDetailsRequest();
 		getRequest.setMerchantAuthentication(merchantAuthentication);
 		getRequest.setTransId(transId);
-		
-		
 		GetTransactionDetailsResponse getResponse = executeTestRequestWithSuccess(getRequest, GetTransactionDetailsController.class, environment);
 		//Assert.assertNotNull(getResponse.getTransId());
 		Assert.assertNotNull(getResponse.getTransaction());

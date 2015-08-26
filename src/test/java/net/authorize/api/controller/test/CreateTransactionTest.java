@@ -527,20 +527,7 @@ public class CreateTransactionTest extends ApiCoreTestBase {
 	        Assert.assertEquals(transactionId, voidResponse.getTransactionResponse().getTransId());
 			logger.info(String.format("Voided Transaction Id %s with ResponseTransId: %s ", transactionId, voidResponse.getTransactionResponse().getTransId()));
         }
-	}// @kgupta add api new test 
-	
-	@Test
-	public void Issue45()
-	{
-	
-	
-	
-	
-	
-	}
-	
-	
-	
+	}	
 }
 
 class CustomerProfileIdsHolder 

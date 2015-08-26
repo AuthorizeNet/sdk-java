@@ -2,10 +2,8 @@ package net.authorize.reporting.functional_test;
 
 import java.util.Calendar;
 import java.util.List;
-
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
-import net.authorize.api.contract.v1.GetTransactionDetailsRequest;
 import net.authorize.data.reporting.Subscription;
 import net.authorize.data.xml.reporting.BatchDetails;
 import net.authorize.data.xml.reporting.BatchStatistics;
@@ -333,18 +331,15 @@ public class ReportingTest extends UnitTestData {
 	public void Issue48solution()
 	{ 
 		//valid transaction id is required to run this test
-		 String transId = "2237316048";
+		 String transId = "2239014404";
 		 net.authorize.reporting.Transaction transaction = merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
 		 ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
 		 reportingDetails.setTransactionId(transId);
 		 
 		 Assert.assertEquals(transId, reportingDetails.getTransactionId());
-
 		 transaction.setReportingDetails(reportingDetails);
 	     Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(transaction);
-
-         Assert.assertEquals("Ok", result.getResultCode());
-        
+	     Assert.assertEquals("Ok", result.getResultCode());
          reportingDetails.getTransactionDetailList();
 	}
 	
