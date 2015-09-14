@@ -1,5 +1,7 @@
 package net.authorize.api.controller.test;
-
+/*@author krgupta
+ * 
+ */
 
 import java.util.List;
 
@@ -39,8 +41,6 @@ import net.authorize.cim.ValidationModeType;
 
 public class CustomerProfileNoCardCode extends ApiCoreTestBase {
 	
-	//author @ krgupta
-	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		ApiCoreTestBase.setUpBeforeClass();
@@ -69,9 +69,6 @@ public class CustomerProfileNoCardCode extends ApiCoreTestBase {
 		String customerprofileId = "36374423" ;
 		getPaymentDetails (merchantAuthenticationType, customerprofileId, ValidationModeEnum.TEST_MODE);	
 		Assert.assertNotNull(customerprofileId);
-		
-		
-		//Assert.assertTrue(messages.resultCode.isOk());
 	}
 		
 	private String getPaymentDetails(MerchantAuthenticationType merchantAuthentication, String customerprofileId, ValidationModeEnum validationMode) {
@@ -93,15 +90,7 @@ public class CustomerProfileNoCardCode extends ApiCoreTestBase {
 		creditCard.setCardNumber("4111111111111111");
 		creditCard.setExpirationDate("2023-12");
 		creditCard.setCardCode("");
-		
-	/*	List<CustomerPaymentProfileType> paymentProfiles = getRequest.setPaymentProfile(customerprofileId);
-		paymentProfiles.clear();
-		paymentProfiles.add(paymentProfile);*/
-		
 		CreateCustomerPaymentProfileResponse getResponse = new CreateCustomerPaymentProfileResponse();
-		//Assert.assertEquals("Ok",getResponse.getMessages().getResultCode());
-		//System.out.println("resultcode: " + getResponse.getMessages().getResultCode());
-		
 		return getResponse.getCustomerPaymentProfileId();
 		}	
 }

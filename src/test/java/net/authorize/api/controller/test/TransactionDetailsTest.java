@@ -1,5 +1,7 @@
 package net.authorize.api.controller.test;
-
+/*@author krgupta
+ * 
+ */
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -65,7 +67,6 @@ public class TransactionDetailsTest extends ApiCoreTestBase {
 		getRequest.setMerchantAuthentication(merchantAuthentication);
 		getRequest.setTransId(transId);
 		GetTransactionDetailsResponse getResponse = executeTestRequestWithSuccess(getRequest, GetTransactionDetailsController.class, environment);
-		//Assert.assertNotNull(getResponse.getTransId());
 		Assert.assertNotNull(getResponse.getTransaction());
 		logger.info(String.format("AuthAmount: '%s', SettleAmount: '%s'", getResponse.getTransaction().getAuthAmount(), getResponse.getTransaction().getSettleAmount()));
 		return getResponse.getTransaction();

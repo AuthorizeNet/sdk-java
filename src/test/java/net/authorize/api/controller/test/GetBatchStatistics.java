@@ -1,5 +1,7 @@
 package net.authorize.api.controller.test;
-
+/*@author krgupta
+ * 
+ */
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,7 +15,6 @@ import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.controller.GetBatchStatisticsController;
 
 public class GetBatchStatistics extends ApiCoreTestBase{
-	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		ApiCoreTestBase.setUpBeforeClass();

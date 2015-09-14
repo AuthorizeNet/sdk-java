@@ -12,7 +12,6 @@ import net.authorize.data.xml.reporting.TransactionDetails;
 import net.authorize.data.xml.reporting.TransactionStatusType;
 import net.authorize.reporting.Result;
 import net.authorize.reporting.TransactionType;
-
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -303,6 +302,7 @@ public class ReportingTest extends UnitTestData {
 		return transactionDetails;
 	}
 	
+	//@author krgupta
 	@Test
 	public void Issue48repro()
 	{ 
@@ -327,6 +327,7 @@ public class ReportingTest extends UnitTestData {
      reportingDetails.getTransactionDetailList();
 	}	
 	
+	//@author krgupta
 	@Test
 	public void Issue48solution()
 	{ 
