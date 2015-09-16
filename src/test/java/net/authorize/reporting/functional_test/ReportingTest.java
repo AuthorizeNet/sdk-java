@@ -328,11 +328,12 @@ public class ReportingTest extends UnitTestData {
 	}	
 	
 	//@author krgupta
-	@Test
+	//@Test
 	public void Issue48solution()
 	{ 
 		//valid transaction id is required to run this test
-		 String transId = "2239014404";
+		 String transId = null ; //"2239014404"; // Update to valid transId
+		 Assert.assertNotNull("transId is null. Enter a valid transId", transId);
 		 net.authorize.reporting.Transaction transaction = merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
 		 ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
 		 reportingDetails.setTransactionId(transId);

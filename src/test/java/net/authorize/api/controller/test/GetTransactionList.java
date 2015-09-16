@@ -38,25 +38,20 @@ public class GetTransactionList extends ApiCoreTestBase {
 		super.tearDown();
 	}
 	
-	@Test
-	/*To run this test successfully you should have a valid transaction id 
+	//@Test
+	/*To run this test successfully you should have a batchId 
 	 */
 	public void TransactionList()
 	{
-		//update accordingly
-		String batchId = "4594221";
- 
-		MessageTypeEnum messagetypeenum = transactionlist(merchantAuthenticationType, batchId);
-		Assert.assertEquals(MessageTypeEnum.OK,messagetypeenum);
-	}	
-	
-	private MessageTypeEnum transactionlist(MerchantAuthenticationType merchantAuthentication, String batchId) {
-		//get a Transaction
+		String batchId = null ; //"4594221"; // Update to valid batchId
+		Assert.assertNotNull("batchId is null. Enter a valid batchId", batchId);
+
 		GetTransactionListRequest getRequest = new GetTransactionListRequest();
 		getRequest.setMerchantAuthentication(merchantAuthenticationType);
 		getRequest.setBatchId(batchId);
 		GetTransactionListResponse getResponse = executeTestRequestWithSuccess(getRequest, GetTransactionListController.class, environment);
-		Assert.assertNotNull(getResponse.getTransactions());
-		return getResponse.getMessages().getResultCode();
+		MessageTypeEnum messagetypeenum = getResponse.getMessages().getResultCode();
+		
+		Assert.assertEquals("Check the credentials", MessageTypeEnum.OK,messagetypeenum);
 	}	
 }

@@ -41,20 +41,13 @@ public class GetUnsettledTransactionList extends ApiCoreTestBase{
 	}
 	
 	@Test
-	/*To run this test successfully you should have a valid transaction id 
-	 */
-	
-	
 	public void UnSettledTransactionList()
 	{  
-		MessageTypeEnum messagetypeenum = getUnSettledTransactionList();		
-		Assert.assertEquals(MessageTypeEnum.OK,messagetypeenum);
-	}
-	
-	private MessageTypeEnum getUnSettledTransactionList() {
 		GetUnsettledTransactionListRequest getRequest = new GetUnsettledTransactionListRequest();
 		getRequest.setMerchantAuthentication(merchantAuthenticationType);
 		GetUnsettledTransactionListResponse getResponse = executeTestRequestWithSuccess(getRequest, GetUnsettledTransactionListController.class, environment);
-		return getResponse.getMessages().getResultCode();
+		MessageTypeEnum messagetypeenum = getResponse.getMessages().getResultCode();		
+		
+		Assert.assertEquals("Check the credentials", MessageTypeEnum.OK,messagetypeenum);
 	}
 }

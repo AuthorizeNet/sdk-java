@@ -35,23 +35,20 @@ public class GetBatchStatistics extends ApiCoreTestBase{
 		super.tearDown();
 	}	
 	
-	@Test
-	/*To run this test successfully you should have a valid transaction id 
+	//@Test
+	/*To run this test successfully you should have a valid batchId 
 	 */
 	public void getbatchstatistics()
 	{  
-		MessageTypeEnum messagetypeenum = getBatchStatistics();
-		Assert.assertEquals(MessageTypeEnum.OK,messagetypeenum);
-	}
-	
-	private MessageTypeEnum getBatchStatistics() {
+		String batchId = null ; //"12345"; // Update to valid batchId
+		Assert.assertNotNull("batchId is null. Enter a valid batchId", batchId);
 
 		GetBatchStatisticsRequest getRequest = new GetBatchStatisticsRequest();
 		getRequest.setMerchantAuthentication(merchantAuthenticationType);
-		String batchId = "12345";
 		getRequest.setBatchId(batchId);
 		GetBatchStatisticsResponse getResponse = executeTestRequestWithSuccess(getRequest, GetBatchStatisticsController.class, environment);
-		return getResponse.getMessages().getResultCode();
+		MessageTypeEnum messagetypeenum = getResponse.getMessages().getResultCode();
+		
+		Assert.assertEquals("Check the credentials ", MessageTypeEnum.OK,messagetypeenum);
 	}
-
 }
