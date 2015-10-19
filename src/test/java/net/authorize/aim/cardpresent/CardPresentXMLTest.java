@@ -12,6 +12,8 @@ import net.authorize.data.creditcard.AVSCode;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.xml.reporting.CardCodeResponseType;
 import net.authorize.util.BasicXmlDocument;
+// ADDED
+    import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +22,8 @@ public class CardPresentXMLTest extends UnitTestData {
 
 	private Customer customer;
 	private Order order;
+        // ADDED
+            private Solution solution;
 
 	@Before
 	public void setUp() {
@@ -36,6 +40,11 @@ public class CardPresentXMLTest extends UnitTestData {
 		order = Order.createOrder();
 		order.setDescription(orderDescription);
 		order.setInvoiceNumber(invoiceNumber);
+                
+                // create solution
+                solution = Solution.createSolution();
+                solution.setId("AAA100302");
+                solution.setName("Test Solution #1");
 	}
 
 	@Test
@@ -54,6 +63,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
+                authCaptureTransaction.setSolutionField(solution);
 		Assert.assertEquals("B1234123412341234^CARDUSER/JOHN^030510100000019301000000877000000", authCaptureTransaction.getCreditCard().getTrack1());
 		Assert.assertEquals("1234123412341234=0305101193010877", authCaptureTransaction.getCreditCard().getTrack2());
 
@@ -100,6 +110,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
+                authCaptureTransaction.setSolutionField(solution);
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
                 Result.createResult(authCaptureTransaction, xmlResponse);
@@ -138,6 +149,7 @@ public class CardPresentXMLTest extends UnitTestData {
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
+                authCaptureTransaction.setSolutionField(solution);
 
 		net.authorize.aim.cardpresent.Result<net.authorize.aim.Transaction> result =
                 Result.createResult(authCaptureTransaction, xmlResponse);

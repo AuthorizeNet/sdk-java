@@ -273,6 +273,9 @@ public enum AuthNetField {
 	X_SHIP_TO_STATE("x_ship_to_state"),
 	X_SHIP_TO_ZIP("x_ship_to_zip"),
 	X_SHOW_FORM("x_show_form"),
+        /* ADDED */
+            X_SOLUTION_ID("x_solution_id"),
+            X_SOLUTION_NAME("x_solution_name"),
 	X_SPLIT_TENDER_ID("x_split_tender_id"),
 	X_STATE("x_state"),
 	X_TAX("x_tax"),

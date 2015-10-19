@@ -27,6 +27,8 @@ import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheck;
 import net.authorize.data.echeck.ECheckType;
+/* ADDED */
+    import net.authorize.data.reporting.Solution;
 import net.authorize.util.BasicXmlDocument;
 import net.authorize.util.DeepCopy;
 import net.authorize.util.HttpClient;
@@ -58,6 +60,8 @@ public class Transaction extends net.authorize.Transaction implements Serializab
 	private Order order;
 	private ShippingAddress shippingAddress;
 	private ShippingCharges shippingCharges;
+        /* ADDED */
+            private Solution solution;
 	protected TransactionType transactionType;
 	private boolean cardPresent = false;
 	protected String MD5Value = null;
@@ -736,5 +740,26 @@ public class Transaction extends net.authorize.Transaction implements Serializab
 		return MD5Value;
 	}
 
+        /**
+	 * Set a solution field.
+	 *
+	 * @param solution
+	 */
+	public void setSolutionField(Solution solution) {
+		this.solution = solution;
 
+		if(solution != null) {
+			this.requestMap.put(AuthNetField.X_SOLUTION_ID.getFieldName(), solution.getId()!=null?solution.getId():EMPTY_STRING);
+			this.requestMap.put(AuthNetField.X_SOLUTION_NAME.getFieldName(), solution.getName()!=null?solution.getName():EMPTY_STRING);
+		}
+	}
+
+	/**
+	 * Get a solution field.	 
+	 * @return Return the solution field.
+	 *
+         */
+	public Solution getSolutionField() {
+		return this.solution;
+	}
 }

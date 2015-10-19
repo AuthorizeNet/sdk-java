@@ -11,6 +11,8 @@ import net.authorize.data.Customer;
 import net.authorize.data.Order;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.data.echeck.ECheck;
+// ADDED
+    import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,8 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 
 	private Customer customer;
 	private Order order;
+        // ADDED
+            private Solution solution;
 
 	@Before
 	public void setUp() {
@@ -35,6 +39,11 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		order = Order.createOrder();
 		order.setDescription(orderDescription);
 		order.setInvoiceNumber(invoiceNumber);
+                
+                // create solution
+                solution = Solution.createSolution();
+                solution.setId("AAA100302");
+                solution.setName("Test Solution #1");
 	}
 
 	@Test
@@ -54,7 +63,8 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		authCaptureTransaction.setCreditCard(creditCard);
 
 		authCaptureTransaction.setMerchantDefinedField("super", "duper");
-
+                authCaptureTransaction.setSolutionField(solution);
+                    
 		Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(authCaptureTransaction);
 
 		Assert.assertNotNull(result);
@@ -64,7 +74,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 				.getReasonResponseCode());
 		Assert.assertNotNull(result.getTarget().getAuthorizationCode());
 		Assert.assertNotNull(result.getTarget().getTransactionId());
-		Assert.assertNotNull(result.getTarget().getCreditCard().getAvsCode());
+		Assert.assertNotNull(result.getTarget().getCreditCard().getAvsCode());                
 	}
 
 	@Test
@@ -86,6 +96,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setECheck(eCheck);
+                authCaptureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 

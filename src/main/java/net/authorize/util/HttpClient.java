@@ -25,6 +25,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.params.CoreProtocolPNames;
 
 /**
  * Transportation object used to facilitate the communication with the respective gateway.
@@ -68,6 +69,7 @@ public class HttpClient {
 			}
 
   		    httpPost = new HttpPost(postUrl);
+                    httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
 		    httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 		    httpPost.setEntity(new StringEntity(transaction.toNVPString()));
 		} else if (transaction instanceof net.authorize.arb.Transaction ||
@@ -76,7 +78,8 @@ public class HttpClient {
 
 			  postUrl = new URI(env.getXmlBaseUrl() + "/xml/v1/request.api");
 			  httpPost = new HttpPost(postUrl);
-			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
+			  httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+                          httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  httpPost.setEntity(new StringEntity(transaction.toXMLString()));
 		}
 
