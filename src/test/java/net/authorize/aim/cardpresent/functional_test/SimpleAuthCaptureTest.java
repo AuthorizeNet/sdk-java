@@ -16,6 +16,8 @@ import net.authorize.data.Customer;
 import net.authorize.data.Order;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
+// ADDED
+    import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,8 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 	private Customer customer;
 	private Order order;
 	private CreditCard creditCard = CreditCard.createCreditCard();
+        // ADDED
+            private Solution solution;
 
 	@Before
 	public void setUp() {
@@ -48,13 +52,18 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		// create credit card
 		creditCard = CreditCard.createCreditCard();
 		creditCard.setCardType(CardType.VISA);
-	    creditCard.setTrack1("%B4111111111111111^CARDUSER/JOHN^1803101000000000020000831000000?");
-	    creditCard.setTrack2(";4111111111111111=1803101000020000831?");
+                creditCard.setTrack1("%B4111111111111111^CARDUSER/JOHN^1803101000000000020000831000000?");
+                creditCard.setTrack2(";4111111111111111=1803101000020000831?");
 
-	    merchant = Merchant.createMerchant(Environment.SANDBOX, apiLoginID, transactionKey);
-	    merchant.setDeviceType(DeviceType.VIRTUAL_TERMINAL);
-	    merchant.setMarketType(MarketType.RETAIL);
-	    merchant.setMD5Value(merchantMD5Key);
+                merchant = Merchant.createMerchant(Environment.SANDBOX, apiLoginID, transactionKey);
+                merchant.setDeviceType(DeviceType.VIRTUAL_TERMINAL);
+                merchant.setMarketType(MarketType.RETAIL);
+                merchant.setMD5Value(merchantMD5Key);
+                
+                // create solution
+                solution = Solution.createSolution();
+                solution.setId("AAA100302");
+                solution.setName("Test Solution #1");
 	}
 
 	@Test
@@ -68,6 +77,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		authCaptureTransaction.setCreditCard(creditCard);
 
 		authCaptureTransaction.setMerchantDefinedField("super", "duper");
+                authCaptureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(authCaptureTransaction);
 
@@ -101,6 +111,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
+                authCaptureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant
 				.postTransaction(authCaptureTransaction);
@@ -127,6 +138,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		captureTransaction.setCreditCard(creditCard);
 		captureTransaction.setTransactionId(transactionId);
 		captureTransaction.setAuthorizationCode(authCode);
+                captureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant
 				.postTransaction(captureTransaction);
