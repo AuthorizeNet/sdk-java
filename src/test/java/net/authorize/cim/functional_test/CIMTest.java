@@ -876,7 +876,41 @@ public class CIMTest extends UnitTestData {
 
 		return new MyReturnValuesTest(customerProfileId, null, customerPaymentProfileId, null, authCode, splitTenderId, transactionId, customerShippingAddressId);
 	}
-	
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testZeroCustomerProfile() {
+        // get all existing customer profile ids
+        net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE_IDS);
+        Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(transaction);
+        ArrayList<String> customerProfileIds = result.getCustomerProfileIdList();
+
+        // delete all existing customer profile
+        for (int i = 0; i < customerProfileIds.size(); i++) {
+            transaction = merchant.createCIMTransaction(TransactionType.DELETE_CUSTOMER_PROFILE);
+            transaction.setCustomerProfileId(customerProfileIds.get(i));
+            result = (Result<Transaction>) merchant.postTransaction(transaction);
+        }
+
+        // test for getCustomerProfileIds request
+        transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE_IDS);
+        result = (Result<Transaction>) merchant.postTransaction(transaction);
+        Assert.assertNotNull(result);
+        result.printMessages();
+        Assert.assertTrue(result.isOk());
+        Assert.assertTrue(result.getCustomerProfileIdList().isEmpty());
+
+        // test for getCustomerProfile request
+        transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
+        transaction.setCustomerProfileId("1001");
+        result = (Result<Transaction>) merchant.postTransaction(transaction);
+        Assert.assertNotNull(result);
+        result.printMessages();
+        Assert.assertTrue(result.isError());
+        Assert.assertNull(result.getCustomerProfileId());
+        Assert.assertNull(result.getCustomerProfile());
+        Assert.assertTrue(result.getCustomerPaymentProfileIdList().isEmpty());
+    }
 	private String createdCustomerPaymentProfileId = null;
 }
 
