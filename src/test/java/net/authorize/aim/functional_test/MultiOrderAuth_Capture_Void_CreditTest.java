@@ -17,8 +17,7 @@ import net.authorize.data.OrderItem;
 import net.authorize.data.ShippingAddress;
 import net.authorize.data.ShippingCharges;
 import net.authorize.data.creditcard.CreditCard;
-// ADDED
-    import net.authorize.data.reporting.Solution;
+import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +35,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 	private ShippingCharges shippingCharges;
 	private EmailReceipt emailReceipt;
 	private static String splitTenderId = null;
-        // ADDED
-            private Solution solution;
+        private Solution solution;
 
 	@Before
 	public void setUp() throws Exception {
@@ -132,7 +130,6 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
                 // create solution
                 solution = Solution.createSolution();
                 solution.setId("AAA100302");
-                solution.setName("Test Solution #1");
 	}
 
 	/**
