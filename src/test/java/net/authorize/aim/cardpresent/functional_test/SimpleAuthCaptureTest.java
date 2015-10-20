@@ -16,8 +16,7 @@ import net.authorize.data.Customer;
 import net.authorize.data.Order;
 import net.authorize.data.creditcard.CardType;
 import net.authorize.data.creditcard.CreditCard;
-// ADDED
-    import net.authorize.data.reporting.Solution;
+import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +29,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 	private Customer customer;
 	private Order order;
 	private CreditCard creditCard = CreditCard.createCreditCard();
-        // ADDED
-            private Solution solution;
+        private Solution solution;
 
 	@Before
 	public void setUp() {
@@ -63,7 +61,6 @@ public class SimpleAuthCaptureTest extends UnitTestData {
                 // create solution
                 solution = Solution.createSolution();
                 solution.setId("AAA100302");
-                solution.setName("Test Solution #1");
 	}
 
 	@Test

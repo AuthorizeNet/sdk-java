@@ -281,7 +281,6 @@ public class Merchant implements Serializable {
 					((net.authorize.aim.Transaction)transaction).isCardPresent()) {
 				BasicXmlDocument responseXML = HttpClient.executeXML(this.environment, transaction);
 				result = net.authorize.aim.cardpresent.Result.createResult(transaction, responseXML);
-                                //System.out.println(responseXML.dump());
 			} else {
 				Map<ResponseField, String> responseMap = HttpClient.execute(this.environment, transaction);
 				result = net.authorize.aim.Result.createResult(transaction, responseMap);

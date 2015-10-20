@@ -10,6 +10,7 @@ import net.authorize.data.Customer;
 import net.authorize.data.Order;
 import net.authorize.data.creditcard.CreditCard;
 import net.authorize.sim.button.TextButton;
+import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ public class TransactionTest extends UnitTestData {
 
 	private Customer customer;
 	private Order order;
+        private Solution solution;
 
 	@Before
 	public void setUp() {
@@ -34,6 +36,10 @@ public class TransactionTest extends UnitTestData {
 		order = Order.createOrder();
 		order.setDescription(orderDescription);
 		order.setInvoiceNumber(invoiceNumber);
+                
+                // create solution
+                solution = Solution.createSolution();
+                solution.setId("AAA100302");
 	}
 
 	@Test
@@ -51,6 +57,7 @@ public class TransactionTest extends UnitTestData {
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
+                authCaptureTransaction.setSolutionField(solution);
 
 		String form = authCaptureTransaction.createForm(null, null, TextButton.createButton("submit_button", "Submit"));
 
@@ -72,6 +79,7 @@ public class TransactionTest extends UnitTestData {
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
 		authCaptureTransaction.setCreditCard(creditCard);
+                authCaptureTransaction.setSolutionField(solution);
 
 		authCaptureTransaction.addFormInput("x_card_num", null);
 		authCaptureTransaction.addFormInput("x_exp_date", null);
@@ -95,6 +103,7 @@ public class TransactionTest extends UnitTestData {
 				TransactionType.AUTH_CAPTURE, 1, totalAmount);
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
+                authCaptureTransaction.setSolutionField(solution);
 		authCaptureTransaction.setShowPaymentForm(true);
 		authCaptureTransaction.addFieldToRename("x_cust_id", "VIP Customer Id");
 		authCaptureTransaction.addFieldToRename("x_last_name", "Sur Name");
@@ -113,6 +122,7 @@ public class TransactionTest extends UnitTestData {
 				TransactionType.AUTH_CAPTURE, 1, totalAmount);
 		authCaptureTransaction.setCustomer(customer);
 		authCaptureTransaction.setOrder(order);
+                authCaptureTransaction.setSolutionField(solution);
 
 		LinkedHashMap<String,String> input_options = new LinkedHashMap<String, String>();
 		input_options.put("type", "text");
