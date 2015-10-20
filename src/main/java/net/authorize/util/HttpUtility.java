@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.params.CoreProtocolPNames;
 
 /**
  * Helper methods for http calls
@@ -59,6 +60,7 @@ public final class HttpUtility {
 			  logger.debug(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
 			  logger.debug(String.format("Posting request to Url: '%s'", postUrl));
 			  httpPost = new HttpPost(postUrl);
+                          httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
