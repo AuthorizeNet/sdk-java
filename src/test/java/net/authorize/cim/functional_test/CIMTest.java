@@ -902,7 +902,12 @@ public class CIMTest extends UnitTestData {
 
         // test for getCustomerProfile request
         transaction = merchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
-        transaction.setCustomerProfileId(customerProfileIds.get(customerProfileIds.size() - 1));
+        if(customerProfileIds.size() > 0){
+            transaction.setCustomerProfileId(customerProfileIds.get(0));
+        }
+        else{
+            transaction.setCustomerProfileId("1001");
+        }
         result = (Result<Transaction>) merchant.postTransaction(transaction);
         Assert.assertNotNull(result);
         result.printMessages();
