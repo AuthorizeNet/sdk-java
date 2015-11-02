@@ -658,7 +658,7 @@ and code samples.
 Use this function to create an Authorize.Net payment transaction request 
 using Apple Pay Opaque data in place of card data. 
 
-**_DataDescriptor (Apple Pay Blob) is one-time use value._**
+**_Data Value (Apple Pay Blob) is one-time use value._**
 
 A transaction of this type can be performed with the following code (JSP) :
 
