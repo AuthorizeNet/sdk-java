@@ -737,3 +737,74 @@ A transaction of this type can be performed with the following code (JSP) :
     }
   %>
 ````
+
+Test Code - Apple Pay
+==============================================
+**Enables you to pass Apple Pay payment data to Authorize.Net.**
+
+Apple Pay support is available through the SDK using our new model 
+and code samples.
+
+###Create a Apple Pay Transaction
+Use this function to create an Authorize.Net payment transaction request 
+using Apple Pay Opaque data in place of card data. 
+
+**_DataDescriptor (Apple Pay Blob) is one-time use value._**
+
+A transaction of this type can be performed with the following code (JSP) :
+
+````jsp
+<%@ page import = "java.math.BigDecimal" %>
+<%@ page import = "java.util.Map" %>
+<%@ page import = "net.authorize.Environment" %>
+<%@ page import = "net.authorize.api.contract.v1.*" %>
+<%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
+<%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
+
+<%
+        MerchantAuthenticationType appleMerchAuthenticationType = new MerchantAuthenticationType();
+        appleMerchAuthenticationType.setName("YOUR_API_LOGIN_ID");
+        appleMerchAuthenticationType.setTransactionKey("YOUR_TRANSACTION_KEY");
+
+        ApiOperationBase.setEnvironment(Environment.SANDBOX);
+        ApiOperationBase.setMerchantAuthentication(appleMerchAuthenticationType);
+
+        PaymentType paymentType = new PaymentType();
+        OpaqueDataType op = new OpaqueDataType();
+        op.setDataDescriptor("YOUR_APPLE_PAY_BLOB_HERE");
+        paymentType.setOpaqueData(op);
+
+
+        TransactionRequestType txnRequest = new TransactionRequestType();
+        txnRequest.setTransactionType(TransactionTypeEnum.AUTH_ONLY_TRANSACTION.value());
+        txnRequest.setPayment(paymentType);
+        txnRequest.setAmount(new BigDecimal(System.currentTimeMillis() % 100));
+
+        CreateTransactionRequest apiRequest = new CreateTransactionRequest();
+        apiRequest.setTransactionRequest(txnRequest);
+
+        CreateTransactionController controller = new CreateTransactionController(apiRequest);
+        controller.execute();
+        CreateTransactionResponse apiResponse = controller.getApiResponse();
+      
+       if (apiResponse!=null) {
+
+           TransactionResponse result = apiResponse.getTransactionResponse();
+
+           if (result.getResponseCode().equals("1")) {
+               out.println(result.getResponseCode());
+               out.println("Successful ApplePay Transaction ");
+               out.println("Auht Code : "+result.getAuthCode());
+               out.println("Transaction ID: "+result.getTransId());
+           }
+           else
+           {
+              out.println("Failed Transaction. <br/> Result Code :  " + apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() + " <br/> "+ apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
+           }
+       }
+       else{
+        out.println("Error processing the Transaction ..");
+     }
+
+%>
+````
