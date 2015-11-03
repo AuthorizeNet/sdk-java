@@ -108,8 +108,27 @@ public class ArbSubscriptionTest extends ApiCoreTestBase {
 		String subscriptionId = createSubscription(merchantAuthenticationType);
 		getSubscription(merchantAuthenticationType, subscriptionId);
 		cancelSubscription(merchantAuthenticationType, subscriptionId);
+		
 	}
-
+	
+	
+	/**
+	 * @Zalak
+	 * Repro and fix test for issue - ARBSubscriptionList SearchType of "cardExpiringThisMonth" doesn't work
+	 */
+	@Test
+	public void ShouldReturnSubsciptionsWhenPagingNotPassedTest()
+	{
+		ARBGetSubscriptionListRequest getSubscriptionListRequest = new ARBGetSubscriptionListRequest();
+		getSubscriptionListRequest.setSearchType(ARBGetSubscriptionListSearchTypeEnum.CARD_EXPIRING_THIS_MONTH);
+		getSubscriptionListRequest.setMerchantAuthentication(merchantAuthenticationType);
+		ARBGetSubscriptionListController nullController = new ARBGetSubscriptionListController(getSubscriptionListRequest);
+		Assert.assertNotNull(nullController);
+		ARBGetSubscriptionListResponse response = executeTestRequestWithSuccess(getSubscriptionListRequest, ARBGetSubscriptionListController.class, environment);
+		Assert.assertNotNull(response);
+		
+	}
+	
 	private ARBGetSubscriptionListRequest setupSubscriptionListRequest(MerchantAuthenticationType merchantAuthentication) {
 		
 		ARBGetSubscriptionListSorting sorting = new ARBGetSubscriptionListSorting();
@@ -166,4 +185,6 @@ public class ArbSubscriptionTest extends ApiCoreTestBase {
 
 		return createResponse.getSubscriptionId();
 	}
+	
+	
 }
