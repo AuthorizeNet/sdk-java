@@ -17,10 +17,7 @@ public class GetHostedProfilePageController extends ApiOperationBase<GetHostedPr
 		
 		//validate required fields		
 		if ( null == request.getCustomerProfileId()) throw new NullPointerException("CustomerProfileIdcannot be null");
-		// HostedProfileSettings is not a required field
-		
-		//validate not-required fields		
-		//creditCardOne.setCardCode("");
+
 	}
 
 	@Override
