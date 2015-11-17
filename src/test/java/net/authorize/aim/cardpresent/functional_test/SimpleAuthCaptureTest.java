@@ -76,7 +76,7 @@ public class SimpleAuthCaptureTest extends UnitTestData {
 		authCaptureTransaction.setMerchantDefinedField("super", "duper");
                 authCaptureTransaction.setSolutionField(solution);
 
-		Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(authCaptureTransaction);
+        Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(authCaptureTransaction);
 
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.isApproved());
