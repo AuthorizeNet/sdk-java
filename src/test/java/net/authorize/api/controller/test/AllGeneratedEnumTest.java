@@ -32,7 +32,6 @@ import net.authorize.api.contract.v1.SplitTenderStatusEnum;
 import net.authorize.api.contract.v1.TransactionStatusEnum;
 import net.authorize.api.contract.v1.TransactionTypeEnum;
 import net.authorize.api.contract.v1.ValidationModeEnum;
-import net.authorize.api.contract.v1.WebCheckOutTypeEnum;
 
 public class AllGeneratedEnumTest extends ApiCoreTestBase {
 	
@@ -234,13 +233,6 @@ public class AllGeneratedEnumTest extends ApiCoreTestBase {
         {
             String aValue = anEnum.value();
             ValidationModeEnum enumFromValue = ValidationModeEnum.fromValue(aValue);
-            Assert.assertEquals(anEnum, enumFromValue);
-        }
-        
-        for ( WebCheckOutTypeEnum anEnum : WebCheckOutTypeEnum.values())
-        {
-            String aValue = anEnum.value();
-            WebCheckOutTypeEnum enumFromValue = WebCheckOutTypeEnum.fromValue(aValue);
             Assert.assertEquals(anEnum, enumFromValue);
         }
     } 
