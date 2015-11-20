@@ -1,5 +1,11 @@
 package net.authorize.api.controller.sampletest;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import junit.framework.Assert;
 import net.authorize.api.contract.v1.ARBCancelSubscriptionRequest;
 import net.authorize.api.contract.v1.ARBCancelSubscriptionResponse;
@@ -10,25 +16,23 @@ import net.authorize.api.contract.v1.ARBGetSubscriptionListRequest;
 import net.authorize.api.contract.v1.ARBGetSubscriptionListResponse;
 import net.authorize.api.contract.v1.ARBGetSubscriptionListSearchTypeEnum;
 import net.authorize.api.contract.v1.ARBGetSubscriptionListSorting;
+import net.authorize.api.contract.v1.ARBGetSubscriptionRequest;
+import net.authorize.api.contract.v1.ARBGetSubscriptionResponse;
 import net.authorize.api.contract.v1.ARBGetSubscriptionStatusRequest;
 import net.authorize.api.contract.v1.ARBGetSubscriptionStatusResponse;
+import net.authorize.api.contract.v1.ARBSubscriptionMaskedType;
 import net.authorize.api.contract.v1.ARBSubscriptionStatusEnum;
 import net.authorize.api.contract.v1.ArrayOfSubscription;
 import net.authorize.api.contract.v1.Paging;
 import net.authorize.api.contract.v1.SubscriptionDetail;
 import net.authorize.api.controller.ARBCancelSubscriptionController;
 import net.authorize.api.controller.ARBCreateSubscriptionController;
+import net.authorize.api.controller.ARBGetSubscriptionController;
 import net.authorize.api.controller.ARBGetSubscriptionListController;
 import net.authorize.api.controller.ARBGetSubscriptionStatusController;
 import net.authorize.api.controller.base.ApiOperationBase;
 import net.authorize.api.controller.test.ApiCoreTestBase;
 import net.authorize.util.LogHelper;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class ArbSubscriptionSampleTest extends ApiCoreTestBase {
 	
@@ -50,6 +54,59 @@ public class ArbSubscriptionSampleTest extends ApiCoreTestBase {
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
+	}
+	
+	@Test
+	public void ARBGetSubscriptionSample() {
+
+		//Common code to set for all requests
+		ApiOperationBase.setEnvironment(environment);
+		ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+		
+		//create
+		ARBCreateSubscriptionRequest createRequest = new ARBCreateSubscriptionRequest();
+		createRequest.setRefId(refId);
+		createRequest.setSubscription(arbSubscriptionOne);
+		ARBCreateSubscriptionController createController = new ARBCreateSubscriptionController(createRequest);		
+		//separate execute and getResponse calls
+		createController.execute();
+		ARBCreateSubscriptionResponse createResponse = createController.getApiResponse();
+		
+		Assert.assertNotNull(createResponse.getSubscriptionId());
+		logger.info(String.format("Created Subscription: %s", createResponse.getSubscriptionId()));
+		String subscriptionId = createResponse.getSubscriptionId();
+
+		try {
+			//getsubscription
+			LogHelper.info(logger, "Getting Subscription Information for SubscriptionId: %s", subscriptionId);
+			
+			ARBGetSubscriptionRequest getSubscriptionRequest = new ARBGetSubscriptionRequest();
+			getSubscriptionRequest.setRefId(refId);
+			getSubscriptionRequest.setSubscriptionId(subscriptionId);
+			
+			ARBGetSubscriptionController subscriptionController = new ARBGetSubscriptionController(getSubscriptionRequest);		
+			//execute and getResponse calls together
+			ARBGetSubscriptionResponse getSubscriptionResponse = subscriptionController.executeWithApiResponse();
+			Assert.assertNotNull(getSubscriptionResponse.getSubscription());
+			
+			ARBSubscriptionMaskedType subscriptionInfo = getSubscriptionResponse.getSubscription();
+			
+			logger.info(String.format("Subscription Name: %s", subscriptionInfo.getName()));
+			Assert.assertEquals(arbSubscriptionOne.getName(), subscriptionInfo.getName());
+		} finally {
+			// cancel
+			ARBCancelSubscriptionRequest cancelRequest = new ARBCancelSubscriptionRequest();
+			cancelRequest.setMerchantAuthentication(merchantAuthenticationType);
+			cancelRequest.setRefId(refId);
+			cancelRequest.setSubscriptionId(subscriptionId);
+			// explicitly setting up the merchant id and environment
+			ARBCancelSubscriptionResponse cancelResponse = executeTestRequestWithSuccess(
+					cancelRequest, ARBCancelSubscriptionController.class,
+					environment);
+			Assert.assertNotNull(cancelResponse.getMessages());
+			logger.info(String.format("Subscription Cancelled %s",
+					subscriptionId));
+		}
 	}
 
 	@Test
@@ -85,7 +142,7 @@ public class ArbSubscriptionSampleTest extends ApiCoreTestBase {
 			ARBSubscriptionStatusEnum newStatus = getResponse.getStatus();
 			Assert.assertEquals(ARBSubscriptionStatusEnum.ACTIVE, newStatus);
 			LogHelper.info(logger, "Getting Subscription List for SubscriptionId: %s", subscriptionId);
-
+			
 			//get list
 			ARBGetSubscriptionListSorting sorting = new ARBGetSubscriptionListSorting();
 			sorting.setOrderDescending(true);

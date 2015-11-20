@@ -54,8 +54,8 @@ public abstract class Result<T> implements Serializable {
 	    }
 
 	    boolean result = md5Check != null && md5Check.equalsIgnoreCase( transHash);
-	    
-	    return result;
+	
+            return result;
 	}
 	
 	public static final String MessageDigestAlgorithm = "MD5";
