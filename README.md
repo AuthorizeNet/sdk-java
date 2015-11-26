@@ -2,6 +2,7 @@ Authorize.Net Java SDK
 ======================
 [![Build Status](https://travis-ci.org/AuthorizeNet/sdk-java.png?branch=master)]
 (https://travis-ci.org/AuthorizeNet/sdk-java)
+[![Coverage Status](https://coveralls.io/repos/namanbansal/sdk-java/badge.svg?branch=master&service=github)](https://coveralls.io/github/namanbansal/sdk-java?branch=master)
 
 ```
   <groupId>net.authorize</groupId>
