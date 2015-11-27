@@ -12,6 +12,9 @@ jdk:
   
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
+  
+after_failure:
+  - mvn clean cobertura:cobertura coveralls:report
 
 after_script:
     print_surefire_reports.sh
