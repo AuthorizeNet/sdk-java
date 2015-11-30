@@ -1,4 +1,4 @@
 checks:
-    java:
+    php:
         code_rating: true
         duplication: true
