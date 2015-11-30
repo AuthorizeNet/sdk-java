@@ -1,6 +1,3 @@
 build:
     environment:
-        java: 
-          - 'java-8-oracle'
-          - 'java-7-oracle'
-          - 'java-1.7.0-openjdk-amd64'
+        java: 'java-7-oracle'
