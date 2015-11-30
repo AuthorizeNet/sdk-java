@@ -127,7 +127,7 @@
                 <version>2.9</version>
                 <configuration>
                     <includes>
-                        <include> **/*test/**.java</include>
+                        <include> **/mocktest/**.java</include>
                     </includes>
                     <skipTests>false</skipTests>
                     <forkCount>1</forkCount>
