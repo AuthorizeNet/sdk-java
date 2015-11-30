@@ -81,6 +81,11 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.codacy</groupId>
+            <artifactId>codacy-api-java</artifactId>
+            <version>1.10</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
