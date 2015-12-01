@@ -10,6 +10,14 @@ jdk:
   - openjdk7
   - openjdk6
 
+before_script:
+  - git submodule update --remote --recursive
+
+script:
+  - cd sample-code-java
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test -B
+
 after_script:
     print_surefire_reports.sh
  
