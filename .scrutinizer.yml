@@ -1,3 +1,4 @@
 build:
     environment:
         java: 'java-7-oracle'
+    script: 'mvn clean package'
