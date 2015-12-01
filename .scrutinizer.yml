@@ -4,4 +4,4 @@ build:
     tests:
         override:
             -
-                command: 'mvn clean package'
+                command: 'mvn clean package' 
