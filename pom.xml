@@ -168,14 +168,14 @@
                     <instrumentation>
                         
                         <excludes>
-                          <exclude>src/main/java/net/authorize/aim/</exclude>
-                          <exclude>src/main/java/net/authorize/cim/</exclude>
-                          <exclude>src/main/java/net/authorize/sim/</exclude>
-                          <exclude>src/main/java/net/authorize/arb/</exclude>
-                          <exclude>src/main/java/net/authorize/data/</exclude>
-                          <exclude>src/main/java/net/authorize/reporting/</exclude>
-                          <exclude>src/main/java/net/authorize/util/</exclude>
-                          <exclude>src/main/java/net/authorize/xml/</exclude>
+                          <exclude>src/main/java/net/authorize/aim/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/cim/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/sim/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/arb/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/data/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/reporting/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/util/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/xml/*.class</exclude>
                         </excludes>
                     </instrumentation>
                 </configuration>
