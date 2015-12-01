@@ -165,6 +165,19 @@
                     <maxmem>256m</maxmem>
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
+                    <instrumentation>
+                        
+                        <excludes>
+                          <exclude>src/main/java/net/authorize/aim/</exclude>
+                          <exclude>src/main/java/net/authorize/cim/</exclude>
+                          <exclude>src/main/java/net/authorize/sim/</exclude>
+                          <exclude>src/main/java/net/authorize/arb/</exclude>
+                          <exclude>src/main/java/net/authorize/data/</exclude>
+                          <exclude>src/main/java/net/authorize/reporting/</exclude>
+                          <exclude>src/main/java/net/authorize/util/</exclude>
+                          <exclude>src/main/java/net/authorize/xml/</exclude>
+                        </excludes>
+                    </instrumentation>
                 </configuration>
             </plugin>
         </plugins>
