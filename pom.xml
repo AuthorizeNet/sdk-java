@@ -162,11 +162,12 @@
                     </instrumentation>
                 </configuration>
                 <executions>
-                  <execution>
-                    <goals>
-                      <goal>clean</goal>
-                    </goals>
-                  </execution>
+                    <execution>
+                        <phase>package</phase>			
+                        <goals>
+                            <goal>cobertura</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
