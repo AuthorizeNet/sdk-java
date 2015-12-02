@@ -147,7 +147,6 @@
                     <!-- aggregated reports for multi-module projects -->
                     <aggregate>true</aggregate>
                     <instrumentation>
-                        
                         <excludes>
                           <exclude>src/main/java/net/authorize/aim/**/*.class</exclude>
                           <exclude>src/main/java/net/authorize/cim/**/*.java</exclude>
