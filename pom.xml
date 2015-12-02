@@ -150,7 +150,7 @@
                         
                         <excludes>
                           <exclude>src/main/java/net/authorize/aim/**/*.class</exclude>
-                          <exclude>src/main/java/net/authorize/cim/**/*.class</exclude>
+                          <exclude>src/main/java/net/authorize/cim/**/*.java</exclude>
                           <exclude>src/main/java/net/authorize/sim/**/*.class</exclude>
                           <exclude>src/main/java/net/authorize/arb/**/*.class</exclude>
                           <exclude>src/main/java/net/authorize/data/**/*.class</exclude>
@@ -160,6 +160,13 @@
                         </excludes>
                     </instrumentation>
                 </configuration>
+                <executions>
+                  <execution>
+                    <goals>
+                      <goal>clean</goal>
+                    </goals>
+                  </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
