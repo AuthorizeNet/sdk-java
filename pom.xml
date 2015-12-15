@@ -149,7 +149,7 @@
                   <excludes>
                       <exclude>**/aim/**/*.class</exclude>
                       <exclude>**/cim/*</exclude>
-                      <exclude>**/sim/*</exclude>
+                      <exclude>**/sim/**</exclude>
                       
                       <exclude>**/arb/**/*.class</exclude>
                       <exclude>**/data/**/*.class</exclude>
