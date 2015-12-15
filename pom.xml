@@ -147,9 +147,9 @@
                <version>0.7.2.201409121644</version>
                <configuration>
                   <excludes>
-                      <exclude>src/main/java/net/authorize/aim/**/*.class</exclude>
-                      <exclude>src/main/java/net/authorize/cim/*</exclude>
-                      <exclude>src/main/java/net/authorize/sim/*</exclude>
+                      <exclude>**/aim/**/*.class</exclude>
+                      <exclude>**/cim/*</exclude>
+                      <exclude>**/sim/*</exclude>
                       <exclude>src/main/java/net/authorize/sim/**/*.class</exclude>
                       <exclude>src/main/java/net/authorize/arb/**/*.class</exclude>
                       <exclude>src/main/java/net/authorize/data/**/*.class</exclude>
