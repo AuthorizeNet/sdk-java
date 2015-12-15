@@ -144,8 +144,6 @@
                 <configuration>
                     <format>xml</format>
                     <maxmem>256m</maxmem>
-                    <!-- aggregated reports for multi-module projects -->
-                    <aggregate>true</aggregate>
                     <instrumentation>
                         <excludes>
                           <exclude>src/main/java/net/authorize/aim/**/*.class</exclude>
