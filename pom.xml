@@ -113,7 +113,9 @@
                 <version>2.9</version>
                 <configuration>
                     <includes>
-                        <include> **/mocktest/**.java</include>
+                        <include> **/api/controller/mocktest/**.java</include>
+                        <include> **/api/controller/sampletest/**.java</include>
+                        <include> **/api/controller/test/**.java</include>
                     </includes>
                     <skipTests>false</skipTests>
                     <forkCount>1</forkCount>
@@ -150,7 +152,7 @@
                       <exclude>**/aim/**/*.class</exclude>
                       <exclude>**/cim/*</exclude>
                       <exclude>**/sim/**</exclude>
-                      
+                      <exclude>**/*Enum.class</exclude>
                       <exclude>**/arb/**/*.class</exclude>
                       <exclude>**/data/**/*.class</exclude>
                       <exclude>**/reporting/**/*.class</exclude>
