@@ -165,7 +165,6 @@
                     <execution>
                         <phase>package</phase>			
                         <goals>
-                            <goal>instrument</goal>
                             <goal>cobertura</goal>
                         </goals>
                     </execution>
