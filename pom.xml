@@ -135,8 +135,7 @@
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>4.0.0</version>
                 <configuration>
-                    
-                    <serviceJobId>TRAVIS_JOB_ID</serviceJobId>
+                    <repoToken>t7RizHlek3fJr3vvdMwlH9CcZMzLPUUHh</repoToken>
                 </configuration>
             </plugin>
             <!-- Code coverage plugin, generates coverage report to target/site/jacoco/
@@ -148,6 +147,15 @@
                <version>0.7.2.201409121644</version>
                <configuration>
                   <excludes>
+                      <exclude>src/main/java/net/authorize/aim/**/*.class</exclude>
+                      <exclude>src/main/java/net/authorize/cim/*</exclude>
+                      <exclude>src/main/java/net/authorize/sim/*</exclude>
+                      <exclude>src/main/java/net/authorize/sim/**/*.class</exclude>
+                      <exclude>src/main/java/net/authorize/arb/**/*.class</exclude>
+                      <exclude>src/main/java/net/authorize/data/**/*.class</exclude>
+                      <exclude>src/main/java/net/authorize/reporting/**/*.class</exclude>
+                      <exclude>src/main/java/net/authorize/util/**/*.class</exclude>
+                      <exclude>src/main/java/net/authorize/xml/**/*.class</exclude>
                      <exclude>**/Protos*.class</exclude>         <!-- Exclude generated protobuf classes -->
                      <exclude>org/bitcoinj/jni/*</exclude>         <!-- Exclude JNI classes -->
                      <exclude>org/bitcoin/*</exclude>         <!-- Exclude native classes -->
