@@ -11,7 +11,7 @@ jdk:
   - openjdk6
   
 after_success:
-  - mvn jacoco:report coveralls:report
+  - mvn clean jacoco:report coveralls:report
 
 after_script:
     print_surefire_reports.sh
