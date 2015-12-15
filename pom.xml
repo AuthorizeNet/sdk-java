@@ -127,6 +127,7 @@
                         <TRANSACTION_KEY>TRANSACTION_KEY</TRANSACTION_KEY>
                         <MD5_HASH_KEY>MD5_HASH_KEY</MD5_HASH_KEY>
                     </environmentVariables>
+                    <argLine>${surefireArgLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -138,6 +139,51 @@
                     <serviceJobId>TRAVIS_JOB_ID</serviceJobId>
                 </configuration>
             </plugin>
+            <!-- Code coverage plugin, generates coverage report to target/site/jacoco/
+               To skip coverage generation add -Djacoco.skip=true
+            -->
+            <plugin>
+               <groupId>org.jacoco</groupId>
+               <artifactId>jacoco-maven-plugin</artifactId>
+               <version>0.7.2.201409121644</version>
+               <configuration>
+                  <excludes>
+                     <exclude>**/Protos*.class</exclude>         <!-- Exclude generated protobuf classes -->
+                     <exclude>org/bitcoinj/jni/*</exclude>         <!-- Exclude JNI classes -->
+                     <exclude>org/bitcoin/*</exclude>         <!-- Exclude native classes -->
+                  </excludes>
+               </configuration>
+               <executions>
+                  <execution>
+                     <id>pre-unit-test</id>
+                     <goals>
+                        <goal>prepare-agent</goal>
+                     </goals>
+                     <configuration>
+                        <destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+                        <propertyName>surefireArgLine</propertyName>
+                     </configuration>
+                  </execution>
+                  <execution>
+                     <id>post-unit-test</id>
+                     <phase>test</phase>
+                     <goals>
+                        <goal>report</goal>
+                     </goals>
+                     <configuration>
+                        <dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
+                        <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                     </configuration>
+                  </execution>
+                  <execution>
+                     <id>default-report</id>
+                     <phase>prepare-package</phase>
+                     <goals>
+                        <goal>report</goal>
+                     </goals>
+                  </execution>
+               </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
@@ -148,8 +194,7 @@
                     <instrumentation>
                         <excludes>
                           <exclude>src/main/java/net/authorize/aim/**/*.class</exclude>
-                          <exclude>src/main/java/net/authorize/cim/**/*.java</exclude>
-                          <exclude>src/main/java/net/authorize/cim/*.java</exclude>
+                          <exclude>src/main/java/net/authorize/cim/*</exclude>
                           <exclude>src/main/java/net/authorize/cim/*.class</exclude>
                           <exclude>src/main/java/net/authorize/sim/**/*.class</exclude>
                           <exclude>src/main/java/net/authorize/arb/**/*.class</exclude>
