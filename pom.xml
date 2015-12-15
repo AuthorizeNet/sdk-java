@@ -169,14 +169,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>*</include>
-                </includes>
-            </resource>
-        </resources>
+        
     </build>
 </project>
