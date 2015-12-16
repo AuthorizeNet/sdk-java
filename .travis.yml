@@ -12,6 +12,9 @@ jdk:
   
 after_success:
   - mvn jacoco:report coveralls:report
+  
+after_failure:
+  - mvn jacoco:report coveralls:report
 
 after_script:
     sh print_surefire_reports.sh
