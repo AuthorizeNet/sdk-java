@@ -17,9 +17,7 @@ public class ValidateCustomerPaymentProfileController extends ApiOperationBase<V
 		
 		//validate required fields		
 		if ( null == request.getCustomerProfileId()) throw new NullPointerException("CustomerProfileId cannot be null");
-		if ( null == request.getCardCode()) throw new NullPointerException("CardCode cannot be null");
 		if ( null == request.getCustomerPaymentProfileId()) throw new NullPointerException("CustomerPaymentProfileId cannot be null");
-		if ( null == request.getCustomerShippingAddressId()) throw new NullPointerException("CustomerShippingAddressId cannot be null");
 				
 		//validate not-required fields		
 		//creditCardOne.setCardCode("");
