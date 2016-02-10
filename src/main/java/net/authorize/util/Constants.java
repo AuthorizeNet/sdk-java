@@ -25,5 +25,8 @@ public final class Constants {
 
 	public static final String PROP_API_LOGINID_APPLEPAY = "api.login.id.applepay";
 	public static final String PROP_TRANSACTION_KEY_APPLEPAY = "transaction.key.applepay";
-	public static final String PROP_MD5_HASHKEY_APPLEPAY = "md5.hash.key.applepay";	
+	public static final String PROP_MD5_HASHKEY_APPLEPAY = "md5.hash.key.applepay";
+	
+	public static final String HTTP_CONNECTION_TIME_OUT = "HTTP_CONNECTION_TIME_OUT";
+	public static final String HTTP_READ_TIME_OUT = "HTTP_READ_TIME_OUT";
 }
