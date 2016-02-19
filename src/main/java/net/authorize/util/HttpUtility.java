@@ -21,6 +21,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.ANetApiRequest;
@@ -81,7 +82,7 @@ public final class HttpUtility {
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
 			  logger.debug(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
-			  httpPost.setEntity(new StringEntity(xmlRequest));
+			  httpPost.setEntity(new StringEntity(xmlRequest, HTTP.UTF_8));
 		}
 
 		return httpPost;

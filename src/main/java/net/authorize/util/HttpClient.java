@@ -85,7 +85,7 @@ public class HttpClient {
 			httpPost.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, httpReadTimeout);
             
 		    httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-		    httpPost.setEntity(new StringEntity(transaction.toNVPString()));
+		    httpPost.setEntity(new StringEntity(transaction.toNVPString(), HTTP.UTF_8));
 		} else if (transaction instanceof net.authorize.arb.Transaction ||
 			    transaction instanceof net.authorize.cim.Transaction ||
 			    transaction instanceof net.authorize.reporting.Transaction) {
@@ -100,7 +100,7 @@ public class HttpClient {
               httpPost.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, httpReadTimeout);
 
               httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
-			  httpPost.setEntity(new StringEntity(transaction.toXMLString()));
+			  httpPost.setEntity(new StringEntity(transaction.toXMLString(), HTTP.UTF_8));
 		}
 
 		return httpPost;
