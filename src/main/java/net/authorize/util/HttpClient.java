@@ -11,10 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.authorize.Environment;
-import net.authorize.ResponseField;
-import net.authorize.Transaction;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -24,11 +20,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
+
+import net.authorize.Environment;
+import net.authorize.ResponseField;
+import net.authorize.Transaction;
 
 
 /**
@@ -49,6 +47,9 @@ public class HttpClient {
 			
 	static {
 		LogHelper.info(logger, "Use Proxy: '%s'", UseProxy);
+		
+		httpConnectionTimeout = (httpConnectionTimeout == 0 ? Constants.HTTP_CONNECTION_TIME_OUT_DEFAULT_VALUE : httpConnectionTimeout );
+		httpReadTimeout = (httpReadTimeout == 0 ? Constants.HTTP_READ_TIME_OUT_DEFAULT_VALUE : httpReadTimeout);
 	}
 	/**
 	 * Creates the http post object for an environment and transaction container.

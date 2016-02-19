@@ -28,5 +28,8 @@ public final class Constants {
 	public static final String PROP_MD5_HASHKEY_APPLEPAY = "md5.hash.key.applepay";
 	
 	public static final String HTTP_CONNECTION_TIME_OUT = "http.ConnectionTimeout";
+	public static final int HTTP_CONNECTION_TIME_OUT_DEFAULT_VALUE = 30000;
+	
 	public static final String HTTP_READ_TIME_OUT = "http.ReadTimeout";
+	public static final int HTTP_READ_TIME_OUT_DEFAULT_VALUE = 30000;
 }
