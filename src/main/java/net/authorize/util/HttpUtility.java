@@ -15,15 +15,17 @@ import java.util.concurrent.Future;
 
 import javax.xml.bind.JAXBException;
 
-import net.authorize.Environment;
-import net.authorize.api.contract.v1.ANetApiRequest;
-import net.authorize.api.contract.v1.ANetApiResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
+
+import net.authorize.Environment;
+import net.authorize.api.contract.v1.ANetApiRequest;
+import net.authorize.api.contract.v1.ANetApiResponse;
 
 /**
  * Helper methods for http calls
@@ -34,6 +36,15 @@ public final class HttpUtility {
 
 	private static Log logger = LogFactory.getLog(HttpUtility.class);	
 
+	static int httpConnectionTimeout = Environment.getIntProperty(Constants.HTTP_CONNECTION_TIME_OUT);
+	static int httpReadTimeout = Environment.getIntProperty(Constants.HTTP_READ_TIME_OUT);
+	
+	static {
+		
+		httpConnectionTimeout = (httpConnectionTimeout == 0 ? Constants.HTTP_CONNECTION_TIME_OUT_DEFAULT_VALUE : httpConnectionTimeout );
+		httpReadTimeout = (httpReadTimeout == 0 ? Constants.HTTP_READ_TIME_OUT_DEFAULT_VALUE : httpReadTimeout);
+	}
+	
 	/**
      * Default C'tor, cannot be instantiated
      */
@@ -60,12 +71,18 @@ public final class HttpUtility {
 			  logger.debug(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
 			  logger.debug(String.format("Posting request to Url: '%s'", postUrl));
 			  httpPost = new HttpPost(postUrl);
-                          httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+              httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+              
+              //set the tcp connection timeout
+  			  httpPost.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT, httpConnectionTimeout);
+  			  //set the time out on read-data request
+  			  httpPost.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, httpReadTimeout);
+              
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
 			  logger.debug(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
-			  httpPost.setEntity(new StringEntity(xmlRequest));
+			  httpPost.setEntity(new StringEntity(xmlRequest, HTTP.UTF_8));
 		}
 
 		return httpPost;
