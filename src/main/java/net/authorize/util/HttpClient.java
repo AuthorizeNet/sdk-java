@@ -11,10 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.authorize.Environment;
-import net.authorize.ResponseField;
-import net.authorize.Transaction;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -25,7 +21,13 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+
+import net.authorize.Environment;
+import net.authorize.ResponseField;
+import net.authorize.Transaction;
+
 
 /**
  * Transportation object used to facilitate the communication with the respective gateway.
@@ -40,9 +42,14 @@ public class HttpClient {
 	static boolean UseProxy = Environment.getBooleanProperty(Constants.HTTPS_USE_PROXY);
 	static String ProxyHost = Environment.getProperty(Constants.HTTPS_PROXY_HOST);
 	static int ProxyPort = Environment.getIntProperty(Constants.HTTPS_PROXY_PORT);
-	
+	static int httpConnectionTimeout = Environment.getIntProperty(Constants.HTTP_CONNECTION_TIME_OUT);
+	static int httpReadTimeout = Environment.getIntProperty(Constants.HTTP_READ_TIME_OUT);
+			
 	static {
 		LogHelper.info(logger, "Use Proxy: '%s'", UseProxy);
+		
+		httpConnectionTimeout = (httpConnectionTimeout == 0 ? Constants.HTTP_CONNECTION_TIME_OUT_DEFAULT_VALUE : httpConnectionTimeout );
+		httpReadTimeout = (httpReadTimeout == 0 ? Constants.HTTP_READ_TIME_OUT_DEFAULT_VALUE : httpReadTimeout);
 	}
 	/**
 	 * Creates the http post object for an environment and transaction container.
@@ -71,18 +78,29 @@ public class HttpClient {
   		    httpPost = new HttpPost(postUrl);
 
             httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+            
+			//set the tcp connection timeout
+			httpPost.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT, httpConnectionTimeout);
+			//set the time out on read-data request
+			httpPost.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, httpReadTimeout);
+            
 		    httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
-
-		    httpPost.setEntity(new StringEntity(transaction.toNVPString()));
+		    httpPost.setEntity(new StringEntity(transaction.toNVPString(), HTTP.UTF_8));
 		} else if (transaction instanceof net.authorize.arb.Transaction ||
 			    transaction instanceof net.authorize.cim.Transaction ||
 			    transaction instanceof net.authorize.reporting.Transaction) {
 
 			  postUrl = new URI(env.getXmlBaseUrl() + "/xml/v1/request.api");
 			  httpPost = new HttpPost(postUrl);
-                          httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
-			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
-			  httpPost.setEntity(new StringEntity(transaction.toXMLString()));
+              httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+
+              //set the TCP connection timeout
+              httpPost.getParams().setIntParameter(HttpConnectionParams.CONNECTION_TIMEOUT, httpConnectionTimeout);
+              //set the time out on read-data request
+              httpPost.getParams().setIntParameter(HttpConnectionParams.SO_TIMEOUT, httpReadTimeout);
+
+              httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
+			  httpPost.setEntity(new StringEntity(transaction.toXMLString(), HTTP.UTF_8));
 		}
 
 		return httpPost;
