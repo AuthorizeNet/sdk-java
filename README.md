@@ -2,6 +2,7 @@ Authorize.Net Java SDK
 ======================
 [![Build Status](https://travis-ci.org/AuthorizeNet/sdk-java.png?branch=master)]
 (https://travis-ci.org/AuthorizeNet/sdk-java)
+[![Code Climate](https://codeclimate.com/github/namanbansal/sdk-java/badges/gpa.svg)](https://codeclimate.com/github/namanbansal/sdk-java)
 [![Maven Central](https://img.shields.io/maven-central/v/net.authorize/anet-java-sdk.svg?style=flat)](http://mvnrepository.com/artifact/net.authorize/anet-java-sdk)
 
 ```
