@@ -1,8 +1,0 @@
-build:
-    environment:
-        java: 'java-7-oracle'
-    tests:
-        override:
-            -
-                command: 'mvn clean package' 
-                
