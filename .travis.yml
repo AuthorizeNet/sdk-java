@@ -15,7 +15,7 @@ before_script:
 
 script:
   - cd sample-code-java
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn install -DsdkVersion=1.8.8-SNAPSHOT -DskipTests=true -Dmaven.javadoc.skip=true -B -V
   - mvn test -B
 
 after_script:
