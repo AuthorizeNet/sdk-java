@@ -12,21 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for arrayOfCustomerPaymentProfileListItemType complex type.
+ * <p>Java class for SubscriptionIdList complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="arrayOfCustomerPaymentProfileListItemType">
+ * &lt;complexType name="SubscriptionIdList">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="paymentProfile" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerPaymentProfileListItemType" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="subscriptionId" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}numericString" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,41 +35,40 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "arrayOfCustomerPaymentProfileListItemType", propOrder = {
-    "paymentProfile"
+@XmlType(name = "SubscriptionIdList", propOrder = {
+    "subscriptionId"
 })
-public class ArrayOfCustomerPaymentProfileListItemType {
+public class SubscriptionIdList {
 
-    @XmlElement(nillable = true)
-    protected List<CustomerPaymentProfileListItemType> paymentProfile;
+    protected List<String> subscriptionId;
 
     /**
-     * Gets the value of the paymentProfile property.
+     * Gets the value of the subscriptionId property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the paymentProfile property.
+     * This is why there is not a <CODE>set</CODE> method for the subscriptionId property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getPaymentProfile().add(newItem);
+     *    getSubscriptionId().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link CustomerPaymentProfileListItemType }
+     * {@link String }
      * 
      * 
      */
-    public List<CustomerPaymentProfileListItemType> getPaymentProfile() {
-        if (paymentProfile == null) {
-            paymentProfile = new ArrayList<CustomerPaymentProfileListItemType>();
+    public List<String> getSubscriptionId() {
+        if (subscriptionId == null) {
+            subscriptionId = new ArrayList<String>();
         }
-        return this.paymentProfile;
+        return this.subscriptionId;
     }
 
 }
