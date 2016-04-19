@@ -34,7 +34,11 @@ import net.authorize.api.contract.v1.ANetApiResponse;
  */
 public final class HttpUtility {
 
-	private static Log logger = LogFactory.getLog(HttpUtility.class);	
+    private static class Sensitive {}
+
+    private static Log loggerSensitive = LogFactory.getLog(Sensitive.class);
+
+    private static Log logger = LogFactory.getLog(HttpUtility.class);   
 
 	static int httpConnectionTimeout = Environment.getIntProperty(Constants.HTTP_CONNECTION_TIME_OUT);
 	static int httpReadTimeout = Environment.getIntProperty(Constants.HTTP_READ_TIME_OUT);
@@ -68,7 +72,7 @@ public final class HttpUtility {
 
 		if(null != request) {
 			  postUrl = new URI(env.getXmlBaseUrl() + "/xml/v1/request.api");
-			  logger.debug(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
+			  loggerSensitive.debug(String.format("MerchantInfo->LoginId/TransactionKey: '%s':'%s'", request.getMerchantAuthentication().getName(), request.getMerchantAuthentication().getTransactionKey() ));
 			  logger.debug(String.format("Posting request to Url: '%s'", postUrl));
 			  httpPost = new HttpPost(postUrl);
               httpPost.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
@@ -81,7 +85,7 @@ public final class HttpUtility {
 			  httpPost.setHeader("Content-Type", "text/xml; charset=utf-8");
 			  
 			  String xmlRequest = XmlUtility.getXml(request);
-			  logger.debug(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
+			  loggerSensitive.debug(String.format("Request: '%s%s%s'", LogHelper.LineSeparator, xmlRequest, LogHelper.LineSeparator));
 			  httpPost.setEntity(new StringEntity(xmlRequest, HTTP.UTF_8));
 		}
 
