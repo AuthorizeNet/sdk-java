@@ -1,11 +1,22 @@
 language:
     java
-    
+
+sudo:
+    false
+
 jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
-  - openjdk6
+  #- openjdk6
+
+before_script:
+  - git submodule update --remote --recursive
+
+script:
+  - cd sample-code-java
+  - mvn install -DsdkVersion=1.8.9-SNAPSHOT -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test -DsdkVersion=1.8.9-SNAPSHOT -B
 
 after_script:
     print_surefire_reports.sh

@@ -325,13 +325,15 @@ public class Transaction extends net.authorize.Transaction {
 			else{
 				cc_exp_el.appendChild(document.getDocument().createTextNode(net.authorize.util.DateUtil.getFormattedDate(credit_card.getExpirationDate(),
 						CreditCard.ARB_EXPIRY_DATE_FORMAT)));
-			}			
-			
+			}
+
 			cc_el.appendChild(cc_exp_el);
 
-			Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
-			card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));
-			cc_el.appendChild(card_code_el);
+			if (!StringUtils.isEmpty(credit_card.getCardCode())) {
+				Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
+				card_code_el.appendChild(document.getDocument().createTextNode(credit_card.getCardCode()));
+				cc_el.appendChild(card_code_el);
+			}
 
 			payment_el.appendChild(cc_el);
 		}
@@ -602,7 +604,7 @@ public class Transaction extends net.authorize.Transaction {
 
 			// check for prior auth/capture which is unique
 			if( !net.authorize.TransactionType.PRIOR_AUTH_CAPTURE.equals(this.paymentTransaction.getTransactionType())) {
-				
+
 				if(order != null) {
 					Element order_el = document.createElement(AuthNetField.ELEMENT_ORDER.getFieldName());
 					Element invoice_number_el = document.createElement(AuthNetField.ELEMENT_INVOICE_NUMBER.getFieldName());
@@ -612,7 +614,7 @@ public class Transaction extends net.authorize.Transaction {
 
 					String orderDescription = XmlUtility.escapeStringForXml(order.getDescription());
 					description_el.appendChild(document.getDocument().createTextNode(orderDescription));
-					
+
 					if(shippingCharges != null) {
 						purchase_order_number_el.appendChild(document.getDocument().createTextNode(shippingCharges.getPurchaseOrderNumber()));
 					}
@@ -621,7 +623,7 @@ public class Transaction extends net.authorize.Transaction {
 					order_el.appendChild(purchase_order_number_el);
 					profile_trans_x_el.appendChild(order_el);
 				}
-	
+
 				// tax exempt
 				if(shippingCharges != null) {
 					Element tax_exempt_el = document.createElement(AuthNetField.ELEMENT_TAX_EXEMPT.getFieldName());
@@ -629,14 +631,14 @@ public class Transaction extends net.authorize.Transaction {
 							shippingCharges.isTaxExempt()?TRUE.toLowerCase():FALSE.toLowerCase()));
 					profile_trans_x_el.appendChild(tax_exempt_el);
 				}
-	
+
 				if(authOrCaptureTxn) {
 					// recurring billing
 					Element recurring_billing_el = document.createElement(AuthNetField.ELEMENT_RECURRING_BILLING.getFieldName());
 					recurring_billing_el.appendChild(document.getDocument().createTextNode(
 							this.paymentTransaction.isRecurringBilling()?TRUE.toLowerCase():FALSE.toLowerCase()));
 					profile_trans_x_el.appendChild(recurring_billing_el);
-	
+
 					// card code
 					if(!StringUtils.isEmpty(this.paymentTransaction.getCardCode())) {
 						Element card_code_el = document.createElement(AuthNetField.ELEMENT_CARD_CODE.getFieldName());
@@ -693,7 +695,7 @@ public class Transaction extends net.authorize.Transaction {
 			}
 		}
 	}
-	
+
 	/**
 	 * Add hosted profile settings to the document.
 	 *
@@ -704,15 +706,15 @@ public class Transaction extends net.authorize.Transaction {
 			Element hp_settings_el = document.createElement(AuthNetField.ELEMENT_HOSTED_PROFILE_SETTINGS.getFieldName());
 			for(HostedProfileSettingType key : hostedProfileSettings.keySet()) {
 				Element setting_el = document.createElement(AuthNetField.ELEMENT_SETTING.getFieldName());
-				
+
 				Element setting_name_el = document.createElement(AuthNetField.ELEMENT_SETTING_NAME.getFieldName());
 				setting_name_el.appendChild(document.getDocument().createTextNode(key.getValue()));
 				setting_el.appendChild(setting_name_el);
-				
+
 				Element setting_value_el = document.createElement(AuthNetField.ELEMENT_SETTING_VALUE.getFieldName());
 				setting_value_el.appendChild(document.getDocument().createTextNode(hostedProfileSettings.get(key)));
 				setting_el.appendChild(setting_value_el);
-				
+
 				hp_settings_el.appendChild(setting_el);
 			}
 			document.getDocumentElement().appendChild(hp_settings_el);
@@ -894,7 +896,7 @@ public class Transaction extends net.authorize.Transaction {
 		addCustomerAddressId(document);
 		currentRequest = document;
 	}
-	
+
 	/**
 	 * Get hosted profile page request.
 	 */
@@ -1237,7 +1239,7 @@ public class Transaction extends net.authorize.Transaction {
 		}
 		this.extraOptions.put(key, value);
 	}
-	
+
 	/**
 	 * Sets the hosted profile settings.
 	 *
@@ -1246,10 +1248,10 @@ public class Transaction extends net.authorize.Transaction {
 	public void setHostedProfileSettings(Map<HostedProfileSettingType, String> settings) {
 		this.hostedProfileSettings = settings;
 	}
-	
+
 	/**
 	 * Add hosted profile setting to the hosted profile settings map.
-	 * 
+	 *
 	 * @param settingName
 	 * @param settingValue
 	 */

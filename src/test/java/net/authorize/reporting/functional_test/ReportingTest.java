@@ -2,7 +2,6 @@ package net.authorize.reporting.functional_test;
 
 import java.util.Calendar;
 import java.util.List;
-
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
 import net.authorize.data.reporting.Subscription;
@@ -13,7 +12,6 @@ import net.authorize.data.xml.reporting.TransactionDetails;
 import net.authorize.data.xml.reporting.TransactionStatusType;
 import net.authorize.reporting.Result;
 import net.authorize.reporting.TransactionType;
-
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -228,12 +226,10 @@ public class ReportingTest extends UnitTestData {
 		String transId = transactionDetails.get(0).getTransId();
 
 		// Get the transaction detail for the given transaction id.
-		ReportingDetails reportingDetails = ReportingDetails
-				.createReportingDetails();
+		ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
 		reportingDetails.setTransactionId(transId);
-
-		net.authorize.reporting.Transaction transaction = merchant
-				.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
+	
+		net.authorize.reporting.Transaction transaction = merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
 		transaction.setReportingDetails(reportingDetails);
 
 		Result<Transaction> result = (Result<Transaction>) merchant
@@ -305,4 +301,48 @@ public class ReportingTest extends UnitTestData {
 				.getReportingDetails().getTransactionDetailList();
 		return transactionDetails;
 	}
+	
+	//@author krgupta
+	@Test
+	public void Issue48repro()
+	{ 
+		 String errormessage = "The element 'getTransactionDetailsRequest' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd' has incomplete content. List of possible elements expected: 'refId, transId' in namespace 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'.";
+		 net.authorize.reporting.Transaction transaction = merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
+		 ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
+		
+		 reportingDetails.setBatchIncludeStatistics(true);
+		 transaction.setReportingDetails(reportingDetails);
+
+	     Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(transaction);
+         System.out.println("Code : "+result.getMessages().get(0).getResultCode());
+         System.out.println("Text : "+result.getMessages().get(0).getText());
+      
+         Assert.assertEquals(errormessage , result.getMessages().get(0).getText()); 
+     for (BatchDetails batchDetail : result.getReportingDetails().getBatchDetailsList()) {
+          System.out.println("---------------------");
+          System.out.println("ID : "+ batchDetail.getBatchId() );
+          System.out.println("Settlement State : "+ batchDetail.getSettlementState().value());
+          System.out.println("local settlementTime: "+ batchDetail.getSettlementTimeLocal().toString());
+      }
+     reportingDetails.getTransactionDetailList();
+	}	
+	
+	//@author krgupta
+	//@Test
+	public void Issue48solution()
+	{ 
+		//valid transaction id is required to run this test
+		 String transId = null ; //"2239014404"; // Update to valid transId
+		 Assert.assertNotNull("transId is null. Enter a valid transId", transId);
+		 net.authorize.reporting.Transaction transaction = merchant.createReportingTransaction(TransactionType.GET_TRANSACTION_DETAILS);
+		 ReportingDetails reportingDetails = ReportingDetails.createReportingDetails();
+		 reportingDetails.setTransactionId(transId);
+		 
+		 Assert.assertEquals(transId, reportingDetails.getTransactionId());
+		 transaction.setReportingDetails(reportingDetails);
+	     Result<Transaction> result = (Result<Transaction>) merchant.postTransaction(transaction);
+	     Assert.assertEquals("Ok", result.getResultCode());
+         reportingDetails.getTransactionDetailList();
+	}
+	
 }
