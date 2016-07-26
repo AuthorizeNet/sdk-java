@@ -3,6 +3,8 @@ package net.authorize.cim.functional_test;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import net.authorize.Environment;
+import net.authorize.Merchant;
 
 import net.authorize.ResponseField;
 import net.authorize.Transaction;
@@ -129,8 +131,7 @@ public class CIMTest extends UnitTestData {
 		paymentProfileBankAccount.setBillTo(billingInfo);
 		paymentProfileBankAccount.addPayment(Payment.createPayment(bankAccount));
 		
-		
-		
+
 		customerProfile = CustomerProfile.createCustomerProfile();
 		customerProfile.setDescription(customerDescription);
 		customerProfile.setMerchantCustomerId("" + System.currentTimeMillis());
@@ -238,6 +239,8 @@ public class CIMTest extends UnitTestData {
 		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PAYMENT_PROFILE);
 		setRefId(transaction);
 		transaction.setCustomerProfileId(result.getCustomerProfileId());
+		
+		
 		transaction.addPaymentProfile(paymentProfileCC);
 		transaction.setValidationMode(ValidationModeType.TEST_MODE);
 		result = (Result<Transaction>) merchant.postTransaction(transaction);
@@ -876,8 +879,74 @@ public class CIMTest extends UnitTestData {
 
 		return new MyReturnValuesTest(customerProfileId, null, customerPaymentProfileId, null, authCode, splitTenderId, transactionId, customerShippingAddressId);
 	}
-	
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testZeroCustomerProfile() {
+        
+        // Merchent credientials with zero CIM profiles (should be different from the credentials used for other tests)
+        // warn: all customer profiles will be deleated for this account for testing purpose
+        String zeroCIMApiLoginID =  "ZERO_CIM_API_LOGIN_ID";
+	String zeroCIMTransactionKey = "ZERO_CIM_TRANSACTION_KEY";
+        Merchant zeroCIMMerchant = Merchant.createMerchant( Environment.SANDBOX, zeroCIMApiLoginID, zeroCIMTransactionKey);
+        
+        // get all existing customer profile ids
+        net.authorize.cim.Transaction transaction = zeroCIMMerchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE_IDS);
+        Result<Transaction> result = (Result<Transaction>) zeroCIMMerchant.postTransaction(transaction);
+        ArrayList<String> customerProfileIds = result.getCustomerProfileIdList();
+
+        // delete all existing customer profile
+        for (int i = 0; i < customerProfileIds.size(); i++) {
+            transaction = zeroCIMMerchant.createCIMTransaction(TransactionType.DELETE_CUSTOMER_PROFILE);
+            transaction.setCustomerProfileId(customerProfileIds.get(i));
+            result = (Result<Transaction>) zeroCIMMerchant.postTransaction(transaction);
+        }
+
+        // test for getCustomerProfileIds request
+        transaction = zeroCIMMerchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE_IDS);
+        result = (Result<Transaction>) zeroCIMMerchant.postTransaction(transaction);
+        Assert.assertNotNull(result);
+        result.printMessages();
+        Assert.assertTrue(result.isOk());
+        Assert.assertTrue(result.getCustomerProfileIdList().isEmpty());
+
+        // test for getCustomerProfile request
+        transaction = zeroCIMMerchant.createCIMTransaction(TransactionType.GET_CUSTOMER_PROFILE);
+        if(customerProfileIds.size() > 0){
+            transaction.setCustomerProfileId(customerProfileIds.get(0));
+        }
+        else{
+            transaction.setCustomerProfileId("1001");
+        }
+        result = (Result<Transaction>) zeroCIMMerchant.postTransaction(transaction);
+        Assert.assertNotNull(result);
+        result.printMessages();
+        Assert.assertTrue(result.isError());
+        Assert.assertNull(result.getCustomerProfileId());
+        Assert.assertNull(result.getCustomerProfile());
+        Assert.assertTrue(result.getCustomerPaymentProfileIdList().isEmpty());
+    }
 	private String createdCustomerPaymentProfileId = null;
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void Issue46repro() {
+		String errormessage = "The 'AnetApi/xml/v1/schema/AnetApiSchema.xsd:cardCode' element is invalid - The value '' is invalid according to its datatype 'AnetApi/xml/v1/schema/AnetApiSchema.xsd:cardCode' - The Pattern constraint failed.";
+		
+		// instance variable setting it to empty will not affect other test cases as in setup it is set to "123"
+		creditCard.setCardCode("");
+		Result<Transaction> result = createCustomerProfile(customerProfile, paymentProfileBankAccount, ValidationModeType.TEST_MODE);
+
+		// Create a new customer payment profile
+		net.authorize.cim.Transaction transaction = merchant.createCIMTransaction(TransactionType.CREATE_CUSTOMER_PAYMENT_PROFILE);
+		setRefId(transaction);
+		transaction.setCustomerProfileId(result.getCustomerProfileId());
+		transaction.addPaymentProfile(paymentProfileCC);
+		transaction.setValidationMode(ValidationModeType.TEST_MODE);
+		result = (Result<Transaction>) merchant.postTransaction(transaction);
+		
+		Assert.assertTrue(result.isOk());
+	}
 }
 
 class MyReturnValuesTest {
@@ -904,6 +973,5 @@ class MyReturnValuesTest {
 		this.splitTenderId = splitTenderId;
 		this.transactionId = transactionId;
 		this.customerShippingAddressId = customerShippingAddressId;
-	}
-	
+	}	
 }

@@ -271,8 +271,8 @@ public abstract class ApiCoreTestBase {
 //		driversLicenseOne.setNumber(getRandomString("DLNumber"));
 //		driversLicenseOne.setState(getRandomString("WA"));
 //		driversLicenseOne.setDateOfBirth(nowString);
-
-		customerAddressOne = new CustomerAddressType();
+	
+	  	customerAddressOne = new CustomerAddressType();
 		customerAddressOne.setFirstName(getRandomString("FName"));
 		customerAddressOne.setLastName(getRandomString("LName"));
 	    customerAddressOne.setCompany(getRandomString("Company"));
@@ -282,8 +282,7 @@ public abstract class ApiCoreTestBase {
 	    customerAddressOne.setZip("98000");
 	    customerAddressOne.setCountry("USA");
 	    customerAddressOne.setPhoneNumber(formatToPhone(counter));
-	    customerAddressOne.setFaxNumber(formatToPhone(counter+1));
-		
+	    customerAddressOne.setFaxNumber(formatToPhone(counter+1));         	    		
 		customerPaymentProfileOne = new CustomerPaymentProfileType();
 		customerPaymentProfileOne.setCustomerType(CustomerTypeEnum.INDIVIDUAL);
 		customerPaymentProfileOne.setPayment(paymentOne);

@@ -15,9 +15,8 @@ public class GetSettledBatchListController extends ApiOperationBase<GetSettledBa
 	protected void validateRequest() {
 		GetSettledBatchListRequest request = this.getApiRequest();
 		
-		//validate required fields		
-		if ( null == request.getFirstSettlementDate()) throw new NullPointerException("FirstSettlementDate cannot be null");
-		if ( null == request.getLastSettlementDate()) throw new NullPointerException("LastSettlementDate cannot be null");
+		//validate required fields
+		//no required fields as per xsd
 		
 		//validate not-required fields		
 		//creditCardOne.setCardCode("");

@@ -18,10 +18,8 @@ public class CreateCustomerProfileController extends ApiOperationBase<CreateCust
 		
 		//validate required fields		
 		if ( null == request.getProfile()) throw new NullPointerException("Profile cannot be null");
-		if ( null == request.getValidationMode() || ValidationModeEnum.NONE == request.getValidationMode()) throw new NullPointerException("ValidationMode cannot be null");
-		if ( null == request.getProfile().getPaymentProfiles() || 0 == request.getProfile().getPaymentProfiles().size()) throw new NullPointerException("Payment Profile cannot be null or empty");
-        }
-
+	}
+	
 	@Override
 	protected Class<CreateCustomerProfileResponse> getResponseType() {
 		return CreateCustomerProfileResponse.class;
