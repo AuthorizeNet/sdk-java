@@ -15,6 +15,7 @@ import net.authorize.api.contract.v1.MerchantAuthenticationType;
 import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
+import net.authorize.util.Constants;
 import net.authorize.util.HttpUtility;
 import net.authorize.util.LogHelper;
 
@@ -75,9 +76,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 	}
 	
 	protected void setClientId() {
-		String clientId = "sdk-java-" + getVersion();
-		
-		this.apiRequest.setClientId(clientId);
+		this.apiRequest.setClientId(getClientId());
 	}
 
 	public S getApiResponse() {
@@ -253,26 +252,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		}
 	}
 	
-	public synchronized String getVersion() {
-	    String version = null;
-
-	    // try to load from maven properties first
-	    try {
-	        Properties p = new Properties();
-	        InputStream is = getClass().getResourceAsStream("/META-INF/maven/net.authorize/anet-java-sdk/pom.properties");
-	        if (is != null) {
-	            p.load(is);
-	            version = p.getProperty("version", "");
-	        }
-	    } catch (Exception e) {
-	        // ignore
-	    }
-
-	    if (version == null) {
-	        // we could not compute the version so use a blank
-	        version = "";
-	    }
-
-	    return version;
+	public synchronized String getClientId() {
+		return Constants.CLIENT_ID;
 	} 
 }
