@@ -1,11 +1,16 @@
 package net.authorize.arb.functional_test;
 
 import java.math.BigDecimal;
+import java.util.Random;
+import net.authorize.Environment;
+import net.authorize.Merchant;
 
 import net.authorize.Transaction;
 import net.authorize.UnitTestData;
 import net.authorize.arb.Result;
 import net.authorize.arb.TransactionType;
+import net.authorize.data.arb.Profile;
+import net.authorize.cim.ValidationModeType;
 import net.authorize.data.Order;
 import net.authorize.data.arb.PaymentSchedule;
 import net.authorize.data.arb.Subscription;
@@ -17,8 +22,11 @@ import net.authorize.data.echeck.ECheckType;
 import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Customer;
+import net.authorize.data.xml.CustomerType;
 import net.authorize.data.xml.Payment;
 import net.authorize.util.XmlUtility;
+import net.authorize.data.cim.CustomerProfile;
+import net.authorize.data.cim.PaymentProfile;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -51,6 +59,7 @@ public class ARBTest extends UnitTestData {
 		credit_card = CreditCard.createCreditCard();
 		credit_card.setCreditCardNumber(creditCardNumber);
 		credit_card.setExpirationDate("2029-07");
+                credit_card.setCardCode("234");                
 
 		// Create a bank account
 		bank_account = BankAccount.createBankAccount();
@@ -94,7 +103,7 @@ public class ARBTest extends UnitTestData {
 		subscription.setPayment(Payment.createPayment(credit_card));
 		subscription.setSchedule(new_schedule);
 		subscription.setCustomer(customer);
-	    subscription.setAmount(new BigDecimal(6.00));
+                subscription.setAmount(new BigDecimal(6.00));
 		subscription.setTrialAmount(Transaction.ZERO_AMOUNT);
 		subscription.setRefId("REF:" + System.currentTimeMillis());
 
@@ -203,5 +212,40 @@ public class ARBTest extends UnitTestData {
 		Assert.assertNotNull(result.getResultSubscriptionId());
 
 		return result;
+	}
+
+	@Test
+	public void createCimSubscription() throws InterruptedException {
+		// Create a new subscription request from the subscription object
+		//                
+		net.authorize.cim.Transaction transactionCim = merchant.createCIMTransaction(net.authorize.cim.TransactionType.CREATE_CUSTOMER_PROFILE);
+                
+		transactionCim.setRefId("REF:" + System.currentTimeMillis());
+
+		CustomerProfile customerProfile = CustomerProfile.createCustomerProfile();
+		customerProfile.setMerchantCustomerId(Integer.toString(new Random().nextInt(10000)));
+		transactionCim.setCustomerProfile(customerProfile);
+
+		PaymentProfile paymentProfile = PaymentProfile.createPaymentProfile();
+		paymentProfile.setBillTo(billing_info);
+		paymentProfile.setCustomerType(CustomerType.INDIVIDUAL);
+		paymentProfile.addPayment(Payment.createPayment(credit_card));
+		transactionCim.addPaymentProfile(paymentProfile);
+		transactionCim.setValidationMode(ValidationModeType.TEST_MODE);
+		net.authorize.cim.Result<Transaction> resultCim = (net.authorize.cim.Result<Transaction>) merchant.postTransaction(transactionCim);
+                Profile profile = Profile.createProfile();
+		profile.setCustomerProfileId(resultCim.getCustomerProfileId());
+		profile.setCustomerPaymentProfileId(resultCim.getCustomerPaymentProfileIdList().get(0));
+
+		subscription.setProfile(profile);
+		subscription.setPayment(null);
+		subscription.setCustomer(null);
+		Thread.sleep(30000); //wait for authorize to create CIM profile
+		net.authorize.arb.Transaction transaction = merchant.createARBTransaction(TransactionType.CREATE_SUBSCRIPTION, subscription);
+		net.authorize.arb.Result<Transaction> result = (net.authorize.arb.Result<Transaction>)merchant.postTransaction(transaction);
+		Assert.assertNotNull(result);
+		result.printMessages();
+		Assert.assertTrue(result.isOk());
+		Assert.assertNotNull(result.getResultSubscriptionId());
 	}
 }
