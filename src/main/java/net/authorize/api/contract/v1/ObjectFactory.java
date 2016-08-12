@@ -129,14 +129,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WebCheckOutDataType }
-     * 
-     */
-    public WebCheckOutDataType createWebCheckOutDataType() {
-        return new WebCheckOutDataType();
-    }
-
-    /**
      * Create an instance of {@link MessagesType }
      * 
      */
@@ -422,14 +414,6 @@ public class ObjectFactory {
      */
     public DeleteCustomerProfileResponse createDeleteCustomerProfileResponse() {
         return new DeleteCustomerProfileResponse();
-    }
-
-    /**
-     * Create an instance of {@link SecurePaymentContainerRequest }
-     * 
-     */
-    public SecurePaymentContainerRequest createSecurePaymentContainerRequest() {
-        return new SecurePaymentContainerRequest();
     }
 
     /**
@@ -790,14 +774,6 @@ public class ObjectFactory {
      */
     public ARBCreateSubscriptionResponse createARBCreateSubscriptionResponse() {
         return new ARBCreateSubscriptionResponse();
-    }
-
-    /**
-     * Create an instance of {@link SecurePaymentContainerResponse }
-     * 
-     */
-    public SecurePaymentContainerResponse createSecurePaymentContainerResponse() {
-        return new SecurePaymentContainerResponse();
     }
 
     /**
