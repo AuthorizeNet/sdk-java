@@ -1,4 +1,4 @@
- package net.authorize.data.arb;
+package net.authorize.data.arb;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,6 +25,7 @@ public class Subscription implements Serializable {
 	private BigDecimal trial_amount = Transaction.ZERO_AMOUNT;
 	private Payment payment = null;
 	private Customer customer;
+	private Profile profile;
 	private String refId = null;
 	private Order order = null;
 
@@ -78,6 +79,24 @@ public class Subscription implements Serializable {
 	 */
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	/**
+	 * Get the profile container.
+	 *
+	 * @return Profile
+	 */
+	public Profile getProfile() {
+		return profile;
+	}
+
+	/**
+	 * Set the profile container.
+	 *
+	 * @param profile
+	 */
+	public void setProfile(Profile profile) {
+		this.profile = profile;
 	}
 
 	/**
