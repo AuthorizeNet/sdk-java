@@ -1,9 +1,11 @@
 package net.authorize.api.controller.base;
 
+import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.ANetApiRequest;
@@ -57,6 +59,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		this.requestClass = (Class<Q>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		this.responseClass = this.getResponseType();
 		this.setApiRequest(apiRequest);
+		this.setClientId();
 		
 		logger.debug(String.format("Creating instance for request:'%s' and response:'%s'", requestClass, responseClass));
 		logger.debug(String.format("Request:'%s'", apiRequest));
@@ -69,6 +72,12 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 
 	protected void setApiRequest(Q apiRequest) {
 		this.apiRequest = apiRequest;
+	}
+	
+	protected void setClientId() {
+		String clientId = "sdk-java-" + getVersion();
+		
+		this.apiRequest.setClientId(clientId);
 	}
 
 	public S getApiResponse() {
@@ -243,4 +252,27 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 			}
 		}
 	}
+	
+	public synchronized String getVersion() {
+	    String version = null;
+
+	    // try to load from maven properties first
+	    try {
+	        Properties p = new Properties();
+	        InputStream is = getClass().getResourceAsStream("/META-INF/maven/net.authorize/anet-java-sdk/pom.properties");
+	        if (is != null) {
+	            p.load(is);
+	            version = p.getProperty("version", "");
+	        }
+	    } catch (Exception e) {
+	        // ignore
+	    }
+
+	    if (version == null) {
+	        // we could not compute the version so use a blank
+	        version = "";
+	    }
+
+	    return version;
+	} 
 }
