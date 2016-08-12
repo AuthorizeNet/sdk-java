@@ -84,7 +84,6 @@ import javax.xml.bind.annotation.XmlType;
     SendCustomerTransactionReceiptRequest.class,
     LogoutRequest.class,
     GetUnsettledTransactionListRequest.class,
-    SecurePaymentContainerRequest.class,
     ARBGetSubscriptionRequest.class,
     DecryptPaymentDataRequest.class,
     GetCustomerShippingAddressRequest.class,

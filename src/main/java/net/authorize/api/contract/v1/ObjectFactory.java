@@ -1577,14 +1577,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link SecurePaymentContainerErrorType }
-     * 
-     */
-    public SecurePaymentContainerErrorType createSecurePaymentContainerErrorType() {
-        return new SecurePaymentContainerErrorType();
-    }
-
-    /**
      * Create an instance of {@link KeyManagementScheme.DUKPT.Mode }
      * 
      */

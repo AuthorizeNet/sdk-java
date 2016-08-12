@@ -58,7 +58,6 @@ import javax.xml.bind.annotation.XmlType;
     UpdateCustomerPaymentProfileResponse.class,
     ARBCancelSubscriptionResponse.class,
     AuthenticateTestResponse.class,
-    SecurePaymentContainerResponse.class,
     ARBCreateSubscriptionResponse.class,
     GetTransactionDetailsResponse.class,
     LogoutResponse.class,
