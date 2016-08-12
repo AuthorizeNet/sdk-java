@@ -1,5 +1,11 @@
 package net.authorize.api.controller.test;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import junit.framework.Assert;
 import net.authorize.api.contract.v1.ARBGetSubscriptionListOrderFieldEnum;
 import net.authorize.api.contract.v1.ARBGetSubscriptionListSearchTypeEnum;
@@ -8,6 +14,8 @@ import net.authorize.api.contract.v1.ARBSubscriptionUnitEnum;
 import net.authorize.api.contract.v1.AccountTypeEnum;
 import net.authorize.api.contract.v1.BankAccountTypeEnum;
 import net.authorize.api.contract.v1.CardTypeEnum;
+import net.authorize.api.contract.v1.CustomerPaymentProfileOrderFieldEnum;
+import net.authorize.api.contract.v1.CustomerPaymentProfileSearchTypeEnum;
 import net.authorize.api.contract.v1.CustomerTypeEnum;
 import net.authorize.api.contract.v1.DeviceActivationEnum;
 import net.authorize.api.contract.v1.EcheckTypeEnum;
@@ -24,12 +32,6 @@ import net.authorize.api.contract.v1.SplitTenderStatusEnum;
 import net.authorize.api.contract.v1.TransactionStatusEnum;
 import net.authorize.api.contract.v1.TransactionTypeEnum;
 import net.authorize.api.contract.v1.ValidationModeEnum;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class AllGeneratedEnumTest extends ApiCoreTestBase {
 	
@@ -105,6 +107,20 @@ public class AllGeneratedEnumTest extends ApiCoreTestBase {
         {
             String aValue = anEnum.value();
             CardTypeEnum enumFromValue = CardTypeEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+        
+        for ( CustomerPaymentProfileOrderFieldEnum anEnum : CustomerPaymentProfileOrderFieldEnum.values())
+        {
+            String aValue = anEnum.value();
+            CustomerPaymentProfileOrderFieldEnum enumFromValue = CustomerPaymentProfileOrderFieldEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( CustomerPaymentProfileSearchTypeEnum anEnum : CustomerPaymentProfileSearchTypeEnum.values())
+        {
+            String aValue = anEnum.value();
+            CustomerPaymentProfileSearchTypeEnum enumFromValue = CustomerPaymentProfileSearchTypeEnum.fromValue(aValue);
             Assert.assertEquals(anEnum, enumFromValue);
         }
 

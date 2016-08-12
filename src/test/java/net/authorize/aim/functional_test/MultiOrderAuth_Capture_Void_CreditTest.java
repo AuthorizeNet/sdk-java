@@ -17,6 +17,7 @@ import net.authorize.data.OrderItem;
 import net.authorize.data.ShippingAddress;
 import net.authorize.data.ShippingCharges;
 import net.authorize.data.creditcard.CreditCard;
+import net.authorize.data.reporting.Solution;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 	private ShippingCharges shippingCharges;
 	private EmailReceipt emailReceipt;
 	private static String splitTenderId = null;
+        private Solution solution;
 
 	@Before
 	public void setUp() throws Exception {
@@ -124,6 +126,10 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		emailReceipt.setFooterEmailReceipt(footerEmailReceipt);
 		emailReceipt.setHeaderEmailReceipt(headerEmailReceipt);
 		emailReceipt.setMerchantEmail(merchantEmail);
+                
+                // create solution
+                solution = Solution.createSolution();
+                solution.setId("AAA100302");
 	}
 
 	/**
@@ -159,6 +165,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		authCaptureTransaction.setShippingCharges(shippingCharges);
 		authCaptureTransaction.setEmailReceipt(emailReceipt);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
+                authCaptureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 
@@ -179,6 +186,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		authCaptureTransaction.setShippingCharges(shippingCharges);
 		authCaptureTransaction.setEmailReceipt(emailReceipt);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
+                authCaptureTransaction.setSolutionField(solution);
 
 		result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 		Assert.assertTrue(result.isApproved());
@@ -204,6 +212,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		authCaptureTransaction.setShippingCharges(shippingCharges);
 		authCaptureTransaction.setEmailReceipt(emailReceipt);
 		authCaptureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
+                authCaptureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant.postTransaction(authCaptureTransaction);
 
@@ -243,6 +252,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		captureTransaction.setEmailReceipt(emailReceipt);
 		captureTransaction.setAuthorizationCode(MultiOrderAuth_Capture_Void_CreditTest.authCode);
 		captureTransaction.setMerchantDefinedField(mdfKey, mdfValue);
+                captureTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant
 				.postTransaction(captureTransaction);
@@ -276,6 +286,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		voidTransaction.setShippingCharges(shippingCharges);
 		voidTransaction.setEmailReceipt(emailReceipt);
 		voidTransaction.setTransactionId(MultiOrderAuth_Capture_Void_CreditTest.transactionId);
+                voidTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant
 				.postTransaction(voidTransaction);
@@ -312,6 +323,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		creditTransaction.setShippingCharges(shippingCharges);
 		creditTransaction.setEmailReceipt(emailReceipt);
 		creditTransaction.setTransactionId(MultiOrderAuth_Capture_Void_CreditTest.transactionId);
+                creditTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant
 				.postTransaction(creditTransaction);
@@ -340,6 +352,7 @@ public class MultiOrderAuth_Capture_Void_CreditTest extends UnitTestData {
 		Transaction creditTransaction = merchant.createAIMTransaction(
 				TransactionType.UNLINKED_CREDIT, new BigDecimal(10.00));
 		creditTransaction.setCreditCard(creditCard);
+                creditTransaction.setSolutionField(solution);
 
 		Result<Transaction> result = (Result<Transaction>)merchant
 				.postTransaction(creditTransaction);

@@ -17,9 +17,7 @@ public class ARBGetSubscriptionListController extends ApiOperationBase<ARBGetSub
 		
 		//validate required fields		
 		if ( null == request.getSearchType()) throw new NullPointerException("SearchType cannot be null");
-		if ( null == request.getPaging()) throw new NullPointerException("Paging cannot be null");
-		
-		//validate not-required fields		
+				
 	}
 
 	@Override
