@@ -69,7 +69,7 @@ public class Result implements Serializable {
 		}
 
 		result.responseCode = responseCodeStr!=null && !"".equals(responseCodeStr)?
-				ResponseCode.findByResponseCode(Integer.parseInt(responseCodeStr)):
+				ResponseCode.findByResponseCode(Double.valueOf(responseCodeStr).intValue()):
 					ResponseCode.UNKNOWN;
 		result.reasonResponseCode = responseReasonCodeStr!=null && !"".equals(responseReasonCodeStr)?
 				ResponseReasonCode.findByReasonCode(Integer.parseInt(responseReasonCodeStr)):
