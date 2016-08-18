@@ -12,6 +12,7 @@ import net.authorize.data.xml.Address;
 import net.authorize.data.xml.BankAccount;
 import net.authorize.data.xml.Payment;
 import net.authorize.util.BasicXmlDocument;
+import net.authorize.util.StringUtils;
 import net.authorize.util.XmlUtility;
 
 import org.w3c.dom.Element;
@@ -172,8 +173,31 @@ public class Transaction extends net.authorize.Transaction {
 			subscr_el.appendChild(trial_el);
 		}
 
-		addPaymentToSubscription(document, subscription, subscr_el);
-		addBillingInfoToSubscription(document, subscription, subscr_el);
+		if (subscription.getProfile() != null && 
+                    StringUtils.isNotEmpty(subscription.getProfile().getCustomerProfileId()) && 
+                    StringUtils.isNotEmpty(subscription.getProfile().getCustomerPaymentProfileId())) {
+			
+			Element profile = document.createElement(AuthNetField.ELEMENT_PROFILE.getFieldName());
+                        
+			Element customerProfileId = document.createElement(AuthNetField.ELEMENT_CUSTOMER_PROFILE_ID.getFieldName());
+                        customerProfileId.appendChild(document.getDocument().createTextNode(subscription.getProfile().getCustomerProfileId()));
+			profile.appendChild(customerProfileId);
+			
+			Element customerPaymentProfileId = document.createElement(AuthNetField.ELEMENT_CUSTOMER_PAYMENT_PROFILE_ID.getFieldName());
+			customerPaymentProfileId.appendChild(document.getDocument().createTextNode(subscription.getProfile().getCustomerPaymentProfileId()));
+			profile.appendChild(customerPaymentProfileId);
+			
+			if (StringUtils.isNotEmpty(subscription.getProfile().getCustomerAddressId())) {
+				Element customerAddressId = document.createElement(AuthNetField.ELEMENT_CUSTOMER_ADDRESS_ID.getFieldName());
+				customerAddressId.appendChild(document.getDocument().createTextNode(subscription.getProfile().getCustomerAddressId()));
+				profile.appendChild(customerAddressId);
+			}
+			subscr_el.appendChild(profile);
+			
+		} else {
+			addPaymentToSubscription(document, subscription, subscr_el);
+			addBillingInfoToSubscription(document, subscription, subscr_el);
+		}
 		document.getDocumentElement().appendChild(subscr_el);
 	}
 

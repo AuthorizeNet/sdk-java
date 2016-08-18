@@ -11,6 +11,7 @@ import net.authorize.api.contract.v1.ARBGetSubscriptionListOrderFieldEnum;
 import net.authorize.api.contract.v1.ARBGetSubscriptionListSearchTypeEnum;
 import net.authorize.api.contract.v1.ARBSubscriptionStatusEnum;
 import net.authorize.api.contract.v1.ARBSubscriptionUnitEnum;
+import net.authorize.api.contract.v1.AUJobTypeEnum;
 import net.authorize.api.contract.v1.AccountTypeEnum;
 import net.authorize.api.contract.v1.BankAccountTypeEnum;
 import net.authorize.api.contract.v1.CardTypeEnum;
@@ -233,6 +234,13 @@ public class AllGeneratedEnumTest extends ApiCoreTestBase {
         {
             String aValue = anEnum.value();
             ValidationModeEnum enumFromValue = ValidationModeEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+        
+        for ( AUJobTypeEnum anEnum : AUJobTypeEnum.values())
+        {
+            String aValue = anEnum.value();
+            AUJobTypeEnum enumFromValue = AUJobTypeEnum.fromValue(aValue);
             Assert.assertEquals(anEnum, enumFromValue);
         }
     } 
