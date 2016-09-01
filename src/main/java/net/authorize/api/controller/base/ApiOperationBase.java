@@ -1,9 +1,11 @@
 package net.authorize.api.controller.base;
 
+import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.ANetApiRequest;
@@ -13,6 +15,7 @@ import net.authorize.api.contract.v1.MerchantAuthenticationType;
 import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
+import net.authorize.util.Constants;
 import net.authorize.util.HttpUtility;
 import net.authorize.util.LogHelper;
 
@@ -57,6 +60,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		this.requestClass = (Class<Q>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		this.responseClass = this.getResponseType();
 		this.setApiRequest(apiRequest);
+		this.setClientId();
 		
 		logger.debug(String.format("Creating instance for request:'%s' and response:'%s'", requestClass, responseClass));
 		logger.debug(String.format("Request:'%s'", apiRequest));
@@ -69,6 +73,10 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 
 	protected void setApiRequest(Q apiRequest) {
 		this.apiRequest = apiRequest;
+	}
+	
+	protected void setClientId() {
+		this.apiRequest.setClientId(getClientId());
 	}
 
 	public S getApiResponse() {
@@ -243,4 +251,8 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 			}
 		}
 	}
+	
+	public synchronized String getClientId() {
+		return Constants.CLIENT_ID;
+	} 
 }
