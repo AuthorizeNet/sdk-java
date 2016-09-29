@@ -1,0 +1,161 @@
+package customer
+
+import wslite.soap.*
+import wslite.http.auth.*
+import javax.swing.*
+import groovy.swing.*
+import java.awt.*
+import java.awt.event.*
+import javax.swing.JOptionPane
+class CreateCustomerProfileTransaction implements ActionListener{
+	def sb
+	def am
+	def am1
+	def na
+	def des
+	def am2
+	def na1
+	def des1
+	def am3
+	def na2
+	def des2
+	def item
+	def na3
+	def des3
+	def quan
+	def pri
+	def inv
+	def des4
+	def po
+	def cusId
+	def payId
+	def shipId
+	public CreateCustomerProfileTransaction(){
+		sb = new SwingBuilder()
+		sb.frame(layout:null,title:'TRANSACTION PROFILE',size:[600,900],defaultCloseOperation:JFrame.HIDE_ON_CLOSE,location:[1110,100],show:true){
+			label(text:'TRANSACTION PROFILE',bounds:[70,5,150,30])
+			label(text:'AUTH AMOUNT',bounds:[20,30,150,30])
+			label(text:'TAX',bounds:[20,60,150,30])
+			label(text:'AMOUNT',bounds:[20,90,150,30])
+			label(text:'NAME',bounds:[20,120,150,30])
+			label(text:'DESCRIPTION',bounds:[20,150,150,30])
+			label(text:'SHIPPING',bounds:[20,180,150,30])
+			label(text:'AMOUNT',bounds:[20,210,150,30])
+			label(text:'NAME',bounds:[20,240,150,30])
+			label(text:'DESCRIPTION',bounds:[20,270,150,30])
+			label(text:'DUTY',bounds:[20,300,150,30])
+			label(text:'AMOUNT',bounds:[20,330,150,30])
+			label(text:'NAME',bounds:[20,360,150,30])
+			label(text:'DESCRIPTION',bounds:[20,390,150,30])
+			label(text:"ORDER ITEMS",bounds:[20,420,150,30])
+			label(text:'ITEM ID',bounds:[20,450,150,30])
+			label(text:'NAME',bounds:[20,480,150,30])
+			label(text:'DESCRIPTION',bounds:[20,510,150,30])
+			label(text:'QUANTITY',bounds:[20,540,150,30])
+			label(text:'PRICE',bounds:[20,570,150,30])
+			label(text:'INVOICE#',bounds:[20,600,150,30])
+			label(text:'DESCRIPTION',bounds:[20,630,150,30])
+			label(text:'PURCHASEORDER#',bounds:[20,660,150,30])
+			label(text:'MERCHANT ID:',bounds:[20,690,150,30])
+			label(text:'PAYMENT ID:',bounds:[20,720,150,30])
+			label(text:'SHIPPING ADDRESS ID',bounds:[20,750,150,30])
+		
+			am=textField(bounds:[200,30,150,30])
+			am1=textField(bounds:[200,90,150,30])
+			na=textField(text:'BIR TAX',bounds:[200,120,150,30])
+			des=textField(text:'VALUE TAX',bounds:[200,150,150,30])
+			am2=textField(bounds:[200,210,150,30])
+			na1=textField(text:'Ground Base Shipping',bounds:[200,240,150,30])
+			des1=textField(text:'Ground Base 2 to 5 days',bounds:[200,270,150,30])
+			am3=textField(bounds:[200,330,150,30])
+			na2=textField(text:'BOX',bounds:[200,360,150,30])
+			des2=textField(text:'5kilos',bounds:[200,390,150,30])
+			item=textField(text:'ITEM0001',bounds:[200,450,150,30])
+			na3=textField(text:'TELEVISION',bounds:[200,480,150,30])
+			des3=textField(text:'APPLIANCES',bounds:[200,510,150,30])
+			quan=textField(text:'1',bounds:[200,540,150,30])
+			pri=textField(text:'500.00',bounds:[200,570,150,30])
+			inv=textField(text:'INV#0001',bounds:[200,600,150,30])
+			des4=textField(text:'APPLIANCES BILL',bounds:[200,630,150,30])
+			po=textField(text:'PO#0001',bounds:[200,660,150,30])
+			cusId=textField(bounds:[200,690,150,30])
+			payId=textField(bounds:[200,720,150,30])
+			shipId=textField(bounds:[200,750,150,30])
+			
+			button text:'X',bounds:[585,5,15,15],actionPerformed:{
+				def main = new MainPage()
+				dispose()
+			}
+			def btn = button(text:'CREATE',bounds:[400,820,150,40])
+			btn.addActionListener(this)
+			}//end of frame
+		}//end of constructor
+	void actionPerformed(ActionEvent ae){
+		def clientUrl = 'https://apitest.authorize.net/soap/v1/Service.asmx'
+		def client = new SOAPClient (clientUrl)
+		def resp = client.send (SOAPAction:'https://api.authorize.net/soap/v1/CreateCustomerProfileTransaction'){
+			body{
+				CreateCustomerProfileTransaction('xmlns':'https://api.authorize.net/soap/v1/'){
+					merchantAuthentication{
+						name('96xY4UmpYx')
+						transactionKey('7DZMy2sT4x8VM43N')
+					}
+					
+					transaction{
+							profileTransAuthCapture{
+								amount(am.getText())
+							
+								tax{
+									amount(am1.getText())
+									name(na.getText())
+									description(des.getText())
+								}//end of tax
+								shipping{
+									amount(am2.getText())
+									name(na1.getText())
+									description(des1.getText())
+								}//end of shipping
+								duty{
+									amount(am3.getText())
+									name(na2.getText())
+									description(des2.getText())
+								}//end of duty
+								lineItems{
+									itemId(item.getText())
+									name(na3.getText())
+									description(des3.getText())
+									quantity(quan.getText())
+									price(pri.getText())
+									taxable('true')
+								}//end of lineItems
+								customerProfileId(cusId.getText())
+								customerPaymentProfileId(payId.getText())
+								customerShippingAddressId(shipId.getText())
+								order{
+									invoiceNumber(inv.getText())
+									description(des4.getText())
+									purchaseOrderNumber(po.getText())
+								}//end of order
+								taxExempt('false')
+								recurringBiling('true')
+								cardcode('0000')
+								splitTenderid('459147')
+							}//end of profileTransAuthCapture
+						}//end of transaction
+					}//end of CreateCustomerProfileTransaction
+				}//end of body
+			}//end of response
+		def sda = resp.CreateCustomerProfileTransactionResponse.CreateCustomerProfileTransactionResult.resultCode
+		def mes = resp.CreateCustomerProfileTransactionResponse.CreateCustomerProfileTransactionResult.messages.MessagesTypeMessage.text
+		def id = resp.CreateCustomerProfileTransactionResponse.CreateCustomerProfileTransactionResult.directResponse
+		println sda
+		println (' ')
+		println mes
+		println (' ')
+		JOptionPane.showMessageDialog(null, id)
+	}
+	public static void main (String []args){
+		new CreateCustomerProfileTransaction()
+		
+	}
+}
