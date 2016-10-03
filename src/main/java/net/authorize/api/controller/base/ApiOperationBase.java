@@ -252,7 +252,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		}
 	}
 	
-	public synchronized String getClientId() {
+	public String getClientId() {
 		return Constants.CLIENT_ID;
 	} 
 }
