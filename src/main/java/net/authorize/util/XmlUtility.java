@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.HashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -23,13 +24,17 @@ import org.apache.commons.logging.LogFactory;
 public final class XmlUtility {
 	private static Log logger = LogFactory.getLog(XmlUtility.class);
 	private static final String XmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+    private static JAXBContext request_ctx = null;
+    private static JAXBContext response_ctx = null;
+    private static HashMap<String, JAXBContext> jaxbContext = new HashMap<String, JAXBContext>();
+
 
 	/**
     * Default C'tor, cannot be instantiated
     */
 	private XmlUtility() {
 	}
-
+	
 	/**
 	 * Helper method to serialize an object to XML. Requires object to be Serializable
 	 * @param entity Object to serialize
@@ -38,15 +43,24 @@ public final class XmlUtility {
 	 * @throws IOException if errors during serialization
 	 * @throws JAXBException if errors during serialization
 	 */
-	public static <T extends Serializable> String getXml(T entity) throws IOException, JAXBException
+	public static synchronized <T extends Serializable> String getXml(T entity) throws IOException, JAXBException
 	{
         StringWriter sw = new StringWriter();
 
         if ( null != entity)
 		{
-	        JAXBContext ctx = JAXBContext.newInstance(entity.getClass());
-	
-	        Marshaller m = ctx.createMarshaller();
+    	
+        	if(!jaxbContext.containsKey(entity.getClass().toString()))
+        	{
+        		request_ctx = JAXBContext.newInstance(entity.getClass());
+        		jaxbContext.put(entity.getClass().toString(), request_ctx);
+        	}
+        	else
+        	{
+        		request_ctx = jaxbContext.get(entity.getClass().toString());
+        	}
+        			
+	        Marshaller m = request_ctx.createMarshaller();
 	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 	
 	        m.marshal(entity, sw);
@@ -66,14 +80,23 @@ public final class XmlUtility {
 	 * @throws JAXBException if errors during de-serialization
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException
+	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException
 	{
 		T entity = null;
 		//make sure we have not null and not-empty string to de-serialize
 		if ( null != xml && !xml.trim().isEmpty())
 		{
-	        JAXBContext ctx = JAXBContext.newInstance(classType);
-	        Unmarshaller um = ctx.createUnmarshaller();
+        	if(!jaxbContext.containsKey(classType.toString()))
+        	{
+        		response_ctx = JAXBContext.newInstance(classType);
+        		jaxbContext.put(classType.toString(), response_ctx);
+        	}
+        	else
+        	{
+        		response_ctx = jaxbContext.get(classType.toString());
+        	}
+			
+	        Unmarshaller um = response_ctx.createUnmarshaller();
 	        try {
 		        Object unmarshaled = um.unmarshal(new StringReader(xml));
 		        if ( null != unmarshaled)
