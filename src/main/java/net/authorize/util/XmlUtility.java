@@ -28,6 +28,7 @@ public final class XmlUtility {
     private static JAXBContext response_ctx = null;
     private static HashMap<String, JAXBContext> jaxbContext = new HashMap<String, JAXBContext>();
 
+
 	/**
     * Default C'tor, cannot be instantiated
     */
@@ -93,7 +94,11 @@ public final class XmlUtility {
         	{
         		response_ctx = jaxbContext.get(classType.toString());
         	}
+<<<<<<< .mine
         	
+=======
+			
+>>>>>>> .theirs
 	        Unmarshaller um = response_ctx.createUnmarshaller();
 	        try {
 		        Object unmarshaled = um.unmarshal(new StringReader(xml));
