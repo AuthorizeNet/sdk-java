@@ -94,11 +94,7 @@ public final class XmlUtility {
         	{
         		response_ctx = jaxbContext.get(classType.toString());
         	}
-<<<<<<< .mine
-        	
-=======
-			
->>>>>>> .theirs
+
 	        Unmarshaller um = response_ctx.createUnmarshaller();
 	        try {
 		        Object unmarshaled = um.unmarshal(new StringReader(xml));
