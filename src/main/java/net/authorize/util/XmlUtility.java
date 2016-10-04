@@ -59,10 +59,12 @@ public final class XmlUtility {
         		request_ctx = jaxbContext.get(entity.getClass().toString());
         	}
 	
-	        Marshaller m = request_ctx.createMarshaller();
-	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-	
-	        m.marshal(entity, sw);
+        	if(request_ctx != null){
+    	        Marshaller m = request_ctx.createMarshaller();
+    	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+    	
+    	        m.marshal(entity, sw);
+        	}
 		}
         sw.flush();
         sw.close();
@@ -94,29 +96,31 @@ public final class XmlUtility {
         	{
         		response_ctx = jaxbContext.get(classType.toString());
         	}
-
-	        Unmarshaller um = response_ctx.createUnmarshaller();
-	        try {
-		        Object unmarshaled = um.unmarshal(new StringReader(xml));
-		        if ( null != unmarshaled)
-		        {
-		        	try {
-		        		entity = classType.cast(unmarshaled);
-		        	} catch (ClassCastException cce) {
-		        		if (unmarshaled instanceof JAXBElement) {
-		        			@SuppressWarnings("rawtypes")
-							JAXBElement element = (JAXBElement) unmarshaled;
-		        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
-		        				entity = (T) element.getValue();
-		        			}
-		        		}
-		        	}
-		        }
-	        } catch (JAXBException jaxbe) {
-	        	LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
-	        	LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
-	        	throw jaxbe;
-	        }
+        	
+        	if(response_ctx != null){
+    	        Unmarshaller um = response_ctx.createUnmarshaller();
+    	        try {
+    		        Object unmarshaled = um.unmarshal(new StringReader(xml));
+    		        if ( null != unmarshaled)
+    		        {
+    		        	try {
+    		        		entity = classType.cast(unmarshaled);
+    		        	} catch (ClassCastException cce) {
+    		        		if (unmarshaled instanceof JAXBElement) {
+    		        			@SuppressWarnings("rawtypes")
+    							JAXBElement element = (JAXBElement) unmarshaled;
+    		        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
+    		        				entity = (T) element.getValue();
+    		        			}
+    		        		}
+    		        	}
+    		        }
+    	        } catch (JAXBException jaxbe) {
+    	        	LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
+    	        	LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
+    	        	throw jaxbe;
+    	        }
+        	}
 		}
 
         return entity;
