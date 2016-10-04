@@ -59,7 +59,8 @@ public final class XmlUtility {
         		request_ctx = jaxbContext.get(entity.getClass().toString());
         	}
 	
-        	if(request_ctx != null){
+        	if(request_ctx != null)
+        	{
     	        Marshaller m = request_ctx.createMarshaller();
     	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
     	
@@ -97,7 +98,8 @@ public final class XmlUtility {
         		response_ctx = jaxbContext.get(classType.toString());
         	}
         	
-        	if(response_ctx != null){
+        	if(response_ctx != null)
+        	{
     	        Unmarshaller um = response_ctx.createUnmarshaller();
     	        try {
     		        Object unmarshaled = um.unmarshal(new StringReader(xml));
