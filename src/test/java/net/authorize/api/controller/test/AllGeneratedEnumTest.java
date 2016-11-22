@@ -33,6 +33,10 @@ import net.authorize.api.contract.v1.SplitTenderStatusEnum;
 import net.authorize.api.contract.v1.TransactionStatusEnum;
 import net.authorize.api.contract.v1.TransactionTypeEnum;
 import net.authorize.api.contract.v1.ValidationModeEnum;
+import net.authorize.api.contract.v1.AfdsTransactionEnum;
+import net.authorize.api.contract.v1.PaymentMethodsTypeEnum;
+import net.authorize.api.contract.v1.TransactionGroupStatusEnum;
+import net.authorize.api.contract.v1.TransactionListOrderFieldEnum;
 
 public class AllGeneratedEnumTest extends ApiCoreTestBase {
 	
