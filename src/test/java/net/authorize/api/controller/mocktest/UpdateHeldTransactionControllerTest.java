@@ -42,6 +42,9 @@ public class UpdateHeldTransactionControllerTest extends ApiCoreTestBase {
 	@Test
 	public void mockUpdateHeldTransactionControllerTest()
 	{
+		TransactionResponse trxResponse = factory.createTransactionResponse();
+		trxResponse.setTransId(counterStr);
+
 		//define all mocked objects as final
 		final IApiOperation<UpdateHeldTransactionRequest, UpdateHeldTransactionResponse> mockController = getMockController();
 		
@@ -49,6 +52,7 @@ public class UpdateHeldTransactionControllerTest extends ApiCoreTestBase {
 		mockRequest.setRefId(refId);
 		
 		final UpdateHeldTransactionResponse   mockResponse = factory.createUpdateHeldTransactionResponse();
+		mockResponse.setTransactionResponse(trxResponse);
 
 		final ANetApiResponse errorResponse = factory.createANetApiResponse();
 		final List<String> results = new ArrayList<String>();

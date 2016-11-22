@@ -49,6 +49,7 @@ public class GetMerchantDetailsControllerTest extends ApiCoreTestBase {
 		mockRequest.setRefId(refId);
 		
 		final GetMerchantDetailsResponse   mockResponse = factory.createGetMerchantDetailsResponse();
+		mockResponse.setGatewayId("1234");
 
 		final ANetApiResponse errorResponse = factory.createANetApiResponse();
 		final List<String> results = new ArrayList<String>();

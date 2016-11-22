@@ -49,6 +49,7 @@ public class GetHostedPaymentPageControllerTest extends ApiCoreTestBase {
 		mockRequest.setRefId(refId);
 		
 		final GetHostedPaymentPageResponse   mockResponse = factory.createGetHostedPaymentPageResponse();
+		mockResponse.setToken("1232131232131231231213213");
 
 		final ANetApiResponse errorResponse = factory.createANetApiResponse();
 		final List<String> results = new ArrayList<String>();
