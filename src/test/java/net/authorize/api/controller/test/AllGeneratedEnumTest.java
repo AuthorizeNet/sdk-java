@@ -243,6 +243,34 @@ public class AllGeneratedEnumTest extends ApiCoreTestBase {
             AUJobTypeEnum enumFromValue = AUJobTypeEnum.fromValue(aValue);
             Assert.assertEquals(anEnum, enumFromValue);
         }
+
+        for ( AfdsTransactionEnum anEnum : AfdsTransactionEnum.values())
+        {
+            String aValue = anEnum.value();
+            AfdsTransactionEnum enumFromValue = AfdsTransactionEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( PaymentMethodsTypeEnum anEnum : PaymentMethodsTypeEnum.values())
+        {
+            String aValue = anEnum.value();
+            PaymentMethodsTypeEnum enumFromValue = PaymentMethodsTypeEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( TransactionGroupStatusEnum anEnum : TransactionGroupStatusEnum.values())
+        {
+            String aValue = anEnum.value();
+            TransactionGroupStatusEnum enumFromValue = TransactionGroupStatusEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( TransactionListOrderFieldEnum anEnum : TransactionListOrderFieldEnum.values())
+        {
+            String aValue = anEnum.value();
+            TransactionListOrderFieldEnum enumFromValue = TransactionListOrderFieldEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }                
     } 
 
 	/*
