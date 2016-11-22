@@ -60,7 +60,7 @@ public class GetMerchantDetailsControllerTest extends ApiCoreTestBase {
 		GetMerchantDetailsResponse controllerResponse = mockController.getApiResponse();
 		
 		Assert.assertNotNull(controllerResponse);
-		Assert.assertNotNull(controllerResponse.getYYY());
-		logger.info(String.format("GetMerchantDetails: Details:%s", controllerResponse.getYYY()));
+		Assert.assertNotNull(controllerResponse.getGatewayId());
+		logger.info(String.format("GetMerchantDetails: Details:%s", controllerResponse.getGatewayId()));
 	}
 }

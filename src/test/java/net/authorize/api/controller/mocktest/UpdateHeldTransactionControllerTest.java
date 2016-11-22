@@ -60,7 +60,7 @@ public class UpdateHeldTransactionControllerTest extends ApiCoreTestBase {
 		UpdateHeldTransactionResponse controllerResponse = mockController.getApiResponse();
 		
 		Assert.assertNotNull(controllerResponse);
-		Assert.assertNotNull(controllerResponse.getYYY());
-		logger.info(String.format("UpdateHeldTransaction: Details:%s", controllerResponse.getYYY()));
+		Assert.assertNotNull(controllerResponse.getResponseCode());
+		logger.info(String.format("UpdateHeldTransaction: Details:%s", controllerResponse.getResponseCode()));
 	}
 }

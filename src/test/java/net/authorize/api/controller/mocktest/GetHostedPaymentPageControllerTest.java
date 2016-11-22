@@ -60,7 +60,7 @@ public class GetHostedPaymentPageControllerTest extends ApiCoreTestBase {
 		GetHostedPaymentPageResponse controllerResponse = mockController.getApiResponse();
 		
 		Assert.assertNotNull(controllerResponse);
-		Assert.assertNotNull(controllerResponse.getYYY());
-		logger.info(String.format("GetHostedPaymentPage: Details:%s", controllerResponse.getYYY()));
+		Assert.assertNotNull(controllerResponse.getToken());
+		logger.info(String.format("GetHostedPaymentPage: Details:%s", controllerResponse.getToken()));
 	}
 }
