@@ -1705,7 +1705,7 @@ public class ObjectFactory {
         return new FraudInformationType();
     }
 
-     * Create an instance of {@link KeyManagementScheme.DUKPT.Mode }
+     /* Create an instance of {@link KeyManagementScheme.DUKPT.Mode }
      * 
      */
     public KeyManagementScheme.DUKPT.Mode createKeyManagementSchemeDUKPTMode() {
