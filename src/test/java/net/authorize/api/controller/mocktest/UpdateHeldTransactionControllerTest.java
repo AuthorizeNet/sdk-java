@@ -5,6 +5,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 import net.authorize.api.contract.v1.ANetApiResponse;
+import net.authorize.api.contract.v1.TransactionResponse;
 import net.authorize.api.contract.v1.UpdateHeldTransactionRequest;
 import net.authorize.api.contract.v1.UpdateHeldTransactionResponse;
 import net.authorize.api.contract.v1.MessageTypeEnum;
@@ -64,7 +65,7 @@ public class UpdateHeldTransactionControllerTest extends ApiCoreTestBase {
 		UpdateHeldTransactionResponse controllerResponse = mockController.getApiResponse();
 		
 		Assert.assertNotNull(controllerResponse);
-		Assert.assertNotNull(controllerResponse.getTransactionResponse().getResponseCode());
-		logger.info(String.format("UpdateHeldTransaction: Details:%s", controllerResponse.getTransactionResponse().getResponseCode()));
+		Assert.assertNotNull(controllerResponse.getTransactionResponse().getTransId());
+		logger.info(String.format("UpdateHeldTransaction: Details:%s", controllerResponse.getTransactionResponse().getTransId()));
 	}
 }
