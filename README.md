@@ -11,6 +11,11 @@ Authorize.Net Java SDK
   <version>LATEST</version>
 ```
 
+Sample Code
+===========
+Samples of all the API operations available can be found at https://github.com/AuthorizeNet/sample-code-java
+  
+  
 Prerequisites
 =============
 
@@ -21,6 +26,7 @@ Prerequisites
   Note: Support for building the SDK with either Ant or Maven has been made.
         Please see the respective build processes below.  All initial jars
         and docs were built with Ant however.
+
 
 Dependencies
 ============
