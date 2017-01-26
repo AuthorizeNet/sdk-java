@@ -123,10 +123,9 @@ public class HttpClient {
 		if(transaction instanceof net.authorize.aim.Transaction ||
 				transaction instanceof net.authorize.sim.Transaction) {
 
-			String decodedResponseData = URLDecoder.decode(responseString, HTTP.UTF_8);
-			
-
-			responseMap = ResponseParser.parseResponseString(decodedResponseData);
+			// ?! already decoded !?
+			//String decodedResponseData = URLDecoder.decode(responseString, HTTP.UTF_8);
+			responseMap = ResponseParser.parseResponseString(responseString);
 		}
 
 		return responseMap;
