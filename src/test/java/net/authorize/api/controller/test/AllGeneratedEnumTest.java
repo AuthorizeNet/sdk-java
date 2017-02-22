@@ -33,6 +33,10 @@ import net.authorize.api.contract.v1.SplitTenderStatusEnum;
 import net.authorize.api.contract.v1.TransactionStatusEnum;
 import net.authorize.api.contract.v1.TransactionTypeEnum;
 import net.authorize.api.contract.v1.ValidationModeEnum;
+import net.authorize.api.contract.v1.AfdsTransactionEnum;
+import net.authorize.api.contract.v1.PaymentMethodsTypeEnum;
+import net.authorize.api.contract.v1.TransactionGroupStatusEnum;
+import net.authorize.api.contract.v1.TransactionListOrderFieldEnum;
 
 public class AllGeneratedEnumTest extends ApiCoreTestBase {
 	
@@ -243,6 +247,34 @@ public class AllGeneratedEnumTest extends ApiCoreTestBase {
             AUJobTypeEnum enumFromValue = AUJobTypeEnum.fromValue(aValue);
             Assert.assertEquals(anEnum, enumFromValue);
         }
+
+        for ( AfdsTransactionEnum anEnum : AfdsTransactionEnum.values())
+        {
+            String aValue = anEnum.value();
+            AfdsTransactionEnum enumFromValue = AfdsTransactionEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( PaymentMethodsTypeEnum anEnum : PaymentMethodsTypeEnum.values())
+        {
+            String aValue = anEnum.value();
+            PaymentMethodsTypeEnum enumFromValue = PaymentMethodsTypeEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( TransactionGroupStatusEnum anEnum : TransactionGroupStatusEnum.values())
+        {
+            String aValue = anEnum.value();
+            TransactionGroupStatusEnum enumFromValue = TransactionGroupStatusEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }
+
+        for ( TransactionListOrderFieldEnum anEnum : TransactionListOrderFieldEnum.values())
+        {
+            String aValue = anEnum.value();
+            TransactionListOrderFieldEnum enumFromValue = TransactionListOrderFieldEnum.fromValue(aValue);
+            Assert.assertEquals(anEnum, enumFromValue);
+        }                
     } 
 
 	/*
