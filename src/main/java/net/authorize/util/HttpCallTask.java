@@ -2,18 +2,18 @@ package net.authorize.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
-
-import net.authorize.Environment;
-import net.authorize.api.contract.v1.ANetApiRequest;
-import net.authorize.api.contract.v1.ANetApiResponse;
-import net.authorize.api.contract.v1.MessageTypeEnum;
-import net.authorize.api.contract.v1.MessagesType;
-import net.authorize.api.contract.v1.MessagesType.Message;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,6 +22,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import net.authorize.Environment;
+import net.authorize.api.contract.v1.ANetApiRequest;
+import net.authorize.api.contract.v1.ANetApiResponse;
+import net.authorize.api.contract.v1.MessageTypeEnum;
+import net.authorize.api.contract.v1.MessagesType;
+import net.authorize.api.contract.v1.MessagesType.Message;
 //import net.authorize.api.controller.base.ErrorResponse;
 
 /**
@@ -62,15 +69,28 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 	public ANetApiResponse call() throws Exception {
 		ANetApiResponse response = null;
 		StringBuilder buffer = new StringBuilder();
-		
+		boolean useCertificates = Environment.getBooleanProperty(Constants.ACCEPT_CERTIFICATES);
 		DefaultHttpClient httpCaller = null;
 		
         try {
             HttpPost httppost = HttpUtility.createPostRequest(this.env, this.request);
             httpCaller = new DefaultHttpClient();
 			HttpClient.setProxyIfRequested(httpCaller);
+			
+			if(useCertificates)
+			{
+			SSLContext sc = SSLContext.getInstance("TLS");
+			sc.init(null, new TrustManager[] { new TrustAllX509TrustManager() }, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HttpsURLConnection.setDefaultHostnameVerifier( new HostnameVerifier(){
+			    public boolean verify(String string,SSLSession ssls) {
+			        return true;
+			    }
+			});
+			}
+			
             HttpResponse httpResponse = httpCaller.execute(httppost);
-
+            
 			if ( null != httpResponse) { 
 				if ( null != httpResponse.getStatusLine()) { 
 					if ( 200 == httpResponse.getStatusLine().getStatusCode()) {
@@ -82,6 +102,8 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 					}
 				}
 			}
+			
+			
 			LogHelper.debug(logger, "Raw Response: '%s'", buffer.toString());
 			// handle HTTP errors
 			if (0 == buffer.length()) {
@@ -125,7 +147,9 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 			response = createErrorResponse(null, cpe);
         } catch (IOException ioe) {
 			response = createErrorResponse(null, ioe);
-        } finally {
+        }
+        
+        finally {
         	if ( null != httpCaller) {
         		httpCaller.getConnectionManager().shutdown();
         	}
@@ -187,3 +211,18 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 		LogHelper.warn(logger, "Adding ErrorMessage: Code: '%s', Text: '%s'", code, text);
 	}
 }	
+
+class TrustAllX509TrustManager implements X509TrustManager {
+    public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
+    }
+
+    public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
+            String authType) {
+    }
+
+    public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
+            String authType) {
+    }
+
+}
