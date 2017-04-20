@@ -89,7 +89,6 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 			}
 			
             HttpResponse httpResponse = httpCaller.execute(httppost);
-            
 			if ( null != httpResponse) { 
 				if ( null != httpResponse.getStatusLine()) { 
 					if ( 200 == httpResponse.getStatusLine().getStatusCode()) {
@@ -101,8 +100,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 					}
 				}
 			}
-			
-			
+
 			LogHelper.debug(logger, "Raw Response: '%s'", buffer.toString());
 			// handle HTTP errors
 			if (0 == buffer.length()) {
