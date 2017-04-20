@@ -29,7 +29,6 @@ import net.authorize.api.contract.v1.ANetApiResponse;
 import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
-//import net.authorize.api.controller.base.ErrorResponse;
 
 /**
  * Callable task to make http calls in future 
@@ -147,9 +146,7 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 			response = createErrorResponse(null, cpe);
         } catch (IOException ioe) {
 			response = createErrorResponse(null, ioe);
-        }
-        
-        finally {
+        } finally {
         	if ( null != httpCaller) {
         		httpCaller.getConnectionManager().shutdown();
         	}
