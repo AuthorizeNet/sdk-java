@@ -150,7 +150,7 @@ public class HttpClient {
 		}
 	}
 
-	private static org.apache.http.client.HttpClient getHttpsClient() throws Exception {
+	public static org.apache.http.client.HttpClient getHttpsClient() throws Exception {
 		SSLContext sslcontext = getSSLContext();
 		try {
 			LayeredConnectionSocketFactory sslSocketFactory = new org.apache.http.conn.ssl.SSLConnectionSocketFactory(sslcontext, SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
