@@ -71,6 +71,6 @@ Build process
 Sample Code
 ===========
 There are some sample unit tests that are located in the test directory. They
-can doemonstrate basic functionality. However, detailed sample code for all
+can demonstrate basic functionality. However, detailed sample code for all
 of the API operations available can be found in our sample code repository
 at https://github.com/AuthorizeNet/sample-code-java
