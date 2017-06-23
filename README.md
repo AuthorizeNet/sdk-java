@@ -83,11 +83,11 @@ There are some sample unit tests that are located in the test directory. They
 capture basic auth/capture (product purchase) functionality, which most
 integrations are looking to get started with. 
 
-###Charge a credit card
+### Charge a credit card
 
 A transaction to authorize and charge a credit card payment can be performed with 
 the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "java.util.Map" %>
   <%@ page import = "net.authorize.Environment" %>
@@ -151,12 +151,12 @@ the following code (JSP) :
         }
     }
   %>
-````
+```
 
-###Capture a Previously Authorized Amount
+### Capture a Previously Authorized Amount
 A transaction to capture funds for a transaction that was previously authorized 
 using `authOnlyTransaction` can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "net.authorize.Environment" %>
   <%@ page import = "net.authorize.api.contract.v1.*" %>
@@ -211,7 +211,7 @@ using `authOnlyTransaction` can be performed with the following code (JSP) :
 		}
 	}
   %>
-````
+```
 
 Test Code - Recurring Billing
 =============================================
@@ -221,12 +221,12 @@ Test Code - Recurring Billing
 There are some sample unit tests that are located in the test directory. 
 They capture basic create/update/cancel/get subscription recurring billing requests.
 
-###Create a Subscription
+### Create a Subscription
 For subscriptions with a monthly interval, whose payments begin on the 31st of a month, 
 payments for months with fewer than 31 days occur on the last day of the month.
 
 A transaction to create a new subscription can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "net.authorize.Environment" %>
   <%@ page import = "net.authorize.api.contract.v1.*" %>
@@ -313,7 +313,7 @@ A transaction to create a new subscription can be performed with the following c
 	    }
 	}	
   %>  
-````
+```
 
 Test Code - PayPal Express Checkout
 =============================================
@@ -325,13 +325,13 @@ The following calls are createTransactionRequest calls with PayPal-specific fiel
 You must first sign up for the service in the [Authorize.Net Merchant Interface](https://account.authorize.net). 
 The sign up page is at Accounts > Digital Payment Solutions.
 
-###Authorization Only
+### Authorization Only
 An Authorization Only request notifies PayPal that an authorization has been initiated 
 but does not complete the authorization. It returns a secure URL with a token appended to it. 
 The purpose of this token is to identify the transaction when the customer is redirected to PayPal.
 
 A transaction of this type can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "net.authorize.Environment" %>
   <%@ page import = "net.authorize.api.contract.v1.*" %>
@@ -404,9 +404,9 @@ A transaction of this type can be performed with the following code (JSP) :
         }
     }
   %>  
-````
+```
 
-###Authorization and Capture
+### Authorization and Capture
 This type of transaction is the most common and is the default payment gateway transaction type. 
 Like the Authorization Only request, it notifies PayPal that an Authorization and Capture transaction 
 has been initiated, but does not complete the request. It also returns a secure URL with a token 
@@ -414,7 +414,7 @@ appended to it. The purpose of this token is to identify the transaction when th
 redirected to PayPal.
 
 A transaction of this type can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "net.authorize.Environment" %>
   <%@ page import = "net.authorize.api.contract.v1.*" %>
@@ -487,7 +487,7 @@ A transaction of this type can be performed with the following code (JSP) :
         }
     }
   %>
-````
+```
 
 Test Code - Customer Profiles
 ==============================================
@@ -497,13 +497,13 @@ There are some sample unit tests that are located in the test directory.  They
 capture requests that create, delete, get, and update customer profile
 information, including payment and address information.
 
-###Create Customer Profile
+### Create Customer Profile
 Use this function to create a new customer profile including any customer 
 payment profiles and customer shipping addresses. The createCustomerProfileResponse 
 field returns the assigned customerProfileId element for the created profile.
 
 A transaction of this type can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "net.authorize.Environment" %>
   <%@ page import = "net.authorize.api.contract.v1.*" %>
@@ -589,7 +589,7 @@ A transaction of this type can be performed with the following code (JSP) :
         }
     }
   %>  
-````
+```
 
 Test Code - Transaction Reporting
 ==============================================
@@ -598,11 +598,11 @@ Test Code - Transaction Reporting
 There are some sample unit tests that are located in the test directory.  They
 capture requests that retrieve transaction data that was processed by Authorize.Net.
 
-###Get Transaction Details
+### Get Transaction Details
 Use this function to get detailed information about a specific transaction.
 
 A transaction of this type can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "net.authorize.Environment" %>
   <%@ page import = "net.authorize.api.contract.v1.*" %>
@@ -652,7 +652,7 @@ A transaction of this type can be performed with the following code (JSP) :
 		}
 	}
   %>
-````
+```
 
 Test Code - Apple Pay
 ==============================================
@@ -661,7 +661,7 @@ Test Code - Apple Pay
 Apple Pay support is available through the SDK using our new model 
 and code samples.
 
-###Create a Apple Pay Transaction
+### Create a Apple Pay Transaction
 Use this function to create an Authorize.Net payment transaction request 
 using Apple Pay Opaque data in place of card data. 
 
@@ -669,7 +669,7 @@ using Apple Pay Opaque data in place of card data.
 
 A transaction of this type can be performed with the following code (JSP) :
 
-````jsp
+```jsp
 <%@ page import = "java.math.BigDecimal" %>
 <%@ page import = "java.util.Map" %>
 <%@ page import = "net.authorize.Environment" %>
@@ -724,7 +724,7 @@ A transaction of this type can be performed with the following code (JSP) :
      }
 
 %>
-````
+```
 
 
 Test Code - Visa Checkout
@@ -734,14 +734,14 @@ Test Code - Visa Checkout
 Visa Checkout support is also available through the SDK using our new model 
 and code samples.
 
-###Create a Visa Checkout Transaction
+### Create a Visa Checkout Transaction
 Use this function to create an Authorize.Net payment transaction request 
 using Visa Checkout data in place of card data. 
 
 **_Data Value, Data Key and Call ID are one-time use values._**
 
 A transaction of this type can be performed with the following code (JSP) :
-````jsp
+```jsp
   <%@ page import = "java.math.BigDecimal" %>
   <%@ page import = "java.util.Map" %>
   <%@ page import = "net.authorize.Environment" %>
@@ -816,4 +816,4 @@ A transaction of this type can be performed with the following code (JSP) :
     	}
     }
   %>
-````
+```
