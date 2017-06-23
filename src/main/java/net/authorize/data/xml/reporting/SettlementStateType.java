@@ -6,7 +6,7 @@ package net.authorize.data.xml.reporting;
 public enum SettlementStateType {
 	SETTLED_SUCCESSFULLY("settledSuccessfully"),
 	ERROR("settlementError");
-    PENDING_SETTLEMENT("pendingSettlement");
+	PENDING_SETTLEMENT("pendingSettlement");
 
     private final String value;
 
