@@ -1,5 +1,5 @@
-Authorize.Net Java SDK
-======================
+# Authorize.Net Java SDK
+
 [![Travis](https://img.shields.io/travis/AuthorizeNet/sdk-java/master.svg)](https://travis-ci.org/AuthorizeNet/sdk-java)
 [![Code Climate](https://codeclimate.com/github/AuthorizeNet/sdk-java/badges/gpa.svg)](https://codeclimate.com/github/AuthorizeNet/sdk-java)
 [![Maven Central](https://img.shields.io/maven-central/v/net.authorize/anet-java-sdk.svg?style=flat)](http://mvnrepository.com/artifact/net.authorize/anet-java-sdk)
@@ -9,21 +9,67 @@ Authorize.Net Java SDK
   <artifactId>anet-java-sdk</artifactId>
   <version>LATEST</version>
 ```
-  
-Prerequisites
-=============
 
-  * JDK 1.5.0 or higher
-  * Ant 1.6.2 or higher (build SDK only)
-  * Maven 2.2.0 or higher (build SDK only)
+ 
+## Requirements
 
-  Note: Support for building the SDK with either Ant or Maven has been made.
-        Please see the respective build processes below.  All initial jars
-        and docs were built with Ant however.
+* JDK 1.5.0 or higher
+* Ant 1.6.2 or higher (build SDK only)
+* Maven 2.2.0 or higher (build SDK only)
+* An Authorize.Net account (see _Registration & Configuration_ section below)
+
+_Note: Support for building the SDK with either Ant or Maven has been made. Please see the respective build processes below.  All initial jars and docs were built with Ant, however._
+
+### TLS 1.2
+The Authorize.Net APIs only support connections using the TLS 1.2 security protocol. It's important to make sure you have new enough versions of all required components to support TLS 1.2. Additionally, it's very important to keep these components up to date going forward to mitigate the risk of any security flaws that may be discovered in your system or any libraries it uses.
 
 
-Dependencies
-============
+## Installation
+
+
+## Registration & Configuration
+
+Use of this SDK and the Authorize.Net APIs requires having an account on our system. You can find these details in the Settings section.
+If you don't currently have a production Authorize.Net account and need a sandbox account for testing, you can easily sign up for one [here](https://developer.authorize.net/sandbox/).
+
+### Authentication
+
+To authenticate with the Authorize.Net API you will need to use your account's API Login ID and Transaction Key. If you don't have these values, you can obtain them from our Merchant Interface site. Access the Merchant Interface for production accounts at (https://account.authorize.net/) or sandbox accounts at (https://sandbox.authorize.net).
+
+Once you have your keys simply load them into the appropriate variables in your code, as per the below sample code dealing with the authentication part of the API request. 
+
+#### To set your API credentials for an API request:
+
+
+You should never include your Login ID and Transaction Key directly in a PHP file that's in a publically accessible portion of your website. A better practice would be to define these in a constants file, and then reference those constants in the appropriate place in your code.
+
+### Switching between the sandbox environment and the production environment
+
+Authorize.Net maintains a complete sandbox environment for testing and development purposes. This sandbox environment is an exact duplicate of our production environment with the transaction authorization and settlement process simulated. By default, this SDK is configured to communicate with the sandbox environment. To switch to the production environment, do the following:
+```java
+// For PRODUCTION use
+```
+
+API credentials are different for each environment, so be sure to switch to the appropriate credentials when switching environments. 
+
+
+## SDK Usage Examples and Sample Code
+To get started using this SDK, it's highly recommended to download our sample code repository:
+* [Authorize.Net Java Sample Code Repository (on GitHub)](https://github.com/AuthorizeNet/sample-code-java)
+
+In that respository, we have comprehensive sample code for all common uses of our API:
+
+Additionally, you can find details and examples of how our API is structured in our API Reference Guide:
+* [Developer Center API Reference](http://developer.authorize.net/api/reference/index.html)
+
+The API Reference Guide provides examples of what information is needed for a particular request and how that information would be formatted. Using those examples, you can easily determine what methods would be necessary to include that information in a request using this SDK.
+
+
+
+
+## Wot's all this, then?
+
+### Dependencies
 
   * commons-logging-1.1.1.jar : logging
   * log4j-1.2.16.jar          : logging
@@ -34,8 +80,7 @@ Dependencies
   * hamcrest-library-1.3.jar  : unit testing
   * jmock-2.6.0.jar           : unit testing
 
-Build process
-==============
+### Build process
 
   * Note:  To properly run the unit tests, please reference the
            anet-java-sdk.properties file, which is a simple properties file that
@@ -68,9 +113,14 @@ Build process
 
     $ ant javadoc
 
-Sample Code
-===========
+## Sample Code
+
 There are some sample unit tests that are located in the test directory. They
 can demonstrate basic functionality. However, detailed sample code for all
 of the API operations available can be found in our sample code repository
 at https://github.com/AuthorizeNet/sample-code-java
+
+
+## License
+
+This repository is destributed under a proprietary license. See the provided [`LICENSE.txt`](/license.txt) file.
