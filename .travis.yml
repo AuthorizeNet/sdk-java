@@ -5,10 +5,13 @@ sudo:
     false
 
 jdk:
-  - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  #- openjdk6
+    - oraclejdk8
+    - oraclejdk9
+    - openjdk7
+
+matrix:
+    allow_failures:
+        - jdk: oraclejdk9
 
 before_script:
   - git submodule update --remote --recursive
