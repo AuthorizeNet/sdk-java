@@ -5,18 +5,21 @@ sudo:
     false
 
 jdk:
-  - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-  #- openjdk6
+    - oraclejdk8
+    - oraclejdk9
+    - openjdk7
+
+matrix:
+    allow_failures:
+        - jdk: oraclejdk9
 
 before_script:
   - git submodule update --remote --recursive
 
 script:
   - cd sample-code-java
-  - mvn install -DsdkVersion=1.9.2-SNAPSHOT -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - mvn test -DsdkVersion=1.9.2-SNAPSHOT -B
+  - mvn install -DsdkVersion=1.9.3-SNAPSHOT -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test -DsdkVersion=1.9.3-SNAPSHOT -B
 
 after_script:
     print_surefire_reports.sh

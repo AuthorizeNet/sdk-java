@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project name="anet-java-sdk" default="compile" basedir=".">
-	<property name="version" value="1.9.0" />
+	<property name="version" value="1.9.3" />
 	<property name="dirs.base" value="${basedir}" />
 	<property name="src.dir" value="${basedir}/src/main/java" />
 	<property name="javadocs.dir" value="${basedir}/docs/javadocs" />

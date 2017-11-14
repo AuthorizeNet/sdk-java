@@ -9,14 +9,14 @@
     <groupId>net.authorize</groupId>
     <artifactId>anet-java-sdk</artifactId>
     <packaging>jar</packaging>
-    <version>1.9.2-SNAPSHOT</version>
+    <version>1.9.4-SNAPSHOT</version>
     <name>Authorize.Net Java SDK</name>
     <description>Authorize.Net SDK includes standard payments, recurring billing, and customer profiles.</description>
     <url>http://developer.authorize.net</url>
     <licenses>
         <license>
             <name>SDK License Agreement</name>
-            <url>https://github.com/AuthorizeNet/sdk-java/blob/master/license.txt</url>
+            <url>https://github.com/AuthorizeNet/sdk-java/blob/master/LICENSE.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>

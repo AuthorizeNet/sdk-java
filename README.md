@@ -1,820 +1,112 @@
-Authorize.Net Java SDK
-======================
-[![Travis](https://img.shields.io/travis/AuthorizeNet/sdk-java/master.svg)]
-(https://travis-ci.org/AuthorizeNet/sdk-java)
+# Authorize.Net Java SDK
+
+[![Travis CI Status](https://travis-ci.org/AuthorizeNet/sdk-java.svg?branch=master)](https://travis-ci.org/AuthorizeNet/sdk-java)
 [![Code Climate](https://codeclimate.com/github/AuthorizeNet/sdk-java/badges/gpa.svg)](https://codeclimate.com/github/AuthorizeNet/sdk-java)
 [![Maven Central](https://img.shields.io/maven-central/v/net.authorize/anet-java-sdk.svg?style=flat)](http://mvnrepository.com/artifact/net.authorize/anet-java-sdk)
 
+ 
+## Requirements
+* JDK 1.5.0 or higher
+* Ant 1.6.2 or higher (build SDK only)
+* Maven 2.2.0 or higher (build SDK only)
+* An Authorize.Net account (see _Registration & Configuration_ section below)
+
+_Note: Support for building the SDK with either Ant or Maven has been made. Please see the respective build processes below.  All initial jars and docs were built with Ant, however._
+
+### Dependencies
+* commons-logging-1.1.1.jar : logging
+* log4j-1.2.16.jar          : logging
+* httpclient-4.0.1.jar      : http communication with the payment gateway
+* httpcore-4.0.1.jar        : http communication with the payment gateway
+* junit-4.8.2.jar           : unit testing
+* hamcrest-core-1.3.jar     : unit testing
+* hamcrest-library-1.3.jar  : unit testing
+* jmock-2.6.0.jar           : unit testing
+
+### TLS 1.2
+The Authorize.Net APIs only support connections using the TLS 1.2 security protocol. It's important to make sure you have new enough versions of all required components to support TLS 1.2. Additionally, it's very important to keep these components up to date going forward to mitigate the risk of any security flaws that may be discovered in your system or any libraries it uses.
+
+
+## Installation
 ```
   <groupId>net.authorize</groupId>
   <artifactId>anet-java-sdk</artifactId>
   <version>LATEST</version>
 ```
 
-Sample Code
-===========
-Samples of all the API operations available can be found at https://github.com/AuthorizeNet/sample-code-java
-  
-  
-Prerequisites
-=============
+## Registration & Configuration
+Use of this SDK and the Authorize.Net APIs requires having an account on our system. You can find these details in the Settings section.
+If you don't currently have a production Authorize.Net account and need a sandbox account for testing, you can easily sign up for one [here](https://developer.authorize.net/sandbox/).
 
-  * JDK 1.5.0 or higher
-  * Ant 1.6.2 or higher (build SDK only)
-  * Maven 2.2.0 or higher (build SDK only)
+### Authentication
+To authenticate with the Authorize.Net API you will need to use your account's API Login ID and Transaction Key. If you don't have these values, you can obtain them from our Merchant Interface site. Access the Merchant Interface for production accounts at (https://account.authorize.net/) or sandbox accounts at (https://sandbox.authorize.net).
 
-  Note: Support for building the SDK with either Ant or Maven has been made.
-        Please see the respective build processes below.  All initial jars
-        and docs were built with Ant however.
+Once you have your keys simply load them into the appropriate variables in your code, as per the below sample code dealing with the authentication part of the API request. 
 
-
-Dependencies
-============
-
-  * commons-logging-1.1.1.jar : logging
-  * log4j-1.2.16.jar          : logging
-  * httpclient-4.0.1.jar      : http communication with the payment gateway
-  * httpcore-4.0.1.jar        : http communication with the payment gateway
-  * junit-4.8.2.jar           : unit testing
-  * hamcrest-core-1.3.jar     : unit testing
-  * hamcrest-library-1.3.jar  : unit testing
-  * jmock-2.6.0.jar           : unit testing
-
-Build process
-==============
-
-  * Note:  To properly run the unit tests, please reference the
-           anet-java-sdk.properties file, which is a simple properties file that
-           holds the API credentials for testing the SDK.
-
-
-
-  Build the SDK with Maven
-  ------------------------
-
-  To compile the SDK and create a jar...
-
-    $ mvn clean package
-
-
-
-  Build the SDK with Ant
-  ----------------------
-
-  To compile the SDK and create a jar...
-
-    $ ant jar
-
-  To run the unit tests...
-
-    $ ant unit-test
-
-
-  To create the javadocs...
-
-    $ ant javadoc
-
-
-Test Code - Payment Transactions
-=============================================
-
-**This API enables you to submit transaction requests to the payment gateway.**
-
-There are some sample unit tests that are located in the test directory. They
-capture basic auth/capture (product purchase) functionality, which most
-integrations are looking to get started with. 
-
-###Charge a credit card
-
-A transaction to authorize and charge a credit card payment can be performed with 
-the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "java.util.Map" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
-  <%
-    // Set up the environment
-	String apiLoginId 		= "YOUR_API_LOGIN_ID";
-    String transactionKey 	= "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-
-	// Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-    merchantAuthenticationType.setName(apiLoginId);
-    merchantAuthenticationType.setTransactionKey(transactionKey);
+#### To set your API credentials for an API request:
+```java
+    MerchantAuthenticationType merchantAuthenticationType  = new MerchantAuthenticationType() ;
+    merchantAuthenticationType.setName("YOUR_API_LOGIN_ID");
+    merchantAuthenticationType.setTransactionKey("YOUR_TRANSACTION_KEY");
     ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+```
 
-    // Populate the payment data
-    PaymentType paymentType 	  = new PaymentType();
-    CreditCardType creditCard 	= new CreditCardType();
-    creditCard.setCardNumber("4111111111111111");
-    creditCard.setExpirationDate("1220");
-    paymentType.setCreditCard(creditCard);
+You should never include your Login ID and Transaction Key directly in a file that's in a publically accessible portion of your website. A better practice would be to define these in a constants file, and then reference those constants in the appropriate place in your code.
 
-    // Create the payment transaction request
-    TransactionRequestType txnRequest = new TransactionRequestType();
-    txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
-    txnRequest.setPayment(paymentType);
-    txnRequest.setAmount(new BigDecimal("500.00"));
+### Switching between the sandbox environment and the production environment
+Authorize.Net maintains a complete sandbox environment for testing and development purposes. This sandbox environment is an exact duplicate of our production environment with the transaction authorization and settlement process simulated. By default, this SDK is configured to communicate with the sandbox environment. To switch to the production environment, set the appropriate environment constant using ApiOperationBase `setEnvironment` method.  For example:
+```java
+// For PRODUCTION use
+ApiOperationBase.setEnvironment(Environment.PRODUCTION);
+```
 
-    // Make the API Request
-    CreateTransactionRequest apiRequest = new CreateTransactionRequest();
-    apiRequest.setTransactionRequest(txnRequest);
-    CreateTransactionController controller = new CreateTransactionController(apiRequest);
-    controller.execute();
+API credentials are different for each environment, so be sure to switch to the appropriate credentials when switching environments. 
 
-    CreateTransactionResponse apiResponse = controller.getApiResponse();
 
-    if (apiResponse != null) {
-        // If API response code is ok (transaction is successful), 
-		// go ahead and check the transaction response
-        if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {
+## SDK Usage Examples and Sample Code
+To get started using this SDK, it's highly recommended to download our sample code repository:
+* [Authorize.Net Java Sample Code Repository (on GitHub)](https://github.com/AuthorizeNet/sample-code-java)
 
-            TransactionResponse txnResponse = apiResponse.getTransactionResponse();
-            if (txnResponse.getResponseCode().equals("1")) {
-                 out.println(txnResponse.getResponseCode());
-                 out.println("Successful Credit Card Transaction");
-                 out.println("Auth Code: " + txnResponse.getAuthCode());
-                 out.println("Transaction ID: " + txnResponse.getTransId());
-            }
-            else {
-                 out.println("Failed Transaction. Response Code: " + 
-											txnResponse.getResponseCode());
-            }
-        }
-        else {
-             out.println("Failed Transaction. Result Code:  " + 
-				  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-        }
-    }
-  %>
-````
+In that respository, we have comprehensive sample code for all common uses of our API:
 
-###Capture a Previously Authorized Amount
-A transaction to capture funds for a transaction that was previously authorized 
-using `authOnlyTransaction` can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
-  <%
-    // Set up the environment
-	String apiLoginId 		= "YOUR_API_LOGIN_ID";
-    String transactionKey 	= "YOUR_TRANSACTION_KEY";    
-	ApiOperationBase.setEnvironment(Environment.SANDBOX);
+Additionally, you can find details and examples of how our API is structured in our API Reference Guide:
+* [Developer Center API Reference](http://developer.authorize.net/api/reference/index.html)
 
-	// Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-	merchantAuthenticationType.setName(apiLoginId);
-	merchantAuthenticationType.setTransactionKey(transactionKey);
-	ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
+The API Reference Guide provides examples of what information is needed for a particular request and how that information would be formatted. Using those examples, you can easily determine what methods would be necessary to include that information in a request using this SDK.
 
-	// Create the payment transaction request
-	TransactionRequestType txnRequest = new TransactionRequestType();
-	txnRequest.setTransactionType(TransactionTypeEnum.PRIOR_AUTH_CAPTURE_TRANSACTION.value());
-	txnRequest.setRefTransId("YOUR_TRANSACTION_ID");
 
-	// Make the API Request
-	CreateTransactionRequest apiRequest = new CreateTransactionRequest();
-	apiRequest.setTransactionRequest(txnRequest);
-	CreateTransactionController controller = new CreateTransactionController(apiRequest);
-	controller.execute(); 
+## Building & Testing the SDK
+Build the SDK with Maven
+------------------------
 
-	CreateTransactionResponse apiResponse = controller.getApiResponse();
+To compile the SDK and create a jar...
 
-	if (apiResponse != null) {
-		// If API response code is ok (transaction is successful), 
-		// go ahead and check the transaction response
-        if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {
+ ` $ mvn clean package`
 
-			TransactionResponse txnResponse = apiResponse.getTransactionResponse();
-			if (txnResponse.getResponseCode().equals("1")) {
-				out.println(txnResponse.getResponseCode());
-				out.println("Successfully Captured Transaction");
-				out.println("Auth Code: " + txnResponse.getAuthCode());
-                out.println("Transaction ID: " + txnResponse.getTransId());
-			}
-			else {
-				out.println("Failed Transaction. Response Code: " + 
-											txnResponse.getResponseCode());
-			}
-		}
-		else {
-			out.println("Failed Transaction. Result Code:  " + 
-				  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-		}
-	}
-  %>
-````
+Build the SDK with Ant
+----------------------
 
-Test Code - Recurring Billing
-=============================================
+To compile the SDK and create a jar...
 
-**Recurring Billing API methods enable you to manage regular payment subscriptions.**
+ ` $ ant jar`
 
-There are some sample unit tests that are located in the test directory. 
-They capture basic create/update/cancel/get subscription recurring billing requests.
+To run the unit tests...
 
-###Create a Subscription
-For subscriptions with a monthly interval, whose payments begin on the 31st of a month, 
-payments for months with fewer than 31 days occur on the last day of the month.
+ ` $ ant unit-test`
 
-A transaction to create a new subscription can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.ARBCreateSubscriptionController" %>
-  <%@ page import = "net.authorize.data.arb.*" %>
-  <%@ page import = "net.authorize.data.Customer" %>
-  <%@ page import = "javax.xml.datatype.*" %>
-  <%@ page import = "java.lang.Exception.*" %>
-  <%
-    // Set up the environment
-    String apiLoginId 		= "YOUR_API_LOGIN_ID";
-    String transactionKey 	= "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-	
-    // Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-	merchantAuthenticationType.setName(apiLoginId);
-	merchantAuthenticationType.setTransactionKey(transactionKey);
-	ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
 
-	// Set up payment schedule
-	PaymentScheduleType schedule 		 = new PaymentScheduleType();
-	PaymentScheduleType.Interval interval = new PaymentScheduleType.Interval();
-	interval.setLength((short)1);
-	interval.setUnit(ARBSubscriptionUnitEnum.MONTHS);
-	schedule.setInterval(interval);
+To create the javadocs...
 
-	try {
-	  XMLGregorianCalendar startDate = DatatypeFactory.newInstance().newXMLGregorianCalendar();
-	  startDate.setDay(30);
-	  startDate.setMonth(8);
-	  startDate.setYear(2020);
-	  schedule.setStartDate(startDate); //2020-08-30 
-	}
-	catch(Exception err) {
-		out.println("Exception in calculating Dates: " + err.getMessage());
-	}
+ ` $ ant javadoc`
 
-	schedule.setTotalOccurrences((short)12);
-	schedule.setTrialOccurrences((short)1);
+### Running the SDK Tests
+* Note:  To properly run the unit tests, please reference the
+          anet-java-sdk.properties file, which is a simple properties file that
+          holds the API credentials for testing the SDK.
 
-	// Populate the payment data
-	PaymentType paymentType 	  = new PaymentType();
-	CreditCardType creditCard 	= new CreditCardType();
-	creditCard.setCardNumber("4111111111111111");
-	creditCard.setExpirationDate("1220");
-	paymentType.setCreditCard(creditCard);
+### Testing Guide
+For additional help in testing your own code, Authorize.Net maintains a [comprehensive testing guide](http://developer.authorize.net/hello_world/testing_guide/) that includes test credit card numbers to use and special triggers to generate certain responses from the sandbox environment.
 
-	// Create the billing info
-	NameAndAddressType billInfo = new NameAndAddressType();
-	billInfo.setFirstName("John");
-	billInfo.setLastName("Doe");
 
-	// Create the ARB subscription request
-	ARBSubscriptionType arbSubscriptionType = new ARBSubscriptionType();
-	arbSubscriptionType.setPaymentSchedule(schedule);
-	arbSubscriptionType.setAmount(new BigDecimal("15.55"));
-	arbSubscriptionType.setTrialAmount(new BigDecimal("0.00"));
-	arbSubscriptionType.setPayment(paymentType);
-	arbSubscriptionType.setBillTo(billInfo);
-
-	// Make the API Request
-	ARBCreateSubscriptionRequest apiRequest = new ARBCreateSubscriptionRequest();
-	apiRequest.setSubscription(arbSubscriptionType);
-	ARBCreateSubscriptionController controller = new ARBCreateSubscriptionController(apiRequest);
-	controller.execute();
-	
-	ARBCreateSubscriptionResponse apiResponse = controller.getApiResponse();
-	
-	if (apiResponse != null) {
-		 // If API response code is ok (transaction is successful), 
-		 // go ahead and print the response details
-	     if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {
-	        out.println("Successfully Created Subscription");
-	        out.println("Subscription ID:  " + apiResponse.getSubscriptionId());
-	        out.println("Message Code: " + apiResponse.getMessages().getMessage().get(0).getCode());
-	        out.println("Message Text: " + apiResponse.getMessages().getMessage().get(0).getText());
-	    }
-	    else {
-	        out.println("Failed to create Subscription:  " + 
-				  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-	    }
-	}	
-  %>  
-````
-
-Test Code - PayPal Express Checkout
-=============================================
-
-**Use the following methods to process PayPal transactions.**
-
-There are some sample unit tests that are located in the test directory. 
-The following calls are createTransactionRequest calls with PayPal-specific fields.
-You must first sign up for the service in the [Authorize.Net Merchant Interface](https://account.authorize.net). 
-The sign up page is at Accounts > Digital Payment Solutions.
-
-###Authorization Only
-An Authorization Only request notifies PayPal that an authorization has been initiated 
-but does not complete the authorization. It returns a secure URL with a token appended to it. 
-The purpose of this token is to identify the transaction when the customer is redirected to PayPal.
-
-A transaction of this type can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
-  <%@ page import = "net.authorize.data.arb.*" %>
-  <%@ page import = "net.authorize.data.Customer" %>
-  <%@ page import = "javax.xml.datatype.*" %>
-  <%@ page import = "java.lang.Exception.*" %>
-  <%
-    // Set up the environment
-    String apiLoginId         = "YOUR_API_LOGIN_ID";
-    String transactionKey     = "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-    
-    // Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-    merchantAuthenticationType.setName(apiLoginId);
-    merchantAuthenticationType.setTransactionKey(transactionKey);
-    ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
-    
-    // Provide the PayPal settings
-    PayPalType payPalType = new PayPalType();
-    payPalType.setSuccessUrl("http://www.merchanteCommerceSite.com/Success/TC25262");
-    payPalType.setCancelUrl("http://www.merchanteCommerceSite.com/Success/TC25262");
-    
-    PaymentType paymentType = new PaymentType();
-    paymentType.setPayPal(payPalType);
-    
-    // Create the payment transaction request
-    TransactionRequestType txnRequest = new TransactionRequestType();
-    
-    txnRequest.setTransactionType(TransactionTypeEnum.AUTH_ONLY_TRANSACTION.value());
-    txnRequest.setPayment(paymentType);
-    txnRequest.setAmount(new BigDecimal("11.89"));
-    
-    // Make the API Request
-    CreateTransactionRequest apiRequest = new CreateTransactionRequest();
-    apiRequest.setTransactionRequest(txnRequest);
-    CreateTransactionController controller = new CreateTransactionController(apiRequest);
-    controller.execute();
-    
-    CreateTransactionResponse apiResponse = controller.getApiResponse();
-    
-    // If API response code is ok (transaction is successful), 
-    // go ahead and check the transaction response
-    if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {  
-        if (apiResponse.getTransactionResponse() != null) {
-            TransactionResponse txnResponse = apiResponse.getTransactionResponse();
-            out.println("Successful Paypal Authorize Only Transaction");
-            out.println("Response Code: " + txnResponse.getResponseCode());
-            out.println("Transaction ID: " + txnResponse.getTransId());
-            out.println("Secure Acceptance URL: " + 
-                              txnResponse.getSecureAcceptance().getSecureAcceptanceUrl());
-        }
-    }
-    else {
-        out.println("Failed Paypal Authorize Only Transaction");
-        if(!apiResponse.getMessages().getMessage().isEmpty()) {
-            out.println("Error: " + apiResponse.getMessages().getMessage().get(0).getCode() + 
-                              "  " + apiResponse.getMessages().getMessage().get(0).getText());
-        }
-    
-        if (apiResponse.getTransactionResponse() != null) {
-            if(!apiResponse.getTransactionResponse().getErrors().getError().isEmpty()) {
-              out.println("Transaction Error : " + 
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-            }
-        }
-    }
-  %>  
-````
-
-###Authorization and Capture
-This type of transaction is the most common and is the default payment gateway transaction type. 
-Like the Authorization Only request, it notifies PayPal that an Authorization and Capture transaction 
-has been initiated, but does not complete the request. It also returns a secure URL with a token 
-appended to it. The purpose of this token is to identify the transaction when the customer is 
-redirected to PayPal.
-
-A transaction of this type can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
-  <%@ page import = "net.authorize.data.arb.*" %>
-  <%@ page import = "net.authorize.data.Customer" %>
-  <%@ page import = "javax.xml.datatype.*" %>
-  <%@ page import = "java.lang.Exception.*" %>
-  <%
-    // Set up the environment
-    String apiLoginId         = "YOUR_API_LOGIN_ID";
-    String transactionKey     = "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-    
-    // Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-    merchantAuthenticationType.setName(apiLoginId);
-    merchantAuthenticationType.setTransactionKey(transactionKey);
-    ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
-    
-    // Provide the PayPal settings
-    PayPalType payPalType = new PayPalType();
-    payPalType.setSuccessUrl("http://www.merchanteCommerceSite.com/Success/TC25262");
-    payPalType.setCancelUrl("http://www.merchanteCommerceSite.com/Success/TC25262");
-    
-    PaymentType paymentType = new PaymentType();
-    paymentType.setPayPal(payPalType);
-    
-    // Create the payment transaction request
-    TransactionRequestType apiRequest = new TransactionRequestType();
-    
-    apiRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
-    apiRequest.setPayment(paymentType);
-    apiRequest.setAmount(new BigDecimal("11.89"));
-    
-    // Make the API Request
-    CreateTransactionRequest apiRequest = new CreateTransactionRequest();
-    apiRequest.setTransactionRequest(apiRequest);
-    CreateTransactionController controller = new CreateTransactionController(apiRequest);
-    controller.execute();
-    
-    CreateTransactionResponse apiResponse = controller.getApiResponse();
-    
-    // If API response code is ok (transaction is successful), 
-    // go ahead and check the transaction response
-    if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {  
-        if (apiResponse.getTransactionResponse() != null) {
-            TransactionResponse txnResponse = apiResponse.getTransactionResponse();
-            out.println("Successful Paypal Authorize Capture Transaction");
-            out.println("Response Code: " + txnResponse.getResponseCode());
-            out.println("Transaction ID: " + txnResponse.getTransId());
-            out.println("Secure Acceptance URL: " + 
-                              txnResponse.getSecureAcceptance().getSecureAcceptanceUrl());
-        }
-    }
-    else {
-        out.println("Failed Paypal Authorize Capture Transaction");
-        if(!apiResponse.getMessages().getMessage().isEmpty()) {
-            out.println("Error: " + apiResponse.getMessages().getMessage().get(0).getCode() + 
-                              "  " + apiResponse.getMessages().getMessage().get(0).getText());
-        }
-
-        if (apiResponse.getTransactionResponse() != null) {
-            if(!apiResponse.getTransactionResponse().getErrors().getError().isEmpty()) {
-              out.println("Transaction Error : " + 
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-            }
-        }
-    }
-  %>
-````
-
-Test Code - Customer Profiles
-==============================================
-**This API enables you to store customer payment and address data for subsequent use.**
-
-There are some sample unit tests that are located in the test directory.  They
-capture requests that create, delete, get, and update customer profile
-information, including payment and address information.
-
-###Create Customer Profile
-Use this function to create a new customer profile including any customer 
-payment profiles and customer shipping addresses. The createCustomerProfileResponse 
-field returns the assigned customerProfileId element for the created profile.
-
-A transaction of this type can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.CreateCustomerProfileController" %>
-  <%@ page import = "net.authorize.data.arb.*" %>
-  <%@ page import = "net.authorize.data.Customer" %>
-  <%@ page import = "javax.xml.datatype.*" %>
-  <%@ page import = "java.lang.Exception.*" %>
-  <%
-    // Set up the environment
-    String apiLoginId         = "YOUR_API_LOGIN_ID";
-    String transactionKey     = "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-
-    // Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-    merchantAuthenticationType.setName(apiLoginId);
-    merchantAuthenticationType.setTransactionKey(transactionKey);
-    ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
-
-    // Populate the payment data
-    PaymentType paymentType = new PaymentType();
-	CreditCardType creditCard = new CreditCardType();
-	creditCard.setCardNumber("4111111111111111");
-  	creditCard.setExpirationDate("1220");
-	paymentType.setCreditCard(creditCard);
-
-	// Populate the request entriesCustomerPaymentProfileType
-	// Payment Profile Type
-	CustomerPaymentProfileType customerPaymentProfileType = new CustomerPaymentProfileType();
-	customerPaymentProfileType.setCustomerType(CustomerTypeEnum.INDIVIDUAL);
-	customerPaymentProfileType.setPayment(paymentType);
-
-    // Profile Type
-	CustomerProfileType customerProfileType = new CustomerProfileType();
-    customerProfileType.setMerchantCustomerId("MERCHANT_CUSTOMER_ID");
-    customerProfileType.setDescription("PROFILE_DESCRIPTION_HERE");	
-    customerProfileType.setEmail("CUSTOMER_EMAIL@ABC.COM"); 
-							// Email Id should be unique for the merchant	
-    customerProfileType.getPaymentProfiles().add(customerPaymentProfileType);
-
-    // Billing Info
-	CustomerAddressType billingInfo = new CustomerAddressType();
-    billingInfo.setFirstName("John");
-    billingInfo.setLastName("Doe");
-    billingInfo.setCompany("Company A");
-    billingInfo.setAddress("123 Street");
-    billingInfo.setCity("AnyCity");
-    billingInfo.setState("CA");
-    billingInfo.setCountry("US");
-    billingInfo.setZip("90122");
-    billingInfo.setPhoneNumber("415-555-1212");
-    billingInfo.setFaxNumber("415-555-1313");
-    customerProfileType.getShipToList().add(billingInfo);
-
-    // Make the API Request
-	CreateCustomerProfileRequest apiRequest = new CreateCustomerProfileRequest();
-    apiRequest.setProfile(customerProfileType);
-    apiRequest.setRefId("REF_ID");
-    apiRequest.setValidationMode(ValidationModeEnum.TEST_MODE);
-    CreateCustomerProfileController controller = new CreateCustomerProfileController(apiRequest);
-    controller.execute();
-    
-	CreateCustomerProfileResponse apiResponse = controller.getApiResponse();
-    
-	if (apiResponse!=null) {
-		// If API response code is ok (transaction is successful), 
-        // go ahead and check the transaction response
-        if (apiRequest.getMessages().getResultCode() == MessageTypeEnum.OK) {
-
-            out.println("Profile ID: " + apiRequest.getCustomerProfileId());
-            out.println("Payment Profiles: " + 
-							apiRequest.getCustomerPaymentProfileIdList().getNumericString().get(0));
-            out.println("Shipping Address: " + 
-							apiRequest.getCustomerShippingAddressIdList().getNumericString().get(0));
-            out.println(apiRequest.getValidationDirectResponseList().getString().get(0));
-        }
-        else {
-            out.println("Failed to create customer profile: " + 
-			      apiRequest.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-        }
-    }
-  %>  
-````
-
-Test Code - Transaction Reporting
-==============================================
-**Enables developers to access transaction history and details programmatically**
-
-There are some sample unit tests that are located in the test directory.  They
-capture requests that retrieve transaction data that was processed by Authorize.Net.
-
-###Get Transaction Details
-Use this function to get detailed information about a specific transaction.
-
-A transaction of this type can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.*" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.GetTransactionDetailsController" %>
-  <%
-    // Set up the environment
-    String apiLoginId         = "YOUR_API_LOGIN_ID";
-    String transactionKey     = "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-
-    // Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType() ;
-    merchantAuthenticationType.setName(apiLoginId);
-	merchantAuthenticationType.setTransactionKey(transactionKey);
-	ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
-
-	// Provide a VALID transaction ID   
-	String transId = "TRANSACTION_ID";
-
-	// Make the API Request
-    GetTransactionDetailsRequest getRequest = new GetTransactionDetailsRequest();
-	getRequest.setMerchantAuthentication(merchantAuthenticationType);
-	getRequest.setTransId(transId);   
-	GetTransactionDetailsController controller = new GetTransactionDetailsController(getRequest);
-	controller.execute();
-	
-	GetTransactionDetailsResponse apiResponse = controller.getApiResponse();
-
-   if (apiResponse != null) {
-		// If API response code is ok (transaction is successful), 
-        // go ahead and check the transaction response
-        if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {
-
-			out.println(apiResponse.getMessages().getMessage().get(0).getCode());
-			out.println(apiResponse.getMessages().getMessage().get(0).getText());
-			
-			// Any other required fields can be accessed from the transaction response
-			// present in the API response.
-			// To access the transaction response, use the getTransactionResponse().
-		}
-		else
-		{
-			out.println("Failed to get transaction details: " + 
-				  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-                  apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-		}
-	}
-  %>
-````
-
-Test Code - Apple Pay
-==============================================
-**Enables you to pass Apple Pay payment data to Authorize.Net.**
-
-Apple Pay support is available through the SDK using our new model 
-and code samples.
-
-###Create a Apple Pay Transaction
-Use this function to create an Authorize.Net payment transaction request 
-using Apple Pay Opaque data in place of card data. 
-
-**_Data Value (Apple Pay Blob) is one-time use value._**
-
-A transaction of this type can be performed with the following code (JSP) :
-
-````jsp
-<%@ page import = "java.math.BigDecimal" %>
-<%@ page import = "java.util.Map" %>
-<%@ page import = "net.authorize.Environment" %>
-<%@ page import = "net.authorize.api.contract.v1.*" %>
-<%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-<%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
-
-<%
-        MerchantAuthenticationType appleMerchAuthenticationType = new MerchantAuthenticationType();
-        appleMerchAuthenticationType.setName("YOUR_API_LOGIN_ID");
-        appleMerchAuthenticationType.setTransactionKey("YOUR_TRANSACTION_KEY");
-
-        ApiOperationBase.setEnvironment(Environment.SANDBOX);
-        ApiOperationBase.setMerchantAuthentication(appleMerchAuthenticationType);
-
-        PaymentType paymentType = new PaymentType();
-        OpaqueDataType op = new OpaqueDataType();
-        op.setDataDescriptor("COMMON.APPLE.INAPP.PAYMENT");
-        op.setDataValue("YOUR_APPLE_PAY_BLOB_HERE");
-        paymentType.setOpaqueData(op);
-
-
-        TransactionRequestType txnRequest = new TransactionRequestType();
-        txnRequest.setTransactionType(TransactionTypeEnum.AUTH_ONLY_TRANSACTION.value());
-        txnRequest.setPayment(paymentType);
-        txnRequest.setAmount(new BigDecimal(System.currentTimeMillis() % 100));
-
-        CreateTransactionRequest apiRequest = new CreateTransactionRequest();
-        apiRequest.setTransactionRequest(txnRequest);
-
-        CreateTransactionController controller = new CreateTransactionController(apiRequest);
-        controller.execute();
-        CreateTransactionResponse apiResponse = controller.getApiResponse();
-      
-       if (apiResponse!=null) {
-
-           TransactionResponse result = apiResponse.getTransactionResponse();
-
-           if (result.getResponseCode().equals("1")) {
-               out.println(result.getResponseCode());
-               out.println("Successful ApplePay Transaction ");
-               out.println("Auht Code : "+result.getAuthCode());
-               out.println("Transaction ID: "+result.getTransId());
-           }
-           else
-           {
-              out.println("Failed Transaction. <br/> Result Code :  " + apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() + " <br/> "+ apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-           }
-       }
-       else{
-        out.println("Error processing the Transaction ..");
-     }
-
-%>
-````
-
-
-Test Code - Visa Checkout
-==============================================
-**Enables you to pass Visa Checkout payment data to Authorize.Net.**
-
-Visa Checkout support is also available through the SDK using our new model 
-and code samples.
-
-###Create a Visa Checkout Transaction
-Use this function to create an Authorize.Net payment transaction request 
-using Visa Checkout data in place of card data. 
-
-**_Data Value, Data Key and Call ID are one-time use values._**
-
-A transaction of this type can be performed with the following code (JSP) :
-````jsp
-  <%@ page import = "java.math.BigDecimal" %>
-  <%@ page import = "java.util.Map" %>
-  <%@ page import = "net.authorize.Environment" %>
-  <%@ page import = "net.authorize.api.contract.v1.MerchantAuthenticationType" %>
-  <%@ page import = "net.authorize.api.contract.v1.PaymentType" %>
-  <%@ page import = "net.authorize.api.contract.v1.OpaqueDataType" %>
-  <%@ page import = "net.authorize.api.contract.v1.TransactionRequestType" %>
-  <%@ page import = "net.authorize.api.contract.v1.CreateTransactionRequest" %>
-  <%@ page import = "net.authorize.api.contract.v1.CreateTransactionResponse" %>
-  <%@ page import = "net.authorize.api.contract.v1.MessageTypeEnum" %>
-  <%@ page import = "net.authorize.api.contract.v1.TransactionResponse" %>
-  <%@ page import = "net.authorize.api.contract.v1.TransactionTypeEnum" %>
-  <%@ page import = "net.authorize.api.controller.base.ApiOperationBase" %>
-  <%@ page import = "net.authorize.api.controller.CreateTransactionController" %>
-  
-  <%
-    // Set up the environment
-    String apiLoginId         = "YOUR_API_LOGIN_ID";
-    String transactionKey     = "YOUR_TRANSACTION_KEY";
-    ApiOperationBase.setEnvironment(Environment.SANDBOX);
-    
-    // Provide the merchant credentials
-    MerchantAuthenticationType merchantAuthenticationType = new MerchantAuthenticationType();
-    merchantAuthenticationType.setName(apiLoginId);
-    merchantAuthenticationType.setTransactionKey(transactionKey);
-    ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
-    
-    // Populate the payment data
-    PaymentType paymentType = new PaymentType();
-    OpaqueDataType opaqueData = new OpaqueDataType();
-    opaqueData.setDataDescriptor("COMMON.VCO.ONLINE.PAYMENT");
-    opaqueData.setDataValue("SET_DATA_VALUE_HERE");
-    
-      opaqueData.setDataKey("SET_DATA_KEY_HERE");
-    paymentType.setOpaqueData(opaqueData);
-    
-    // Create the payment transaction request
-    TransactionRequestType txnRequest = new TransactionRequestType();
-    txnRequest.setTransactionType(TransactionTypeEnum.AUTH_CAPTURE_TRANSACTION.value());
-    txnRequest.setPayment(paymentType);
-    txnRequest.setCallId("SET_VALID_CALL_ID_HERE");
-    
-    // Make the API Request
-    CreateTransactionRequest apiRequest = new CreateTransactionRequest();
-    apiRequest.setTransactionRequest(txnRequest);
-    CreateTransactionController controller = new CreateTransactionController(apiRequest);
-    controller.execute();
-    
-    CreateTransactionResponse apiResponse = controller.getApiResponse();
-    
-    if (apiResponse != null) {
-    	// If API response code is ok (transaction is successful), 
-    	// go ahead and check the transaction response
-    	if (apiResponse.getMessages().getResultCode() == MessageTypeEnum.OK) {
-    
-    		TransactionResponse txnResponse = apiResponse.getTransactionResponse();
-    		if (txnResponse.getResponseCode().equals("1")) {
-    			out.println(txnResponse.getResponseCode());
-    			out.println("Successful Visa Checkout Transaction");
-    			out.println(txnResponse.getAuthCode());
-    			out.println(txnResponse.getTransId());
-    		} 
-    		else {
-    			out.println("Failed Transaction: " + txnResponse.getResponseCode());
-    		}
-    	}
-    	 
-    	else {
-    		out.println("Failed Transaction: " + 
-    			apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorCode() +
-    			apiResponse.getTransactionResponse().getErrors().getError().get(0).getErrorText());
-    	}
-    }
-  %>
-````
+## License
+This repository is distributed under a proprietary license. See the provided [`LICENSE.txt`](/LICENSE.txt) file.
