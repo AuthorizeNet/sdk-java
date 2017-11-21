@@ -30,7 +30,7 @@ public class Result<T> extends net.authorize.Result<T> {
 
 		String responseCodeStr = responseMap.get(ResponseField.RESPONSE_CODE);
 		result.responseCode = responseCodeStr!=null && !"".equals(responseCodeStr)?
-				ResponseCode.findByResponseCode(Integer.parseInt(responseCodeStr)):
+				ResponseCode.findByResponseCode(Double.valueOf(responseCodeStr).intValue()):
 					ResponseCode.ERROR;
 
 		String responseReasonCodeStr = responseMap.get(ResponseField.RESPONSE_REASON_CODE);
