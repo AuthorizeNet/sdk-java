@@ -153,7 +153,7 @@ public class HttpClient {
 
 		if(environment != null && transaction != null) {
 			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
+				org.apache.http.client.HttpClient httpClient = getHttpsClient();
 
 				setProxyIfRequested(httpClient);
 
@@ -243,7 +243,7 @@ public class HttpClient {
 
 		if(environment != null && transaction != null) {
 			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
+				org.apache.http.client.HttpClient httpClient = getHttpsClient();
 
 				setProxyIfRequested(httpClient);
 				
@@ -311,7 +311,7 @@ public class HttpClient {
 	 * if proxy use is requested, set http-client appropriately 
 	 * @param httpClient the client to add proxy values to 
 	 */
-	public static void setProxyIfRequested(DefaultHttpClient httpClient) {
+	public static void setProxyIfRequested(org.apache.http.client.HttpClient httpClient) {
 		if ( UseProxy)
 		{
 			if ( !proxySet) {
