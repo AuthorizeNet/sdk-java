@@ -17,6 +17,7 @@ public class Result<T> extends net.authorize.Result<T> {
 	private ResponseCode responseCode;
 	private ResponseReasonCode reasonResponseCode;
 	private String responseText;
+	private String transactionId;
 
 	private Result() { }
 
@@ -29,8 +30,11 @@ public class Result<T> extends net.authorize.Result<T> {
 		}
 
 		String responseCodeStr = responseMap.get(ResponseField.RESPONSE_CODE);
+		
+		result.transactionId = responseMap.get(ResponseField.TRANSACTION_ID);
+		
 		result.responseCode = responseCodeStr!=null && !"".equals(responseCodeStr)?
-				ResponseCode.findByResponseCode(Integer.parseInt(responseCodeStr)):
+				ResponseCode.findByResponseCode(Double.valueOf(responseCodeStr).intValue()):
 					ResponseCode.ERROR;
 
 		String responseReasonCodeStr = responseMap.get(ResponseField.RESPONSE_REASON_CODE);
@@ -56,6 +60,10 @@ public class Result<T> extends net.authorize.Result<T> {
 	 */
 	public String getResponseText() {
 		return responseText;
+	}
+
+	public String getTransactionId() {
+		return transactionId;
 	}
 
 	public boolean isApproved() {
