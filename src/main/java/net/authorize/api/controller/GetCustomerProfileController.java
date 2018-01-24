@@ -16,8 +16,7 @@ public class GetCustomerProfileController extends ApiOperationBase<GetCustomerPr
 		GetCustomerProfileRequest request = this.getApiRequest();
 		
 		//validate required fields		
-		if ( null == request.getCustomerProfileId()) throw new NullPointerException("CustomerProfileId cannot be null");
-		
+
 		//validate not-required fields		
 		//creditCardOne.setCardCode("");
 	}
