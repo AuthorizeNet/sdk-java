@@ -6,6 +6,8 @@ public final class Constants {
 	public static final String HTTPS_USE_PROXY = "https.proxyUse";
 	public static final String HTTPS_PROXY_HOST = "https.proxyHost";
 	public static final String HTTPS_PROXY_PORT = "https.proxyPort";
+	public static final String HTTPS_PROXY_USERNAME = "https.proxyUser";
+    public static final String HTTPS_PROXY_PASSWORD = "https.proxyPassword";
 
 	public static final String HTTP_USE_PROXY = "http.proxyUse";
 	public static final String HTTP_PROXY_HOST = "http.proxyHost";
@@ -33,5 +35,5 @@ public final class Constants {
 	public static final String HTTP_READ_TIME_OUT = "http.ReadTimeout";
 	public static final int HTTP_READ_TIME_OUT_DEFAULT_VALUE = 30000;
 	
-	public static final String CLIENT_ID = "sdk-java-1.9.4";
+	public static final String CLIENT_ID = "sdk-java-1.9.6";
 }
