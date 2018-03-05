@@ -344,7 +344,36 @@ public class HttpClient {
 			
 			CloseableHttpClient httpClient;
 			
-			if ( !UseProxy && ( ProxyHost == null || proxyUsername == null || proxyPassword == null ) ) {
+			if ( UseProxy && ProxyHost != null) {
+
+				LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
+				HttpClientBuilder hcBuilder;
+				if (proxyUsername != null && proxyPassword != null) {
+					CredentialsProvider credsProvider = new BasicCredentialsProvider();
+					AuthScope proxyScope = new AuthScope(ProxyHost, ProxyPort);
+					Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+					credsProvider.setCredentials(proxyScope, proxyCreds);
+					hcBuilder = HttpClients.custom()
+								.setSSLSocketFactory(sslSocketFactory)
+								.setDefaultRequestConfig(requestConfig)
+								.setRedirectStrategy(new LaxRedirectStrategy())
+								.setDefaultCredentialsProvider(credsProvider);
+				}
+				else {
+					hcBuilder = HttpClients.custom()
+								.setSSLSocketFactory(sslSocketFactory)
+								.setDefaultRequestConfig(requestConfig)
+								.setRedirectStrategy(new LaxRedirectStrategy());
+				}
+				
+				HttpHost httpProxy = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);
+	            hcBuilder.setProxy(httpProxy);
+        
+	            httpClient = hcBuilder.build();
+
+				proxySet = true;
+			}
+			else {
 				LogHelper.warn(logger, "Defaulting to non-proxy environment");
 				
 				httpClient =  HttpClients.custom()
@@ -353,30 +382,6 @@ public class HttpClient {
 						.setRedirectStrategy(new LaxRedirectStrategy())
 						.build();
 			} 
-			
-			else {
-
-				LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
-				CredentialsProvider credsProvider = new BasicCredentialsProvider();
-
-				AuthScope proxyScope = new AuthScope(ProxyHost, ProxyPort);
-				Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
-				credsProvider.setCredentials(proxyScope, proxyCreds);
-				
-				HttpClientBuilder hcBuilder = HttpClients.custom()
-						.setSSLSocketFactory(sslSocketFactory)
-						.setDefaultRequestConfig(requestConfig)
-						.setRedirectStrategy(new LaxRedirectStrategy())
-	                    .setDefaultCredentialsProvider(credsProvider);
-				
-				HttpHost httpProxy = new HttpHost(ProxyHost, ProxyPort, Constants.PROXY_PROTOCOL);
-	            DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(httpProxy);
-	            hcBuilder.setRoutePlanner(routePlanner);
-        
-	            httpClient = hcBuilder.build();
-
-				proxySet = true;
-			}			
 
 			return httpClient;
 		} catch (Exception e) {
