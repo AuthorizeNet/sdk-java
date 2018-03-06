@@ -345,10 +345,10 @@ public class HttpClient {
 			CloseableHttpClient httpClient;
 			
 			if ( UseProxy && ProxyHost != null) {
-
-				LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
+				
 				HttpClientBuilder hcBuilder;
 				if (proxyUsername != null && proxyPassword != null) {
+					LogHelper.info(logger, "Setting up proxy to URL with Authentication: '%s://%s@%s:%d'", Constants.PROXY_PROTOCOL, proxyUsername, ProxyHost, ProxyPort);
 					CredentialsProvider credsProvider = new BasicCredentialsProvider();
 					AuthScope proxyScope = new AuthScope(ProxyHost, ProxyPort);
 					Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
@@ -360,6 +360,7 @@ public class HttpClient {
 								.setDefaultCredentialsProvider(credsProvider);
 				}
 				else {
+					LogHelper.info(logger, "Setting up proxy to URL: '%s://%s:%d'", Constants.PROXY_PROTOCOL, ProxyHost, ProxyPort);
 					hcBuilder = HttpClients.custom()
 								.setSSLSocketFactory(sslSocketFactory)
 								.setDefaultRequestConfig(requestConfig)
