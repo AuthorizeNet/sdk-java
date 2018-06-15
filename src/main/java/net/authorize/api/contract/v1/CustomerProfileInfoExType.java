@@ -10,22 +10,21 @@ package net.authorize.api.contract.v1;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for customerProfileInfoExType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="customerProfileInfoExType">
  *   &lt;complexContent>
- *     &lt;extension base="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}ANetApiResponse">
+ *     &lt;extension base="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileExType">
  *       &lt;sequence>
- *         &lt;element name="token" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="profileType" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileTypeEnum" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -35,39 +34,38 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "token"
+@XmlType(name = "customerProfileInfoExType", propOrder = {
+    "profileType"
 })
-@XmlRootElement(name = "getHostedPaymentPageResponse")
-public class GetHostedPaymentPageResponse
-    extends ANetApiResponse
+public class CustomerProfileInfoExType
+    extends CustomerProfileExType
 {
 
-    @XmlElement(required = true)
-    protected String token;
+    @XmlSchemaType(name = "string")
+    protected CustomerProfileTypeEnum profileType;
 
     /**
-     * Gets the value of the token property.
+     * Gets the value of the profileType property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link CustomerProfileTypeEnum }
      *     
      */
-    public String getToken() {
-        return token;
+    public CustomerProfileTypeEnum getProfileType() {
+        return profileType;
     }
 
     /**
-     * Sets the value of the token property.
+     * Sets the value of the profileType property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link CustomerProfileTypeEnum }
      *     
      */
-    public void setToken(String value) {
-        this.token = value;
+    public void setProfileType(CustomerProfileTypeEnum value) {
+        this.profileType = value;
     }
 
 }

@@ -14,31 +14,31 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for TransactionGroupStatusEnum.
+ * <p>Java class for customerProfileTypeEnum.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="TransactionGroupStatusEnum">
+ * &lt;simpleType name="customerProfileTypeEnum">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="any"/>
- *     &lt;enumeration value="pendingApproval"/>
+ *     &lt;enumeration value="regular"/>
+ *     &lt;enumeration value="guest"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
  * 
  */
-@XmlType(name = "TransactionGroupStatusEnum")
+@XmlType(name = "customerProfileTypeEnum")
 @XmlEnum
-public enum TransactionGroupStatusEnum {
+public enum CustomerProfileTypeEnum {
 
-    @XmlEnumValue("any")
-    ANY("any"),
-    @XmlEnumValue("pendingApproval")
-    PENDING_APPROVAL("pendingApproval");
+    @XmlEnumValue("regular")
+    REGULAR("regular"),
+    @XmlEnumValue("guest")
+    GUEST("guest");
     private final String value;
 
-    TransactionGroupStatusEnum(String v) {
+    CustomerProfileTypeEnum(String v) {
         value = v;
     }
 
@@ -46,8 +46,8 @@ public enum TransactionGroupStatusEnum {
         return value;
     }
 
-    public static TransactionGroupStatusEnum fromValue(String v) {
-        for (TransactionGroupStatusEnum c: TransactionGroupStatusEnum.values()) {
+    public static CustomerProfileTypeEnum fromValue(String v) {
+        for (CustomerProfileTypeEnum c: CustomerProfileTypeEnum.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
