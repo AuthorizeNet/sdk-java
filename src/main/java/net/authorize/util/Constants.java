@@ -35,5 +35,5 @@ public final class Constants {
 	public static final String HTTP_READ_TIME_OUT = "http.ReadTimeout";
 	public static final int HTTP_READ_TIME_OUT_DEFAULT_VALUE = 30000;
 	
-	public static final String CLIENT_ID = "sdk-java-1.9.6";
+	public static final String CLIENT_ID = "sdk-java-1.9.7";
 }
