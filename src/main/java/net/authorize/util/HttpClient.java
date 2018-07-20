@@ -80,6 +80,7 @@ public class HttpClient {
 	 *
 	 * @throws Exception
 	 */
+	@Deprecated
 	private static HttpPost createHttpPost(Environment env, Transaction transaction) throws Exception {
 		URI postUrl;
 		HttpPost httpPost = null;
@@ -134,6 +135,7 @@ public class HttpClient {
 	 * @return container map containing semi-processed data after request was posted
 	 * @throws UnsupportedEncodingException
 	 */
+	@Deprecated
 	private static Map<ResponseField, String> createResponseMap(Transaction transaction, String responseString)
 		throws UnsupportedEncodingException {
 
@@ -159,6 +161,7 @@ public class HttpClient {
 	 * @param transaction
 	 * @return container map containing semi-processed data after request was posted
 	 */
+	@Deprecated
 	public static Map<ResponseField, String> execute(Environment environment, Transaction transaction) {
 		Map<ResponseField, String> responseMap = new HashMap<ResponseField, String>();
 
@@ -208,6 +211,7 @@ public class HttpClient {
 	 * @param is
 	 * @return String
 	 */
+	@Deprecated
 	public static String convertStreamToString(InputStream is) {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	    StringBuilder sb = new StringBuilder();
@@ -247,6 +251,7 @@ public class HttpClient {
 	 * @param transaction
 	 * @return BasicXmlDocument containing semi-processed data after request was posted
 	 */
+	@Deprecated
 	public static BasicXmlDocument executeXML(Environment environment, Transaction transaction) {
 		BasicXmlDocument response = new BasicXmlDocument();
 
