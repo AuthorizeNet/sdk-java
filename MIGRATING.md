@@ -1,16 +1,16 @@
-# Migrating from Legacy Authorize.Net APIs
+# Migrating from Legacy Authorize.Net Classes
 
 Authorize.Net no longer supports several legacy classes, including AIM, ARB and others listed below, as part of sdk-java. If you are using any of these, we recommend that you update your code to use the new Authorize.Net API classes under (net/authorize/api).
 
 **For details on the deprecation and replacement of legacy Authorize.Net APIs, visit https://developer.authorize.net/api/upgrade_guide/.**
 
 ## Full list of classes that are no longer supported
-| Class                               | New Feature                                                                                                                                                    | Sample Codes directory                                                 |
+| Class                               | New Feature                                                                                                                                                    | Sample Codes directory/repository                                                 |
 |-------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
 | AIM (net/authorize/aim)             | [PaymentTransactions](https://developer.authorize.net/api/reference/index.html#payment-transactions)                                                           | [sample-code-java/PaymentTransactions](https://github.com/AuthorizeNet/sample-code-java/tree/master/src/main/java/net/authorize/sample/PaymentTransactions)    |
 | ARB (net/authorize/arb)             | [RecurringBilling](https://developer.authorize.net/api/reference/index.html#recurring-billing)                                                                 | [sample-code-java/Recurring Billing](https://github.com/AuthorizeNet/sample-code-java/tree/master/src/main/java/net/authorize/sample/RecurringBilling)          | 
 | CIM (net/authorize/cim)             | [CustomerProfiles](https://developer.authorize.net/api/reference/index.html#customer-profiles)                                                                 | [sample-code-java/CustomerProfiles](https://github.com/AuthorizeNet/sample-code-java/tree/master/src/main/java/net/authorize/sample/CustomerProfiles)          |
-| SIM (net/authorize/sim)             | [Accept Hosted](https://developer.authorize.net/content/developer/en_us/api/reference/features/accept_hosted.html)                                             | -                                                                                                                         |
+| SIM (net/authorize/sim)             | [Accept Hosted](https://developer.authorize.net/content/developer/en_us/api/reference/features/accept_hosted.html)                                             | Not available                                                                                                                         |
 | Reporting	(net/authorize/reporting) | [TransactionReporting](https://developer.authorize.net/api/reference/index.html#transaction-reporting)                                                         | [sample-code-java/TransactionReporting](https://github.com/AuthorizeNet/sample-code-java/tree/master/src/main/java/net/authorize/sample/TransactionReporting) |
 
 ## Example 
