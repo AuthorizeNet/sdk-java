@@ -23,6 +23,13 @@ _Note: Support for building the SDK with either Ant or Maven has been made. Plea
 * hamcrest-library-1.3.jar  : unit testing
 * jmock-2.6.0.jar           : unit testing
 
+### Migrating from older versions
+Since August 2018, the Authorize.Net API has been reorganized to be more merchant focused. AuthorizeNet AIM, ARB, CIM, Transaction Reporting and SIM classes have all been deprecated in favor of `net\authorize\api` . To see the full list of mapping of new features corresponding to the deprecated features, you can see [MIGRATING.md](MIGRATING.md).
+
+### Contribution
+ - If you are confused about any Authorize.Net features, please create an issue for it. Also you can search for it in the [Authorize.Net developer community](https://community.developer.authorize.net/).
+ - Before creating pull requests, please read [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ### TLS 1.2
 The Authorize.Net APIs only support connections using the TLS 1.2 security protocol. It's important to make sure you have new enough versions of all required components to support TLS 1.2. Additionally, it's very important to keep these components up to date going forward to mitigate the risk of any security flaws that may be discovered in your system or any libraries it uses.
 
