@@ -63,10 +63,7 @@ import net.authorize.api.controller.base.ApiOperationBase;
 
 public class ChargeCreditCard {
 	
-    // Run this sample from command line with:
-    //                 java -jar target/ChargeCreditCard-jar-with-dependencies.jar
-    //
-    public static ANetApiResponse run(String apiLoginId, String transactionKey, Double amount) {
+    public static void main(String[] args) {
 
         // Set the request to operate in either the sandbox or production environment
         ApiOperationBase.setEnvironment(Environment.SANDBOX);
@@ -79,8 +76,8 @@ public class ChargeCreditCard {
         // Populate the payment data
         PaymentType paymentType = new PaymentType();
         CreditCardType creditCard = new CreditCardType();
-        creditCard.setCardNumber("4242424242424242");
-        creditCard.setExpirationDate("0822");
+        creditCard.setCardNumber("4111111111111111");
+        creditCard.setExpirationDate("1220");
         paymentType.setCreditCard(creditCard);
 
         // Create the payment transaction object
