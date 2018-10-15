@@ -4,7 +4,16 @@ package net.authorize.sim.data;
  * When using the hosted payment form, settings can be configured to match the look of
  * the merchant's website.  The purpose of this class is just that - to
  * store the hosted payment form settings.
+ * 
+ * @deprecated since version 1.9.8
+ * @deprecated We have reorganized and simplified the Authorize.Net API to ease integration and to focus on merchants' needs.
+ * @deprecated We have deprecated AIM, ARB, CIM, and Reporting as separate options, in favor of AuthorizeNet::API (package: net.authorize.api.*).
+ * @deprecated We have also deprecated SIM as a separate option, in favor of Accept Hosted. See https://developer.authorize.net/api/reference/features/accept_hosted.html for details on Accept Hosted.
+ * @deprecated For details on AIM, see https://github.com/AuthorizeNet/sample-code-java/tree/master/src/main/java/net/authorize/sample/PaymentTransactions.
+ * @deprecated For details on the deprecation and replacement of legacy Authorize.Net methods, visit https://developer.authorize.net/api/upgrade_guide/.
+ *
  */
+@Deprecated
 public class HostedPaymentFormSettings {
 	private String header;
 	private String footer;
