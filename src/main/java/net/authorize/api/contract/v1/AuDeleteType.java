@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}auDetailsType">
  *       &lt;sequence>
  *         &lt;element name="creditCard" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}creditCardMaskedType"/>
+ *         &lt;element name="subscriptionIdList" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}SubscriptionIdList" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -35,16 +36,29 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "auDeleteType", propOrder = {
-    "creditCard"
-})
+    "creditCard",
+    "subscriptionIdList"
+    })
 public class AuDeleteType
     extends AuDetailsType
 {
 
     @XmlElement(required = true)
     protected CreditCardMaskedType creditCard;
-
-    /**
+    
+    /*---Added for GetAccountUpdaterJobDetails---*/
+    @XmlElement(required = true)
+    protected SubscriptionIdList subscriptionIdList;
+    
+    public SubscriptionIdList getSubscriptionIdList() {
+		return subscriptionIdList;
+	}
+	public void setSubscriptionIdList(SubscriptionIdList value) {
+		this.subscriptionIdList = value;
+	}
+	
+	/*---End---*/
+	/**
      * Gets the value of the creditCard property.
      * 
      * @return
