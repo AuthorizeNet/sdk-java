@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}ANetApiRequest">
  *       &lt;sequence>
- *         &lt;element name="profile" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileInfoExType"/>
+ *         &lt;element name="profile" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileExType"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -44,30 +44,30 @@ public class UpdateCustomerProfileRequest
 {
 
     @XmlElement(required = true)
-    protected CustomerProfileInfoExType profile;
-
+    protected CustomerProfileExType profile;
     /**
      * Gets the value of the profile property.
      * 
      * @return
      *     possible object is
-     *     {@link CustomerProfileInfoExType }
+     *     {@link customerProfileExType }
      *     
      */
-    public CustomerProfileInfoExType getProfile() {
-        return profile;
-    }
+
+	public CustomerProfileExType getProfile() {
+		return profile;
+	}
 
     /**
      * Sets the value of the profile property.
      * 
      * @param value
      *     allowed object is
-     *     {@link CustomerProfileInfoExType }
+     *     {@link customerProfileExType }
      *     
      */
-    public void setProfile(CustomerProfileInfoExType value) {
-        this.profile = value;
-    }
+	public void setProfile(CustomerProfileExType profile) {
+		this.profile = profile;
+	}
 
 }
