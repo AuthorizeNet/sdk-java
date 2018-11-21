@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;extension base="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}ANetApiRequest">
  *       &lt;sequence>
- *         &lt;element name="profile" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileExType"/>
+ *         &lt;element name="profile" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}CustomerProfileExType"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -50,7 +50,7 @@ public class UpdateCustomerProfileRequest
      * 
      * @return
      *     possible object is
-     *     {@link customerProfileExType }
+     *     {@link CustomerProfileExType }
      *     
      */
 
@@ -63,7 +63,7 @@ public class UpdateCustomerProfileRequest
      * 
      * @param value
      *     allowed object is
-     *     {@link customerProfileExType }
+     *     {@link CustomerProfileExType }
      *     
      */
 	public void setProfile(CustomerProfileExType profile) {
