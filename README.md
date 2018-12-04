@@ -114,6 +114,36 @@ To create the javadocs...
 ### Testing Guide
 For additional help in testing your own code, Authorize.Net maintains a [comprehensive testing guide](http://developer.authorize.net/hello_world/testing_guide/) that includes test credit card numbers to use and special triggers to generate certain responses from the sandbox environment.
 
+## Logging Sensitive Data 
+ 
+The Authorize.Net Java SDK uses Log4J framework for logging purposes and it can be enabled by keeping a configuration file `Log4j.properties` in the resources folder of the application. A sample [Log4.properties](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/log4j.properties) file has been provided as a reference.  
+ 
+The possible log levels are `DEBUG, INFO, WARN, ERROR` and `FATAL`.  There is a new pattern layout introduced to mask sensitive data while logging and can be used with the application by providing the following configurations in the `Log4j.properties` file:   
+ 
+``` 
+// Default configuration which logs the entries in clear text 
+
+log4j.appender.S.layout = org.apache.log4j.PatternLayout 
+log4j.appender.R.layout = org.apache.log4j.PatternLayout 
+ 
+// Configuration which masks the sensitive data in the log entries 
+
+log4j.appender.S.layout = net.authorize.util.SensitiveFilterLayout 
+log4j.appender.R.layout = net.authorize.util.SensitiveFilterLayout 
+
+``` 
+ 
+By default the logger comes with two appenders i.e **console** and **file transport**.  
+ 
+The list of sensitive fields which can be masked during logging are: 
+* Card Number, 
+* Card Code, 
+* Expiration Date,  
+* Name on Account,  
+* Transaction Key, and  
+* Account Number.  
+ 
+There is also a list of regular expressions which the sensitive logger uses to mask credit card numbers while logging.  Further information on the sensitive data logging and regular expressions can be found at this [location](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/AuthorizedNetSensitiveTagsConfig.json). 
 
 ## License
 This repository is distributed under a proprietary license. See the provided [`LICENSE.txt`](/LICENSE.txt) file.
