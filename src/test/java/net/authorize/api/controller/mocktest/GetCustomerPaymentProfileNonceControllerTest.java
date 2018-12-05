@@ -1,13 +1,12 @@
-package net.authorize.api.controller.mocktest;
+/*package net.authorize.api.controller.mocktest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 import net.authorize.api.contract.v1.ANetApiResponse;
-import net.authorize.api.contract.v1.CustomerPaymentProfileMaskedType;
-import net.authorize.api.contract.v1.GetCustomerPaymentProfileRequest;
-import net.authorize.api.contract.v1.GetCustomerPaymentProfileResponse;
+import net.authorize.api.contract.v1.GetCustomerPaymentProfileNonceRequest;
+import net.authorize.api.contract.v1.GetCustomerPaymentProfileNonceResponse;
 import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.controller.base.IApiOperation;
 import net.authorize.api.controller.test.ApiCoreTestBase;
@@ -18,7 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class GetCustomerPaymentProfileControllerTest extends ApiCoreTestBase {
+public class GetCustomerPaymentProfileNonceControllerTest extends ApiCoreTestBase {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -41,19 +40,15 @@ public class GetCustomerPaymentProfileControllerTest extends ApiCoreTestBase {
 	}
 
 	@Test
-	public void mockGetCustomerPaymentProfileControllerTest()
+	public void mockGetCustomerPaymentProfileNonceControllerTest()
 	{
 		//define all mocked objects as final
-		final IApiOperation<GetCustomerPaymentProfileRequest, GetCustomerPaymentProfileResponse> mockController = getMockController();
+		final IApiOperation<GetCustomerPaymentProfileNonceRequest, GetCustomerPaymentProfileNonceResponse> mockController = getMockController();
 		
-		final GetCustomerPaymentProfileRequest mockRequest = factory.createGetCustomerPaymentProfileRequest();
+		final GetCustomerPaymentProfileNonceRequest mockRequest = factory.createGetCustomerPaymentProfileNonceRequest();
 		mockRequest.setRefId(refId);
 		
-		CustomerPaymentProfileMaskedType paymentProfile = factory.createCustomerPaymentProfileMaskedType();
-		paymentProfile.setCustomerPaymentProfileId(counterStr);
-		
-		final GetCustomerPaymentProfileResponse   mockResponse = factory.createGetCustomerPaymentProfileResponse();
-		mockResponse.setPaymentProfile( paymentProfile);
+		final GetCustomerPaymentProfileNonceResponse   mockResponse = factory.createGetCustomerPaymentProfileNonceResponse();
 
 		final ANetApiResponse errorResponse = factory.createANetApiResponse();
 		final List<String> results = new ArrayList<String>();
@@ -62,11 +57,11 @@ public class GetCustomerPaymentProfileControllerTest extends ApiCoreTestBase {
 		setMockControllerExpectations(mockController, mockRequest, mockResponse, errorResponse, results, messageTypeOk);
 		//setMockControllerExpectations(mockController, mockResponse, null, null, null);
 		mockController.execute();
-		GetCustomerPaymentProfileResponse controllerResponse = mockController.getApiResponse();
+		GetCustomerPaymentProfileNonceResponse controllerResponse = mockController.getApiResponse();
 		
 		Assert.assertNotNull(controllerResponse);
-		Assert.assertNotNull(controllerResponse.getPaymentProfile());
-		Assert.assertNotNull(controllerResponse.getPaymentProfile().getCustomerPaymentProfileId());
-		logger.info(String.format("GetCustomerPaymentProfile: Details:%s", controllerResponse.getPaymentProfile().getCustomerPaymentProfileId()));
+		Assert.assertNotNull(controllerResponse.getYYY());    
+		logger.info(String.format("GetCustomerPaymentProfileNonce: Details:%s", controllerResponse.getYYY()));
 	}
 }
+*/
