@@ -35,12 +35,9 @@ import net.authorize.api.controller.CreateCustomerProfileFromTransactionControll
 import net.authorize.api.controller.GetTransactionDetailsController;
 import net.authorize.api.controller.CreateCustomerPaymentProfileController;
 import net.authorize.api.controller.base.ApiOperationBase;
-import net.authorize.cim.Result;
-import net.authorize.cim.TransactionType;
-import net.authorize.cim.ValidationModeType;
 
 public class CustomerProfileNoCardCode extends ApiCoreTestBase {
-	
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		ApiCoreTestBase.setUpBeforeClass();
@@ -63,18 +60,19 @@ public class CustomerProfileNoCardCode extends ApiCoreTestBase {
 
 	@Test
 	public void Issue46() {
-		
+
 		ApiOperationBase.setEnvironment(environment);
 		ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
-		String customerprofileId = "36374423" ;
-		getPaymentDetails (merchantAuthenticationType, customerprofileId, ValidationModeEnum.TEST_MODE);	
+		String customerprofileId = "36374423";
+		getPaymentDetails(merchantAuthenticationType, customerprofileId, ValidationModeEnum.TEST_MODE);
 		Assert.assertNotNull(customerprofileId);
 	}
-		
-	private String getPaymentDetails(MerchantAuthenticationType merchantAuthentication, String customerprofileId, ValidationModeEnum validationMode) {
+
+	private String getPaymentDetails(MerchantAuthenticationType merchantAuthentication, String customerprofileId,
+			ValidationModeEnum validationMode) {
 		CreateCustomerPaymentProfileRequest getRequest = new CreateCustomerPaymentProfileRequest();
 		getRequest.setMerchantAuthentication(merchantAuthentication);
-		getRequest.setCustomerProfileId(customerprofileId);	
+		getRequest.setCustomerProfileId(customerprofileId);
 
 		CustomerAddressType customerAddress = new CustomerAddressType();
 		customerAddress.setFirstName("test");
@@ -85,12 +83,12 @@ public class CustomerProfileNoCardCode extends ApiCoreTestBase {
 		customerAddress.setZip("98004");
 		customerAddress.setCountry("USA");
 		customerAddress.setPhoneNumber("000-000-0000");
-		
+
 		CreditCardType creditCard = new CreditCardType();
 		creditCard.setCardNumber("4111111111111111");
 		creditCard.setExpirationDate("2023-12");
 		creditCard.setCardCode("");
 		CreateCustomerPaymentProfileResponse getResponse = new CreateCustomerPaymentProfileResponse();
 		return getResponse.getCustomerPaymentProfileId();
-		}	
+	}
 }
