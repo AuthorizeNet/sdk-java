@@ -179,7 +179,6 @@ public abstract class ApiCoreTestBase {
 		counterStr = getRandomString("");
 
 		now = Calendar.getInstance().getTime();
-		// nowString = DateUtil.getFormattedDate(now, ReportingDetails.DATE_FORMAT);
 
 		datatypeFactory = DatatypeFactory.newInstance();
 		// TODO add / subtract relative
