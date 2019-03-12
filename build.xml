@@ -17,7 +17,6 @@
 	<property name="prop.message" value="must be defined in ${user.home}/${ant.project.name}.properties" />
 	<fail message="api.login.id ${prop.message}" unless="api.login.id" />
 	<fail message="transaction.key ${prop.message}" unless="transaction.key" />
-	<fail message="md5.hash.key ${prop.message}" unless="md5.hash.key" />
 
 	<path id="classpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
@@ -88,12 +87,10 @@
 			</classpath>
 			<sysproperty key="API_LOGIN_ID" value="${api.login.id}" />
 			<sysproperty key="TRANSACTION_KEY" value="${transaction.key}" />
-			<sysproperty key="MD5_HASH_KEY" value="${md5.hash.key}" />
 			<formatter type="plain" />
 			<batchtest fork="yes" todir="${reports.tests}">
 				<fileset dir="${classes.dir}">
 					<include name="**/*Test*.class" />
-					<!--include name="net/authorize/cim/functional_test/*Test*.class" /-->
 					<exclude name="**/UnitTestData.class, **/MyTest.class" />
 				</fileset>
 			</batchtest>
