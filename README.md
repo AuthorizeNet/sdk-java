@@ -31,7 +31,7 @@ Since August 2018, the Authorize.Net API has been reorganized to be more merchan
   - Before creating pull requests, read [the contributors guide](CONTRIBUTING.md).
 
 ### TLS 1.2
-The Authorize.Net API only support connections using the TLS 1.2 security protocol. Make sure to upgrade all required components to support TLS 1.2. Keep these components up to date to mitigate the risk of new security flaws.
+The Authorize.Net APIs only support connections using the TLS 1.2 security protocol. Make sure to upgrade all required components to support TLS 1.2. Keep these components up to date to mitigate the risk of new security flaws.
 
 
 ## Installation
@@ -58,10 +58,10 @@ After you have your credentials, load them into the appropriate variables in you
     ApiOperationBase.setMerchantAuthentication(merchantAuthenticationType);
 ```
 
-Never include your API Login ID and Transaction Key directly in a file in a publically accessible portion of your website. As a best practice, define the API Login ID and Transaction Key in a constants file, and then reference those constants in your code.
+Never include your API Login ID and Transaction Key directly in a file in a publicly accessible portion of your website. As a best practice, define the API Login ID and Transaction Key in a constants file, and reference those constants in your code.
 
 ### Switching between the sandbox environment and the production environment
-Authorize.Net maintains a complete sandbox environment for testing and development purposes. The sandbox environment is an exact duplicate of our production environment, with simulated transaction authorization and settlement. By default, this SDK is configured to use the sandbox environment. To switch to the production environment, set the appropriate environment constant using ApiOperationBase `setEnvironment` method. For example:
+Authorize.Net maintains a complete sandbox environment for testing and development purposes. The sandbox environment is an exact replica of our production environment, with simulated transaction authorization and settlement. By default, this SDK is configured to use the sandbox environment. To switch to the production environment, set the appropriate environment constant using ApiOperationBase `setEnvironment` method. For example:
 ```java
 // For PRODUCTION use
 ApiOperationBase.setEnvironment(Environment.PRODUCTION);
@@ -73,7 +73,7 @@ API credentials are different for each environment, so be sure to switch to the 
 When using this SDK, downloading the Authorize.Net sample code repository is recommended.
 * [Authorize.Net Java Sample Code Repository (on GitHub)](https://github.com/AuthorizeNet/sample-code-java)
 
-The respository contains comprehensive sample code for common uses of the Authorize.Net API.
+The repository contains comprehensive sample code for common uses of the Authorize.Net API.
 
 The API Reference contains details and examples of the structure and formatting of the Authorize.Net API.
 * [Developer Center API Reference](http://developer.authorize.net/api/reference/index.html)
@@ -157,7 +157,7 @@ The sensitive fields that are masked during logging are:
 
 There is also a list of regular expressions which the sensitive logger uses to mask credit card numbers while logging. 
 
-More information on the regular espressions used during sensitive data logging [can be found here](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/AuthorizedNetSensitiveTagsConfig.json).
+More information on the regular expressions used during sensitive data logging [can be found here](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/AuthorizedNetSensitiveTagsConfig.json).
 
 ### Transaction Hash Upgrade
 Authorize.Net is phasing out the MD5 based `transHash` element in favor of the SHA-512 based `transHashSHA2`. The setting in the Merchant Interface which controlled the MD5 Hash option is no longer available, and the `transHash` element will stop returning values at a later date to be determined. For information on how to use `transHashSHA2`, see the [Transaction Hash Upgrade Guide](https://developer.authorize.net/support/hash_upgrade/).
