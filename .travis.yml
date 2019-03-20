@@ -18,8 +18,8 @@ before_script:
 
 script:
   - cd sample-code-java
-  - mvn install -DsdkVersion=2.0.0-SNAPSHOT -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - mvn test -DsdkVersion=2.0.0-SNAPSHOT -B
+  - mvn install -DsdkVersion=2.0.1-SNAPSHOT -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - mvn test -DsdkVersion=2.0.1-SNAPSHOT -B
 
 after_script:
     print_surefire_reports.sh
