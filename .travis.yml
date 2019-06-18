@@ -4,6 +4,8 @@ language:
 sudo:
     false
 
+dist: trusty
+
 jdk:
     - oraclejdk8
     - oraclejdk9
