@@ -12,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import junit.framework.Assert;
-import net.authorize.Transaction;
 import net.authorize.api.contract.v1.CreateCustomerPaymentProfileRequest;
 import net.authorize.api.contract.v1.CreateCustomerPaymentProfileResponse;
 import net.authorize.api.contract.v1.CreateCustomerProfileFromTransactionRequest;
