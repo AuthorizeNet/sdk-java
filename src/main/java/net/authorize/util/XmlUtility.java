@@ -12,9 +12,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 /**
  * Helper methods for serializing and de-serializing to XML using JAXB
@@ -80,11 +88,25 @@ public final class XmlUtility {
 	 * @param <T> class that implements Serializable
 	 * @return T De-serialized object
 	 * @throws JAXBException if errors during de-serialization
+	 * @throws ParserConfigurationException 
+	 * @throws SAXException 
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException
+	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException, ParserConfigurationException, SAXException
 	{
 		T entity = null;
+		
+		//Disable XXE
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		spf.setNamespaceAware(true);
+	    spf.setValidating(true);	       
+		spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+		spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+		spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+		//Do unmarshall operation
+		Source xmlSource = new SAXSource(spf.newSAXParser().getXMLReader(), new InputSource(new StringReader(xml)));
+
 		//make sure we have not null and not-empty string to de-serialize
 		if ( null != xml && !xml.trim().isEmpty())
 		{
@@ -102,7 +124,7 @@ public final class XmlUtility {
         	{
     	        Unmarshaller um = response_ctx.createUnmarshaller();
     	        try {
-    		        Object unmarshaled = um.unmarshal(new StringReader(xml));
+    		        Object unmarshaled = um.unmarshal(xmlSource);
     		        if ( null != unmarshaled)
     		        {
     		        	try {
