@@ -32,14 +32,14 @@ import org.xml.sax.SAXNotSupportedException;
 public final class XmlUtility {
 	private static Logger logger = LogManager.getLogger(XmlUtility.class);
 	private static final String XmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
-    private static JAXBContext request_ctx = null;
-    private static JAXBContext response_ctx = null;
-    private static HashMap<String, JAXBContext> jaxbContext = new HashMap<String, JAXBContext>();
+	private static JAXBContext request_ctx = null;
+	private static JAXBContext response_ctx = null;
+	private static HashMap<String, JAXBContext> jaxbContext = new HashMap<String, JAXBContext>();
 
 
 	/**
-    * Default C'tor, cannot be instantiated
-    */
+	* Default C'tor, cannot be instantiated
+	*/
 	private XmlUtility() {
 	}
 
@@ -53,32 +53,32 @@ public final class XmlUtility {
 	 */
 	public static synchronized <T extends Serializable> String getXml(T entity) throws IOException, JAXBException
 	{
-        StringWriter sw = new StringWriter();
+		StringWriter sw = new StringWriter();
 
-        if ( null != entity)
+		if ( null != entity)
 		{
-        	if(!jaxbContext.containsKey(entity.getClass().toString()))
-        	{
-        		request_ctx = JAXBContext.newInstance(entity.getClass());
-        		jaxbContext.put(entity.getClass().toString(), request_ctx);
-        	}
-        	else
-        	{
-        		request_ctx = jaxbContext.get(entity.getClass().toString());
-        	}
+			if(!jaxbContext.containsKey(entity.getClass().toString()))
+			{
+				request_ctx = JAXBContext.newInstance(entity.getClass());
+				jaxbContext.put(entity.getClass().toString(), request_ctx);
+			}
+			else
+			{
+				request_ctx = jaxbContext.get(entity.getClass().toString());
+			}
 	
-        	if(request_ctx != null)
-        	{
-    	        Marshaller m = request_ctx.createMarshaller();
-    	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-    	
-    	        m.marshal(entity, sw);
-        	}
-		}
-        sw.flush();
-        sw.close();
+			if(request_ctx != null)
+			{
+				Marshaller m = request_ctx.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		
-        return sw.toString();
+				m.marshal(entity, sw);
+			}
+		}
+		sw.flush();
+		sw.close();
+		
+		return sw.toString();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public final class XmlUtility {
 		//Disable XXE
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		spf.setNamespaceAware(true);
-	    spf.setValidating(true);	       
+		spf.setValidating(true);		   
 		spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
 		spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 		spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
@@ -110,44 +110,44 @@ public final class XmlUtility {
 		//make sure we have not null and not-empty string to de-serialize
 		if ( null != xml && !xml.trim().isEmpty())
 		{
-        	if(!jaxbContext.containsKey(classType.toString()))
-        	{
-        		response_ctx = JAXBContext.newInstance(classType);
-        		jaxbContext.put(classType.toString(), response_ctx);
-        	}
-        	else
-        	{
-        		response_ctx = jaxbContext.get(classType.toString());
-        	}
-        	
-        	if(response_ctx != null)
-        	{
-    	        Unmarshaller um = response_ctx.createUnmarshaller();
-    	        try {
-    		        Object unmarshaled = um.unmarshal(xmlSource);
-    		        if ( null != unmarshaled)
-    		        {
-    		        	try {
-    		        		entity = classType.cast(unmarshaled);
-    		        	} catch (ClassCastException cce) {
-    		        		if (unmarshaled instanceof JAXBElement) {
-    		        			@SuppressWarnings("rawtypes")
-    							JAXBElement element = (JAXBElement) unmarshaled;
-    		        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
-    		        				entity = (T) element.getValue();
-    		        			}
-    		        		}
-    		        	}
-    		        }
-    	        } catch (JAXBException jaxbe) {
-    	        	LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
-    	        	LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
-    	        	throw jaxbe;
-    	        }
-        	}
+			if(!jaxbContext.containsKey(classType.toString()))
+			{
+				response_ctx = JAXBContext.newInstance(classType);
+				jaxbContext.put(classType.toString(), response_ctx);
+			}
+			else
+			{
+				response_ctx = jaxbContext.get(classType.toString());
+			}
+			
+			if(response_ctx != null)
+			{
+				Unmarshaller um = response_ctx.createUnmarshaller();
+				try {
+					Object unmarshaled = um.unmarshal(xmlSource);
+					if ( null != unmarshaled)
+					{
+						try {
+							entity = classType.cast(unmarshaled);
+						} catch (ClassCastException cce) {
+							if (unmarshaled instanceof JAXBElement) {
+								@SuppressWarnings("rawtypes")
+								JAXBElement element = (JAXBElement) unmarshaled;
+								if ( null != element.getValue() && element.getValue().getClass()==classType) {
+									entity = (T) element.getValue();
+								}
+							}
+						}
+					}
+				} catch (JAXBException jaxbe) {
+					LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
+					LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
+					throw jaxbe;
+				}
+			}
 		}
 
-        return entity;
+		return entity;
 	}
 	
 	/**
@@ -233,7 +233,7 @@ public final class XmlUtility {
 	 * @return String  root element xml without prologue
 	 */
 	public static String getRootElementXml(String xmlString) {
-        return xmlString.replace(XmlHeader, "");
+		return xmlString.replace(XmlHeader, "");
 	}
 	
 	@XmlRootElement
