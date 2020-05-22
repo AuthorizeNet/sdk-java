@@ -17,8 +17,8 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXNotSupportedException;
  *
  */
 public final class XmlUtility {
-	private static Log logger = LogFactory.getLog(XmlUtility.class);
+	private static Logger logger = LogManager.getLogger(XmlUtility.class);
 	private static final String XmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
     private static JAXBContext request_ctx = null;
     private static JAXBContext response_ctx = null;
