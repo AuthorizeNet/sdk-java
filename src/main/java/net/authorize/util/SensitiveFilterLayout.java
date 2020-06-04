@@ -1,6 +1,7 @@
 package net.authorize.util;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,9 @@ import com.google.gson.GsonBuilder;
 
 public class SensitiveFilterLayout extends PatternLayout{
 	
-	private static Pattern[] cardPatterns;
+	private static final String SENSITIVE_CONFIG_FILE_NAME = "/AuthorizedNetSensitiveTagsConfig.json";
+
+    private static Pattern[] cardPatterns;
 	
 	private static Pattern[] tagPatterns;
 	private static String[] tagReplacements;
@@ -29,34 +32,48 @@ public class SensitiveFilterLayout extends PatternLayout{
 			gsonBuilder.registerTypeAdapter(SensitiveDataConfigType.class, new SensitiveTagsDeserializer());
 			gson = gsonBuilder.create();
 				
-			InputStream in = getClass().getResourceAsStream("/AuthorizedNetSensitiveTagsConfig.json"); 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-				SensitiveDataConfigType configType = gson.fromJson(reader, SensitiveDataConfigType.class);
-				cardPatterns = new Pattern[configType.sensitiveStringRegexes.length];
+			InputStream in = getClass().getResourceAsStream(SENSITIVE_CONFIG_FILE_NAME);
+			Closeable closeableResource = in;
+            if (null != in) {
+                try {
+					InputStreamReader inputStreamReader = new InputStreamReader(in);
+					closeableResource = inputStreamReader;
+					BufferedReader reader = new BufferedReader(inputStreamReader);
+					closeableResource = reader;
+					SensitiveDataConfigType configType = gson.fromJson(reader, SensitiveDataConfigType.class);
+					cardPatterns = new Pattern[configType.sensitiveStringRegexes.length];
 
-			  for(int i = 0; i < configType.sensitiveStringRegexes.length; i++) {  
-					  cardPatterns[i] = Pattern.compile(configType.sensitiveStringRegexes[i]);
-				  }
-				  
-				int noOfSensitiveTags = configType.sensitiveTags.length;
-				tagPatterns     = new Pattern[noOfSensitiveTags];
-				tagReplacements = new String[noOfSensitiveTags];
+				  for(int i = 0; i < configType.sensitiveStringRegexes.length; i++) {  
+						  cardPatterns[i] = Pattern.compile(configType.sensitiveStringRegexes[i]);
+					  }
 					  
-				 for(int j=0; j<noOfSensitiveTags; j++) {
-					  String tagName     = configType.sensitiveTags[j].tagName;
-					  String pattern     = configType.sensitiveTags[j].pattern;
-					  String replacement = configType.sensitiveTags[j].replacement;
-					  
-					  if(pattern != null && !pattern.isEmpty())
-						  tagPatterns[j] = Pattern.compile("<"+tagName+">"+pattern+"</"+tagName+">");
-					  else
-						  tagPatterns[j] = Pattern.compile("<"+tagName+">"+".+"+"</"+tagName+">");
-					  tagReplacements[j] = "<"+tagName+">"+replacement+"</"+tagName+">";
-				  }
-				 if(reader!=null)
-					 reader.close();
+					int noOfSensitiveTags = configType.sensitiveTags.length;
+					tagPatterns	 = new Pattern[noOfSensitiveTags];
+					tagReplacements = new String[noOfSensitiveTags];
+						  
+					 for(int j=0; j<noOfSensitiveTags; j++) {
+						  String tagName	 = configType.sensitiveTags[j].tagName;
+						  String pattern	 = configType.sensitiveTags[j].pattern;
+						  String replacement = configType.sensitiveTags[j].replacement;
+						  
+						  if(pattern != null && !pattern.isEmpty())
+							  tagPatterns[j] = Pattern.compile("<"+tagName+">"+pattern+"</"+tagName+">");
+						  else
+							  tagPatterns[j] = Pattern.compile("<"+tagName+">"+".+"+"</"+tagName+">");
+						  tagReplacements[j] = "<"+tagName+">"+replacement+"</"+tagName+">";
+					  }
+				} finally {
+					closeableResource.close();
+				}
+			} else {
+				// no logging system configured, so System.err is the only option...
+				System.err.println("Resource "+ SENSITIVE_CONFIG_FILE_NAME + " not found when configuring SensitiveFilterLayout");
+			}
 		}
 		catch(Exception e){
+            // no logging system configured, so System.err is the only option...
+            System.err.println("Something went wrong configuring the SensitiveFilterLayout");
+            e.printStackTrace(System.err);
 		}		
 	}
 
