@@ -16,6 +16,7 @@ _Note: Support for building the SDK with either Ant or Maven has been made. Plea
 ### Dependencies
 * commons-logging-1.1.1.jar : logging
 * log4j-1.2.16.jar          : logging
+* gson-2.3.1.jar.jar        : logging with SensitiveFilterLayout
 * httpclient-4.0.1.jar      : http communication with the payment gateway
 * httpcore-4.0.1.jar        : http communication with the payment gateway
 * junit-4.8.2.jar           : unit testing
