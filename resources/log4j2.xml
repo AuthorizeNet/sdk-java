@@ -31,10 +31,10 @@
 		</RollingFile>
 	</Appenders>
 	<Loggers>
-		<Logger name="consoleLogger" level="fatal" additivity="false">
-			<appender-ref ref="LogToConsole" level="fatal" />
+		<Logger name="net.authorize" level="fatal" additivity="true">
+			<AppenderRef ref="LogToConsole" level="fatal" />
 		</Logger>
-		<Root level="fatal" additivity="false">
+		<Root level="fatal" additivity="true">
 			<AppenderRef ref="RollingFile" />
 		</Root>
 	</Loggers>
