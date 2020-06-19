@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 @Plugin(name = "SensitiveFilterPatternConverter", category = "Converter")
-@ConverterKeys({"logMessage"})
+@ConverterKeys({"maskedMessage"})
 public class SensitiveFilterPatternConverter extends LogEventPatternConverter{
 	private static Pattern[] cardPatterns;
 	
@@ -28,7 +28,7 @@ public class SensitiveFilterPatternConverter extends LogEventPatternConverter{
 	}
 	
 	public static SensitiveFilterPatternConverter newInstance(final String[] options) {
-		return new SensitiveFilterPatternConverter("logMessage", "logMessage");
+		return new SensitiveFilterPatternConverter("maskedMessage", "maskedMessage");
 	}
 
 	@Override

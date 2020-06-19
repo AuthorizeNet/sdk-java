@@ -5,7 +5,7 @@
 	For information on how to change this configuration file, 
 	refer to https://logging.apache.org/log4j/2.x/manual/configuration.html
 	
-	To enable masking of sensitive data, replace `%m` with `%logMessage%` in the patterns below
+	To enable masking of sensitive data, replace `%m` with `%maskedMessage` in the patterns below
 ################################################################################################################ 
 -->
 
