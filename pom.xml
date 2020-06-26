@@ -173,7 +173,7 @@
 					<include>**/*.*</include>
 				</includes>
 				<excludes>
-					<exclude>log4j.properties</exclude>
+					<exclude>log4j2.xml</exclude>
 				</excludes>
 			</resource>
 		</resources>
