@@ -15,8 +15,8 @@ import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -30,7 +30,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
  *
  */
 public class HttpCallTask implements Callable<ANetApiResponse> {
-	private static Log logger = LogFactory.getLog(HttpCallTask.class);
+	private static Logger logger = LogManager.getLogger(HttpCallTask.class);
 
 	Environment env = null;
 	ANetApiRequest request = null;

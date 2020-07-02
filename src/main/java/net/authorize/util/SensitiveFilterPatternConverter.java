@@ -1,29 +1,50 @@
 package net.authorize.util;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
+import org.apache.logging.log4j.core.pattern.ConverterKeys;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class SensitiveFilterLayout extends PatternLayout{
-	
+@Plugin(name = "SensitiveFilterPatternConverter", category = "Converter")
+@ConverterKeys({"maskedMessage"})
+public class SensitiveFilterPatternConverter extends LogEventPatternConverter{
 	private static Pattern[] cardPatterns;
 	
 	private static Pattern[] tagPatterns;
 	private static String[] tagReplacements;
 	private static Gson gson;
 	
-	public SensitiveFilterLayout() throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	private SensitiveFilterPatternConverter(final String name, final String style) {
+		super(name, style);
+		initialize();
+	}
+	
+	public static SensitiveFilterPatternConverter newInstance(final String[] options) {
+		return new SensitiveFilterPatternConverter("maskedMessage", "maskedMessage");
+	}
+
+	@Override
+	public void format(LogEvent event, StringBuilder toAppendTo) {
+		try {
+				String message = event.getMessage().getFormattedMessage();
+				String maskXmlMessage = SensitiveFilterPatternConverter.maskSensitiveXmlString(message);
+				String maskCardNumber = SensitiveFilterPatternConverter.maskCreditCards(maskXmlMessage);
+				
+				toAppendTo.append(maskCardNumber.trim());
+		}
+		catch(Exception e){
+		}
+	}
+
+	public void initialize() {
 		try {
 			GsonBuilder gsonBuilder = new GsonBuilder();
 			gsonBuilder.registerTypeAdapter(SensitiveDataConfigType.class, new SensitiveTagsDeserializer());
@@ -57,27 +78,9 @@ public class SensitiveFilterLayout extends PatternLayout{
 					 reader.close();
 		}
 		catch(Exception e){
-		}		
-	}
-
-	@Override
-	public String format(LoggingEvent event) {
-		try {
-			if(event.getMessage() instanceof String) {
-				String message = event.getRenderedMessage();
-				String maskXmlMessage = SensitiveFilterLayout.maskSensitiveXmlString(message);
-				String maskCardNumber = SensitiveFilterLayout.maskCreditCards(maskXmlMessage);
-				
-				Throwable throwable = event.getThrowableInformation() != null ? event.getThrowableInformation().getThrowable() : null;
-				LoggingEvent maskedEvent = new LoggingEvent(event.fqnOfCategoryClass, Logger.getLogger(event.getLoggerName()), event.timeStamp, event.getLevel(), maskCardNumber, throwable);			
-				return super.format(maskedEvent);
-			}		
 		}
-		catch(Exception e){
-		}		
-		return null;
 	}
-
+	
 	public static String maskCreditCards(String str) {
 	    for (int i = 0; i < cardPatterns.length; i++) {
 	        str = cardPatterns[i].matcher(str).replaceAll("XXXX");
@@ -90,5 +93,5 @@ public class SensitiveFilterLayout extends PatternLayout{
 	        str = tagPatterns[i].matcher(str).replaceAll(tagReplacements[i]);
 	    }
 	    return str;
-	}	
+	}
 }

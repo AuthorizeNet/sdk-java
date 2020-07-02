@@ -10,8 +10,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import net.authorize.Environment;
 import net.authorize.util.Constants;
@@ -103,7 +103,7 @@ public abstract class UnitTestData {
 
 	private static boolean internetAccessible = false;
 
-	private static Log logger = LogFactory.getLog(UnitTestData.class);
+	private static Logger logger = LogManager.getLogger(UnitTestData.class);
 
 	static URL url = null;
 	static String[] propertiesList = { Constants.HTTP_USE_PROXY, Constants.HTTP_PROXY_HOST, Constants.HTTP_PROXY_PORT,
