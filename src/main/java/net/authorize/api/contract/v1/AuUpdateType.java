@@ -8,6 +8,9 @@
 
 package net.authorize.api.contract.v1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="newCreditCard" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}creditCardMaskedType"/>
  *         &lt;element name="oldCreditCard" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}creditCardMaskedType"/>
+ *         &lt;element name="subscriptionIdList" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}SubscriptionIdList" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -37,7 +41,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "auUpdateType", propOrder = {
     "newCreditCard",
-    "oldCreditCard"
+    "oldCreditCard",
+    "subscriptionIdList"
 })
 public class AuUpdateType
     extends AuDetailsType
@@ -47,8 +52,20 @@ public class AuUpdateType
     protected CreditCardMaskedType newCreditCard;
     @XmlElement(required = true)
     protected CreditCardMaskedType oldCreditCard;
+    
+   	/*---Added for GetAccountUpdaterJobDetails---*/
+    @XmlElement(required = true)
+    protected SubscriptionIdList subscriptionIdList;
+    
+    public SubscriptionIdList getSubscriptionIdList() {
+		return subscriptionIdList;
+	}
+	public void setSubscriptionIdList(SubscriptionIdList value) {
+		this.subscriptionIdList = value;
+	}
+   /*---End---*/
 
-    /**
+	/**
      * Gets the value of the newCreditCard property.
      * 
      * @return
@@ -59,8 +76,7 @@ public class AuUpdateType
     public CreditCardMaskedType getNewCreditCard() {
         return newCreditCard;
     }
-
-    /**
+	/**
      * Sets the value of the newCreditCard property.
      * 
      * @param value
