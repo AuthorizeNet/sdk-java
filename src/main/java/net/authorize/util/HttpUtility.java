@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,6 +27,9 @@ import org.apache.http.protocol.HTTP;
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.ANetApiRequest;
 import net.authorize.api.contract.v1.ANetApiResponse;
+import net.authorize.api.contract.v1.MessageTypeEnum;
+import net.authorize.api.contract.v1.MessagesType;
+import net.authorize.api.contract.v1.MessagesType.Message;
 
 /**
  * Helper methods for http calls
@@ -106,12 +110,46 @@ public final class HttpUtility {
         	logger.debug(String.format("Response: '%s'", response));
 		} catch (InterruptedException ie) {
 			logger.error(String.format("Http call interrupted Message: '%s'", ie.getMessage()));
+			response = createErrorResponse(ie);
 		} catch (ExecutionException ee) {
 			logger.error(String.format("Execution error for http post Message: '%s'", ee.getMessage()));
+			response = createErrorResponse(ee);
 		}
 
         return response;
 	}
+
+    /**
+     * Creates a failure response with information from the exception causing the failure
+     * @param exception causing failed response
+     * @return failed ANetApiResponse with information from exception
+     */
+    private static ANetApiResponse createErrorResponse(Exception exception) {
+        ANetApiResponse response = new ANetApiResponse();
+
+        MessagesType aMessage = new MessagesType();
+        aMessage.setResultCode(MessageTypeEnum.ERROR);
+        response.setMessages(aMessage);
+
+        List<Message> messages = response.getMessages().getMessage();
+        // clear all messages
+        messages.clear();
+
+        if (null != exception) {
+            Message errorMessage = new Message();
+            messages.add(errorMessage);
+            String code = "Error";
+            String text = "Unknown Error";
+            code = exception.getClass().getCanonicalName();
+            // code = exception.getClass().getTypeName();// requires java1.8
+            text = exception.getMessage();
+
+            errorMessage.setCode(code);
+            errorMessage.setText(text);
+        }
+
+        return response;
+    }
 
 	/**
 	 * Converts a response inputstream into a string.
