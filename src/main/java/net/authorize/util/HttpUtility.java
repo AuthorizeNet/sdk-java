@@ -16,8 +16,8 @@ import java.util.concurrent.Future;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.params.CoreProtocolPNames;
@@ -38,7 +38,7 @@ import net.authorize.api.contract.v1.MessagesType.Message;
  */
 public final class HttpUtility {
 
-	private static Log logger = LogFactory.getLog(HttpUtility.class);	
+	private static Logger logger = LogManager.getLogger(HttpUtility.class);	
 
 	static int httpConnectionTimeout = Environment.getIntProperty(Constants.HTTP_CONNECTION_TIME_OUT);
 	static int httpReadTimeout = Environment.getIntProperty(Constants.HTTP_READ_TIME_OUT);
