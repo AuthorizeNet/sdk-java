@@ -55,8 +55,8 @@ import net.authorize.util.Constants;
 import net.authorize.util.DateUtil;
 import net.authorize.util.LogHelper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;
@@ -66,7 +66,7 @@ import org.junit.BeforeClass;
 
 public abstract class ApiCoreTestBase {
 
-	protected static Log logger = LogFactory.getLog(ApiCoreTestBase.class);
+	protected static Logger logger = LogManager.getLogger(ApiCoreTestBase.class);
 
 	protected static HashMap<String, String> errorMessages = null;
 
