@@ -12,9 +12,17 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 /**
  * Helper methods for serializing and de-serializing to XML using JAXB
@@ -22,16 +30,16 @@ import org.apache.commons.logging.LogFactory;
  *
  */
 public final class XmlUtility {
-	private static Log logger = LogFactory.getLog(XmlUtility.class);
+	private static Logger logger = LogManager.getLogger(XmlUtility.class);
 	private static final String XmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
-    private static JAXBContext request_ctx = null;
-    private static JAXBContext response_ctx = null;
-    private static HashMap<String, JAXBContext> jaxbContext = new HashMap<String, JAXBContext>();
+	private static JAXBContext request_ctx = null;
+	private static JAXBContext response_ctx = null;
+	private static HashMap<String, JAXBContext> jaxbContext = new HashMap<String, JAXBContext>();
 
 
 	/**
-    * Default C'tor, cannot be instantiated
-    */
+	* Default C'tor, cannot be instantiated
+	*/
 	private XmlUtility() {
 	}
 
@@ -45,32 +53,32 @@ public final class XmlUtility {
 	 */
 	public static synchronized <T extends Serializable> String getXml(T entity) throws IOException, JAXBException
 	{
-        StringWriter sw = new StringWriter();
+		StringWriter sw = new StringWriter();
 
-        if ( null != entity)
+		if ( null != entity)
 		{
-        	if(!jaxbContext.containsKey(entity.getClass().toString()))
-        	{
-        		request_ctx = JAXBContext.newInstance(entity.getClass());
-        		jaxbContext.put(entity.getClass().toString(), request_ctx);
-        	}
-        	else
-        	{
-        		request_ctx = jaxbContext.get(entity.getClass().toString());
-        	}
+			if(!jaxbContext.containsKey(entity.getClass().toString()))
+			{
+				request_ctx = JAXBContext.newInstance(entity.getClass());
+				jaxbContext.put(entity.getClass().toString(), request_ctx);
+			}
+			else
+			{
+				request_ctx = jaxbContext.get(entity.getClass().toString());
+			}
 	
-        	if(request_ctx != null)
-        	{
-    	        Marshaller m = request_ctx.createMarshaller();
-    	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-    	
-    	        m.marshal(entity, sw);
-        	}
-		}
-        sw.flush();
-        sw.close();
+			if(request_ctx != null)
+			{
+				Marshaller m = request_ctx.createMarshaller();
+				m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		
-        return sw.toString();
+				m.marshal(entity, sw);
+			}
+		}
+		sw.flush();
+		sw.close();
+		
+		return sw.toString();
 	}
 
 	/**
@@ -80,52 +88,66 @@ public final class XmlUtility {
 	 * @param <T> class that implements Serializable
 	 * @return T De-serialized object
 	 * @throws JAXBException if errors during de-serialization
+	 * @throws ParserConfigurationException 
+	 * @throws SAXException 
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException
+	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException, ParserConfigurationException, SAXException
 	{
 		T entity = null;
+		
+		//Disable XXE
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		spf.setNamespaceAware(true);
+		spf.setValidating(true);		   
+		spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+		spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+		spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+		//Do unmarshall operation
+		Source xmlSource = new SAXSource(spf.newSAXParser().getXMLReader(), new InputSource(new StringReader(xml)));
+
 		//make sure we have not null and not-empty string to de-serialize
 		if ( null != xml && !xml.trim().isEmpty())
 		{
-        	if(!jaxbContext.containsKey(classType.toString()))
-        	{
-        		response_ctx = JAXBContext.newInstance(classType);
-        		jaxbContext.put(classType.toString(), response_ctx);
-        	}
-        	else
-        	{
-        		response_ctx = jaxbContext.get(classType.toString());
-        	}
-        	
-        	if(response_ctx != null)
-        	{
-    	        Unmarshaller um = response_ctx.createUnmarshaller();
-    	        try {
-    		        Object unmarshaled = um.unmarshal(new StringReader(xml));
-    		        if ( null != unmarshaled)
-    		        {
-    		        	try {
-    		        		entity = classType.cast(unmarshaled);
-    		        	} catch (ClassCastException cce) {
-    		        		if (unmarshaled instanceof JAXBElement) {
-    		        			@SuppressWarnings("rawtypes")
-    							JAXBElement element = (JAXBElement) unmarshaled;
-    		        			if ( null != element.getValue() && element.getValue().getClass()==classType) {
-    		        				entity = (T) element.getValue();
-    		        			}
-    		        		}
-    		        	}
-    		        }
-    	        } catch (JAXBException jaxbe) {
-    	        	LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
-    	        	LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
-    	        	throw jaxbe;
-    	        }
-        	}
+			if(!jaxbContext.containsKey(classType.toString()))
+			{
+				response_ctx = JAXBContext.newInstance(classType);
+				jaxbContext.put(classType.toString(), response_ctx);
+			}
+			else
+			{
+				response_ctx = jaxbContext.get(classType.toString());
+			}
+			
+			if(response_ctx != null)
+			{
+				Unmarshaller um = response_ctx.createUnmarshaller();
+				try {
+					Object unmarshaled = um.unmarshal(xmlSource);
+					if ( null != unmarshaled)
+					{
+						try {
+							entity = classType.cast(unmarshaled);
+						} catch (ClassCastException cce) {
+							if (unmarshaled instanceof JAXBElement) {
+								@SuppressWarnings("rawtypes")
+								JAXBElement element = (JAXBElement) unmarshaled;
+								if ( null != element.getValue() && element.getValue().getClass()==classType) {
+									entity = (T) element.getValue();
+								}
+							}
+						}
+					}
+				} catch (JAXBException jaxbe) {
+					LogHelper.info(logger, "Exception - while deserializing text:'%s' ", xml);
+					LogHelper.warn(logger, "Exception Details-> Code:'%s', Message:'%s'", jaxbe.getErrorCode(), jaxbe.getMessage());
+					throw jaxbe;
+				}
+			}
 		}
 
-        return entity;
+		return entity;
 	}
 	
 	/**
@@ -211,7 +233,7 @@ public final class XmlUtility {
 	 * @return String  root element xml without prologue
 	 */
 	public static String getRootElementXml(String xmlString) {
-        return xmlString.replace(XmlHeader, "");
+		return xmlString.replace(XmlHeader, "");
 	}
 	
 	@XmlRootElement
