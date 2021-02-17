@@ -1,11 +1,11 @@
 package net.authorize.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class StringUtils {
 
-	private static Log logger = LogFactory.getLog(StringUtils.class);
+	private static Logger logger = LogManager.getLogger(StringUtils.class);
 
 	public static int parseInt(String intStringValue) {
 		int amount = 0;
