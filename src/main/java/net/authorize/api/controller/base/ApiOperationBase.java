@@ -19,8 +19,8 @@ import net.authorize.util.Constants;
 import net.authorize.util.HttpUtility;
 import net.authorize.util.LogHelper;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author ramittal
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetApiResponse> implements IApiOperation<Q, S> {
 
-	protected static Log logger = LogFactory.getLog(ApiOperationBase.class);
+	protected static Logger logger = LogManager.getLogger(ApiOperationBase.class);
 
 	private static Environment environment = null;
 	private static MerchantAuthenticationType merchantAuthentication = null;
