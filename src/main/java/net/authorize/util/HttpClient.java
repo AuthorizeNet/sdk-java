@@ -9,8 +9,8 @@ import java.security.KeyStore;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -33,7 +33,7 @@ import net.authorize.Environment;
  *
  */
 public class HttpClient {
-	private static Log logger = LogFactory.getLog(HttpClient.class);
+	private static Logger logger = LogManager.getLogger(HttpClient.class);
 
 	public static final String ENCODING = "UTF-8";
 	static boolean proxySet = false;
