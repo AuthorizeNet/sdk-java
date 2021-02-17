@@ -6,16 +6,19 @@
 
  
 ## Requirements
-* JDK 1.5.0 or higher
+* JDK 1.5.0 to JDK 1.8.0
 * Ant 1.6.2 or higher (build SDK only)
 * Maven 2.2.0 or higher (build SDK only)
 * An Authorize.Net account (see _Registration & Configuration_ section below)
 
-_Note: Support for building the SDK with either Ant or Maven has been made. Please see the respective build processes below.  All initial jars and docs were built with Ant, however._
+_Note 1: Support for building the SDK with either Ant or Maven has been made. Please see the respective build processes below.  All initial jars and docs were built with Ant, however._
+
+_Note 2: Support for higher versions of JDK (>= 1.9.0) has not been made available._
 
 ### Dependencies
 * commons-logging-1.1.1.jar : logging
 * log4j-1.2.16.jar          : logging
+* gson-2.3.1.jar.jar        : logging with SensitiveFilterLayout
 * httpclient-4.0.1.jar      : http communication with the payment gateway
 * httpcore-4.0.1.jar        : http communication with the payment gateway
 * junit-4.8.2.jar           : unit testing
