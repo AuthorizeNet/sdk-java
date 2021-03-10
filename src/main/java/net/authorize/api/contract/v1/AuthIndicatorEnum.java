@@ -9,37 +9,50 @@
 package net.authorize.api.contract.v1;
 
 import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for webCheckOutTypeEnum.
+ * <p>Java class for authIndicatorEnum.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="webCheckOutTypeEnum">
+ * &lt;simpleType name="authIndicatorEnum">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="PAN"/>
- *     &lt;enumeration value="TOKEN"/>
+ *     &lt;enumeration value="pre"/>
+ *     &lt;enumeration value="final"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
  * 
  */
-@XmlType(name = "webCheckOutTypeEnum")
+@XmlType(name = "authIndicatorEnum")
 @XmlEnum
-public enum WebCheckOutTypeEnum {
+public enum AuthIndicatorEnum {
 
-    PAN,
-    TOKEN;
+    @XmlEnumValue("pre")
+    PRE("pre"),
+    @XmlEnumValue("final")
+    FINAL("final");
+    private final String value;
 
-    public String value() {
-        return name();
+    AuthIndicatorEnum(String v) {
+        value = v;
     }
 
-    public static WebCheckOutTypeEnum fromValue(String v) {
-        return valueOf(v);
+    public String value() {
+        return value;
+    }
+
+    public static AuthIndicatorEnum fromValue(String v) {
+        for (AuthIndicatorEnum c: AuthIndicatorEnum.values()) {
+            if (c.value.equals(v)) {
+                return c;
+            }
+        }
+        throw new IllegalArgumentException(v);
     }
 
 }

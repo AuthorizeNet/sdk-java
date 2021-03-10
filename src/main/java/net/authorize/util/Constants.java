@@ -7,7 +7,7 @@ public final class Constants {
 	public static final String HTTPS_PROXY_HOST = "https.proxyHost";
 	public static final String HTTPS_PROXY_PORT = "https.proxyPort";
 	public static final String HTTPS_PROXY_USERNAME = "https.proxyUsername";
-        public static final String HTTPS_PROXY_PASSWORD = "https.proxyPassword";
+    public static final String HTTPS_PROXY_PASSWORD = "https.proxyPassword";
 
 	public static final String HTTP_USE_PROXY = "http.proxyUse";
 	public static final String HTTP_PROXY_HOST = "http.proxyHost";

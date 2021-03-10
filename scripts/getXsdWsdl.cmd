@@ -31,14 +31,14 @@ SET PROTOCOL=https
 @REM SET PROTOCOL=http
 
 SET XSD=%PROTOCOL%://%HOST%/xml/v1/schema/AnetApiSchema.xsd
-SET WSDL=%PROTOCOL%://%HOST%/ANetApiWS/ANetApiWS.asmx?wsdl
+REM SET WSDL=%PROTOCOL%://%HOST%/ANetApiWS/ANetApiWS.asmx?wsdl
 
 @ECHO Fetching  XSD from:%XSD%
-@ECHO Fetching WSDL from:%WSDL%
+REM @ECHO Fetching WSDL from:%WSDL%
 @ECHO Press Enter to continue
 pause
 DEL /Q %LOCALXSD%
-DEL /Q %LOCALWSDL%
+REM DEL /Q %LOCALWSDL%
 
 @ECHO Fetching Schema: %XSD% 
 bitsadmin.exe /transfer "XSD Download" /DOWNLOAD %XSD%  %LOCALXSD%
@@ -47,35 +47,35 @@ IF NOT "%ERRORLEVEL%"=="0" (
     EXIT /b 1
 )
 
-@ECHO Fetching WSDL:   %WSDL% 
-bitsadmin.exe /transfer "WSDL Download" /DOWNLOAD %WSDL% %LOCALWSDL%
-IF NOT "%ERRORLEVEL%"=="0" (
-    SET ERRORLEVEL=
-    IF EXIST "ANetApiWS.asmx@wsdl" (
-        DEL /Q "ANetApiWS.asmx@wsdl"
-    )
-    @ECHO Unable to fetch "%WSDL%" via bitsadmin, trying wget
-    "%CYGWIN_EXE%\wget.exe" %WSDL% 
-REM     IF "%ERRORLEVEL%"=="1" (
-REM         @ECHO Unable to fetch "%WSDL%" via wget
-REM         EXIT /b 1
-REM     )
-     IF EXIST "ANetApiWS.asmx@wsdl" (
-        COPY "ANetApiWS.asmx@wsdl" "%LOCALWSDL%"
-        DEL /Q "ANetApiWS.asmx@wsdl"
-    ) ELSE (
-        @ECHO Unable to fetch "%WSDL%" via wget
-        @REM EXIT /b 1    
-    )
-)
+REM @ECHO Fetching WSDL:   %WSDL% 
+REM bitsadmin.exe /transfer "WSDL Download" /DOWNLOAD %WSDL% %LOCALWSDL%
+REM IF NOT "%ERRORLEVEL%"=="0" (
+    REM SET ERRORLEVEL=
+    REM IF EXIST "ANetApiWS.asmx@wsdl" (
+        REM DEL /Q "ANetApiWS.asmx@wsdl"
+    REM )
+    REM @ECHO Unable to fetch "%WSDL%" via bitsadmin, trying wget
+    REM "%CYGWIN_EXE%\wget.exe" %WSDL% 
+    REM IF "%ERRORLEVEL%"=="1" (
+        REM @ECHO Unable to fetch "%WSDL%" via wget
+        REM EXIT /b 1
+    REM )
+     REM IF EXIST "ANetApiWS.asmx@wsdl" (
+        REM COPY "ANetApiWS.asmx@wsdl" "%LOCALWSDL%"
+        REM DEL /Q "ANetApiWS.asmx@wsdl"
+    REM ) ELSE (
+        REM @ECHO Unable to fetch "%WSDL%" via wget
+        REM @REM EXIT /b 1    
+    REM )
+REM )
 IF NOT EXIST "%LOCALXSD%" (
     @ECHO Unable to find "%LOCALXSD%"
     EXIT /b 1
 )
-IF NOT EXIST "%LOCALWSDL%" (
-    @ECHO Unable to find "%LOCALWSDL%"
-    @REM EXIT /b 1
-)
+REM IF NOT EXIST "%LOCALWSDL%" (
+    REM @ECHO Unable to find "%LOCALWSDL%"
+    REM @REM EXIT /b 1
+REM )
 @ECHO %0 Exit Code:'%ERRORLEVEL%'
 ENDLOCAL
 

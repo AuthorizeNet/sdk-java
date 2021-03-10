@@ -15,18 +15,18 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for customerProfileInfoExType complex type.
+ * <p>Java class for authorizationIndicatorType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="customerProfileInfoExType">
+ * &lt;complexType name="authorizationIndicatorType">
  *   &lt;complexContent>
- *     &lt;extension base="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileExType">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="profileType" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}customerProfileTypeEnum" minOccurs="0"/>
+ *         &lt;element name="authorizationIndicator" type="{AnetApi/xml/v1/schema/AnetApiSchema.xsd}authIndicatorEnum" minOccurs="0"/>
  *       &lt;/sequence>
- *     &lt;/extension>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -34,38 +34,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "customerProfileInfoExType", propOrder = {
-    "profileType"
+@XmlType(name = "authorizationIndicatorType", propOrder = {
+    "authorizationIndicator"
 })
-public class CustomerProfileInfoExType
-    extends CustomerProfileExType
-{
+public class AuthorizationIndicatorType {
 
     @XmlSchemaType(name = "string")
-    protected CustomerProfileTypeEnum profileType;
+    protected AuthIndicatorEnum authorizationIndicator;
 
     /**
-     * Gets the value of the profileType property.
+     * Gets the value of the authorizationIndicator property.
      * 
      * @return
      *     possible object is
-     *     {@link CustomerProfileTypeEnum }
+     *     {@link AuthIndicatorEnum }
      *     
      */
-    public CustomerProfileTypeEnum getProfileType() {
-        return profileType;
+    public AuthIndicatorEnum getAuthorizationIndicator() {
+        return authorizationIndicator;
     }
 
     /**
-     * Sets the value of the profileType property.
+     * Sets the value of the authorizationIndicator property.
      * 
      * @param value
      *     allowed object is
-     *     {@link CustomerProfileTypeEnum }
+     *     {@link AuthIndicatorEnum }
      *     
      */
-    public void setProfileType(CustomerProfileTypeEnum value) {
-        this.profileType = value;
+    public void setAuthorizationIndicator(AuthIndicatorEnum value) {
+        this.authorizationIndicator = value;
     }
 
 }

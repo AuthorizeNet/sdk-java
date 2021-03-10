@@ -19,53 +19,53 @@ SETLOCAL
 @ECHO Starting %DATE%-%TIME%
 
 
-SET LOCALXSD=%TEMP%\AnetApiSchema.xsd
-SET LOCALWSDL=%TEMP%\AnetApiSchema.wsdl
-SET selection=N
-CHOICE /C YN  /T 10 /D N /M "Fetch and update Schema/WSDL file from remote server?"
-IF "%ERRORLEVEL%"=="1" (
-    @ECHO Fetching Schema/WSDL files 
-    SET %ERRORLEVEL%=
-    CALL "%~dp0\getXsdWsdl.cmd" %LOCALXSD% %LOCALWSDL%
-    SET ERRORCODE=%ERRORLEVEL%
-    @ECHO GetXsdWsdl Call Exit Code:%ERRORCODE%
-    IF NOT "%ERRORLEVEL%"=="0" (
-       @ECHO Error fetching source files
-       @ECHO ##### ***** $$$$$ CHECK FOR ERROR $$$$$ ***** #####
-       REM EXIT /b 1
-    )
-) ELSE (
-    @ECHO Schema/WSDL files have not been updated!
-)
+SET LOCALXSD="%~dp0\AnetApiSchema.xsd"
+REM SET LOCALWSDL=%TEMP%\AnetApiSchema.wsdl
+REM SET selection=N
+REM CHOICE /C YN  /T 10 /D N /M "Fetch and update Schema/WSDL file from remote server?"
+REM IF "%ERRORLEVEL%"=="1" (
+    REM @ECHO Fetching Schema/WSDL files 
+    REM SET %ERRORLEVEL%=
+    REM CALL "%~dp0\getXsdWsdl.cmd" %LOCALXSD% %LOCALWSDL%
+    REM SET ERRORCODE=%ERRORLEVEL%
+    REM @ECHO GetXsdWsdl Call Exit Code:%ERRORCODE%
+    REM IF NOT "%ERRORLEVEL%"=="0" (
+       REM @ECHO Error fetching source files
+       REM @ECHO ##### ***** $$$$$ CHECK FOR ERROR $$$$$ ***** #####
+       REM @REM EXIT /b 1
+    REM )
+REM ) ELSE (
+    REM @ECHO Schema/WSDL files have not been updated!
+REM )
 SET XSDSRCDIR=src/main/java/
 SET XSDPACKAGE=net.authorize.api.contract.v1
 SET XSDGENFOLDER=%XSDPACKAGE:.=/%
 
-SET WSDLSRCDIR=src/wsdlgen/java/
-SET WSDLPACKAGE=net.authorize.api.contract.v1
+REM SET WSDLSRCDIR=src/wsdlgen/java/
+REM SET WSDLPACKAGE=net.authorize.api.contract.v1
 
 IF NOT EXIST "%LOCALXSD%" (
     @ECHO Unable to find "%LOCALXSD%"
     EXIT /b 1
 )
-IF NOT EXIST "%LOCALWSDL%" (
-    @ECHO Unable to find "%LOCALWSDL%"
-    @REM EXIT /b 1
-)
+REM IF NOT EXIST "%LOCALWSDL%" (
+    REM @ECHO Unable to find "%LOCALWSDL%"
+    REM @REM EXIT /b 1
+REM )
 @ECHO Validating target folder "%XSDSRCDIR%"
 IF NOT EXIST %XSDSRCDIR% (
         MD "%XSDSRCDIR%"
 )
-@ECHO Validating target folder "%WSDLSRCDIR%"
-IF NOT EXIST %WSDLSRCDIR% (
-        MD "%WSDLSRCDIR%"
-)
+REM @ECHO Validating target folder "%WSDLSRCDIR%"
+REM IF NOT EXIST %WSDLSRCDIR% (
+        REM MD "%WSDLSRCDIR%"
+REM )
 
 @ECHO Generating sources from Schema: %XSD% in folder "%XSDSRCDIR%"
 @ECHO: Command Line: xjc -verbose -d "%XSDSRCDIR%"  -p "%XSDPACKAGE%" "%LOCALXSD%"
 xjc            -verbose -d "%XSDSRCDIR%"  -p "%XSDPACKAGE%"              "%LOCALXSD%"
 
-@ECHO **NOT** Generating source from WSDL: %WSDL% in folder "%WSDLSRCDIR%"
+REM @ECHO **NOT** Generating source from WSDL: %WSDL% in folder "%WSDLSRCDIR%"
 REM wsimport -keep -verbose -d "%WSDLSRCDIR%" -p "%WSDLPACKAGE%" -Xnocompile "%LOCALWSDL%"
 
 @ECHO Adding Serializable to the Base Request/Response
