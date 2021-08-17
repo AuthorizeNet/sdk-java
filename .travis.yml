@@ -12,6 +12,7 @@ jdk:
     - openjdk7
 
 matrix:
+  fast_finish: true
     allow_failures:
         - jdk: oraclejdk9
 
@@ -26,3 +27,7 @@ script:
 after_script:
     print_surefire_reports.sh
  
+
+cache:
+  directories:
+  - $HOME/.m2
