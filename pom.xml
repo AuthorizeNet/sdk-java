@@ -9,7 +9,7 @@
 	<groupId>net.authorize</groupId>
 	<artifactId>anet-java-sdk</artifactId>
 	<packaging>jar</packaging>
-	<version>2.0.4-SNAPSHOT</version>
+	<version>2.0.4</version>
 	<name>Authorize.Net Java SDK</name>
 	<description>Authorize.Net SDK includes standard payments, recurring billing, and customer profiles.</description>
 	<url>http://developer.authorize.net</url>
