@@ -4,6 +4,12 @@
 [![Code Climate](https://codeclimate.com/github/AuthorizeNet/sdk-java/badges/gpa.svg)](https://codeclimate.com/github/AuthorizeNet/sdk-java)
 [![Maven Central](https://img.shields.io/maven-central/v/net.authorize/anet-java-sdk.svg?style=flat)](http://mvnrepository.com/artifact/net.authorize/anet-java-sdk)
 
+## IMPORTANT NOTE:
+
+***Due to restrictions on Log4j2 v2.15.0, masking/hiding of sensitive data will not work for the time being.***
+
+***We will work to include it again in future versions.***
+
  
 ## Requirements
 * JDK 1.5.0 to JDK 1.8.0
