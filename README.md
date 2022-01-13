@@ -16,7 +16,7 @@ _Note 2: Support for higher versions of JDK (>= 1.9.0) has not been made availab
 
 ### Dependencies
 * commons-logging-1.1.1.jar : logging
-* log4j-2.16.0.jar          : logging
+* log4j-2.17.1.jar          : logging
 * httpclient-4.0.1.jar      : http communication with the payment gateway
 * httpcore-4.0.1.jar        : http communication with the payment gateway
 * junit-4.8.2.jar           : unit testing
