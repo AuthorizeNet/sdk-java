@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'authorizenet/sample-code-java'
-          ref: 'master'
+          ref: 'future'
           path: ${{env.sample_code_java}}
       - name: Setup Java 1.8 to build the SDK
         uses: actions/setup-java@v2
