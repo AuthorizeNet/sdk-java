@@ -65,7 +65,7 @@ jobs:
           cd $sdk_java
           SDK_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo $SDK_VERSION
-          cd $sample_code_java
+          cd ../$sample_code_java
           mvn install -DsdkVersion=$SDK_VERSION -DskipTests=true -Dmaven.javadoc.skip=true -B -V
           echo "Running Samples"
           mvn test -DsdkVersion=$SDK_VERSION -B
