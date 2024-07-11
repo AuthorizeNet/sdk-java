@@ -15,6 +15,7 @@ import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;
 import net.authorize.api.contract.v1.MessagesType.Message;
 
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.hc.core5.http.HttpEntity;
@@ -75,10 +76,11 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
 
             if (null != httpResponse) {
                 if (200 == httpResponse.getCode()) {
-                    HttpEntity entity = httpResponse.getEntity();
+                    final HttpEntity entity = httpResponse.getEntity();
                     // get the raw data being received
                     InputStream instream = entity.getContent();
                     buffer.append(HttpUtility.convertStreamToString(instream));
+                    EntityUtils.consume(entity);
                 }
             }
             LogHelper.debug(logger, "Raw Response: '%s'", buffer.toString());

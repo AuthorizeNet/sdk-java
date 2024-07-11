@@ -6,7 +6,7 @@
 	<property name="javadocs.dir" value="${basedir}/docs/javadocs" />
 	<property name="build.dir" value="${basedir}/target" />
 	<property name="classes.dir" value="${basedir}/target/classes" />
-	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="lib.dir" value="${basedir}/target/lib" />
 	<property name="src.tests" value="${basedir}/src/test/java" />
 	<property name="resources.dir" value="${basedir}/resources" />
 	<property name="reports.tests" value="${basedir}/target/reports" />
@@ -106,7 +106,7 @@
 		<javadoc destdir="${javadocs.dir}" author="true" version="true" encoding="UTF-8" use="true" windowtitle="Authorize.Net Java SDK" verbose="off" serialwarn="off">
 
 			<classpath>
-				<fileset id="libFiles" dir="lib">
+				<fileset id="libFiles" dir="target/lib">
 					<include name="**/**/*.jar" />
 				</fileset>
 			</classpath>
