@@ -152,11 +152,11 @@ public class HttpCallTask implements Callable<ANetApiResponse> {
     }
 
     private void setErrorResponse(List<Message> messages, HttpResponse httpResponse) {
-        if ( null != httpResponse) {
+        if (null != httpResponse) {
             messages.add(errorMessage);
             String code = "Error";
             String text = "Unknown Error";
-            LogHelper.warn( logger, "Error deserializing response to '%s'", this.classType);
+            LogHelper.warn(logger, "Error deserializing response to '%s'", this.classType);
             code = String.format("%d", httpResponse.getCode());
             if (null != httpResponse.getReasonPhrase()) {
                 text = httpResponse.getReasonPhrase();
