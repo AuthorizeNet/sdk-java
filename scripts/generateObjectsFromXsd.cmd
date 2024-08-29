@@ -81,5 +81,11 @@ FOR %%x IN (Request Response) DO (
     )
 )
 DEL /q /s *.bak
+
+FOR /r "%XSDSRCDIR%%XSDGENFOLDER%" %%F IN (*.java) DO (
+    @ECHO Converting %%F to use Jakarta
+    POWERSHELL -Command "(Get-Content '%%F') | ForEach-Object { $_ -replace 'import javax.xml.bind', 'import jakarta.xml.bind' } | ForEach-Object { $_ -replace '@javax.xml.bind', '@jakarta.xml.bind' } | ForEach-Object { $_ -replace 'elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED', 'elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED' } | Set-Content '%%F'"
+)
+
 ENDLOCAL
 @ECHO FINISHED %DATE%-%TIME%
