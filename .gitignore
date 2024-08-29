@@ -1,8 +1,10 @@
 target
 logs
+log
 
 #intellij files
 .idea
 *.iml
 .DS_Store
 docs/.DS_Store
+*.xsd
