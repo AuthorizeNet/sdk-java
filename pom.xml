@@ -144,7 +144,7 @@
 		<maven.compile.target>1.5</maven.compile.target>
 		<maven.compile.optimize>true</maven.compile.optimize>
 		<maven.compile.deprecation>true</maven.compile.deprecation>
-		<log4j.version>2.22.0</log4j.version>
+		<log4j.version>2.23.1</log4j.version>
 	</properties>
 	<build>
 		<plugins>
