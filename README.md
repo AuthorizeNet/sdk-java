@@ -21,8 +21,6 @@
 
 _Note 1: Support for building the SDK with either Ant or Maven has been made. Please see the respective build processes below.  All initial jars and docs were built with Ant, however._
 
-_Note 2: Support for higher versions of JDK (>= 1.9.0) has not been made available._
-
 ### Dependencies
 * commons-logging-1.3.3
 * log4j-2.23.1
