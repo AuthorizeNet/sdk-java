@@ -140,7 +140,6 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		logger.debug(String.format("Executing Request:'%s'", this.getApiRequest()));
 		
 		if ( null == environment) throw new InvalidParameterException(nullEnvironmentErrorMessage);
-		
 
 		ANetApiResponse httpApiResponse = HttpUtility.postData(environment, this.getApiRequest(), this.responseClass);
 		if ( null != httpApiResponse)
