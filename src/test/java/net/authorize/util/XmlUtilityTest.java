@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import net.authorize.api.contract.v1.MessageTypeEnum;
 import net.authorize.api.contract.v1.MessagesType;

@@ -2,7 +2,7 @@ package net.authorize.api.controller.base;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import net.authorize.api.contract.v1.ANetApiResponse;
 import net.authorize.api.contract.v1.MessagesType;

@@ -1,11 +1,20 @@
 # Authorize.Net Java SDK
 
-[![Travis CI Status](https://travis-ci.org/AuthorizeNet/sdk-java.svg?branch=master)](https://travis-ci.org/AuthorizeNet/sdk-java)
-[![Code Climate](https://codeclimate.com/github/AuthorizeNet/sdk-java/badges/gpa.svg)](https://codeclimate.com/github/AuthorizeNet/sdk-java)
+[![Authorize.net Java CI](https://github.com/AuthorizeNet/sdk-java/actions/workflows/java-workflow.yml/badge.svg?branch=master)](https://github.com/AuthorizeNet/sdk-java/actions/workflows/java-workflow.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/net.authorize/anet-java-sdk.svg?style=flat)](http://mvnrepository.com/artifact/net.authorize/anet-java-sdk)
- 
+
+## IMPORTANT NOTE
+
+### Support for Java 1.8
+
+**A new version that supports Java 1.8 is `v2.0.7`. This is the _LAST_ release with support for Java 1.8.**
+
+### Support for Java 9 and higher
+
+**A new version of the SDK has been released that supports Java 9 and higher. This new version is `v3.0.0`.**
+
 ## Requirements
-* JDK 1.5.0 to JDK 1.8.0
+* JDK 9 and higher
 * Ant 1.6.2 or higher (build SDK only)
 * Maven 2.2.0 or higher (build SDK only)
 * An Authorize.Net account (see _Registration & Configuration_ section below)
@@ -15,20 +24,28 @@ _Note 1: Support for building the SDK with either Ant or Maven has been made. Pl
 _Note 2: Support for higher versions of JDK (>= 1.9.0) has not been made available._
 
 ### Dependencies
-* commons-logging-1.1.1.jar : logging
-* log4j-2.17.1.jar          : logging
-* httpclient-4.0.1.jar      : http communication with the payment gateway
-* httpcore-4.0.1.jar        : http communication with the payment gateway
-* junit-4.8.2.jar           : unit testing
-* hamcrest-core-1.3.jar     : unit testing
-* hamcrest-library-1.3.jar  : unit testing
-* jmock-2.6.0.jar           : unit testing
+* commons-logging-1.3.3
+* log4j-2.23.1
+* log4j-jcl-2.23.1
+* log4j-api-2.23.1
+* log4j-core-2.23.1
+* log4j-1.2-api-2.23.1
+* httpclient5-5.3.1
+* httpcore5-5.2.5
+* gson-2.11.0
+* jakarta.xml.bind-api-4.0.2
+* jaxb-runtime-4.0.5
+* jackson-module-jakarta-xmlbind-annotations-2.17.2
+* junit-4.13.1
+* hamcrest-core-1.3
+* hamcrest-library-1.3
+* jmock-2.6.0
 
 ### Migrating from older versions
-Since August 2018, the Authorize.Net API has been reorganized to be more merchant focused. Authorize.Net AIM, ARB, CIM, Transaction Reporting, and SIM classes have been deprecated in favor of `net\authorize\api`. To see the full list of mapping of new features corresponding to the deprecated features, see [MIGRATING.md](MIGRATING.md).  
+Since August 2018, the Authorize.Net API has been reorganized to be more merchant focused. Authorize.Net AIM, ARB, CIM, Transaction Reporting, and SIM classes have been deprecated in favor of `net\authorize\api`. To see the full list of mapping of new features corresponding to the deprecated features, see [MIGRATING.md](MIGRATING.md).
 
 ### Contribution
-  - If you need information or clarification about Authorize.Net features, create an issue with your question. You can also search the [Authorize.Net developer community](https://community.developer.authorize.net/) for discussions related to your question.  
+  - If you need information or clarification about Authorize.Net features, create an issue with your question. You can also search the [Authorize.Net developer community](https://community.developer.authorize.net/) for discussions related to your question.
   - Before creating pull requests, read [the contributors guide](CONTRIBUTING.md).
 
 ### TLS 1.2
@@ -68,7 +85,7 @@ Authorize.Net maintains a complete sandbox environment for testing and developme
 ApiOperationBase.setEnvironment(Environment.PRODUCTION);
 ```
 
-API credentials are different for each environment, so be sure to switch to the appropriate credentials when switching environments. 
+API credentials are different for each environment, so be sure to switch to the appropriate credentials when switching environments.
 
 ## SDK Usage Examples and Sample Code
 When using this SDK, downloading the Authorize.Net sample code repository is recommended.
@@ -127,27 +144,22 @@ To create the javadocs:
 ### Testing Guide
 For additional help in testing your own code, Authorize.Net maintains a [comprehensive testing guide](http://developer.authorize.net/hello_world/testing_guide/) that includes test credit card numbers to use and special triggers to generate certain responses from the sandbox environment.
 
-## Logging Sensitive Data 
- 
-The Authorize.Net Java SDK uses Log4J framework for logging purposes. Enable the logger by keeping a configuration file `Log4j.properties` in the resources folder of the application. A sample [Log4.properties](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/log4j.properties) file has been provided as a reference.  
- 
-The possible log levels are `DEBUG, INFO, WARN, ERROR` and `FATAL`.  There is a new pattern layout introduced to mask sensitive data while logging and can be used with the application by providing the following configurations in the `Log4j.properties` file:   
- 
-``` 
-// Default configuration which logs the entries in clear text 
+## Logging Sensitive Data
 
-log4j.appender.S.layout = org.apache.log4j.PatternLayout 
-log4j.appender.R.layout = org.apache.log4j.PatternLayout 
- 
-// Configuration which masks the sensitive data in the log entries 
+The Authorize.Net Java SDK uses Log4J2 framework for logging purposes. Enable the logger by keeping a configuration file `log4j2.xml` in the resources folder of the application. A sample [log4j2.xml](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/log4j2.xml) file has been provided as a reference.
 
-log4j.appender.S.layout = net.authorize.util.SensitiveFilterLayout 
-log4j.appender.R.layout = net.authorize.util.SensitiveFilterLayout 
+The possible log levels are `DEBUG, INFO, WARN, ERROR` and `FATAL`. There is a new pattern layout introduced to mask sensitive data while logging and can be used with the application by making the following configurations in the `log4j2.xml` file:
 
-``` 
- 
-By default the logger comes with two appenders, **console** and **file transport**.  
- 
+1. Create your own appender under `<Appenders></Appenders>` and insert the `<PatternLayout><pattern></pattern></PatternLayout>` section. (Example is present in the `log4j2.xml` file)
+    * To enable masking of sensitive data, replace `%m` with `%maskedMessage`.
+    * To disable masking, replace `%maskedMessage` with `%m`.
+2. Create a logger under `<Loggers></Loggers>`
+3. The `name` field in the `<Logger>` should contain the namespace from where log messages needs to be written to file.
+4. Attach an `<AppenderRef>` section where the `ref` field uses one of the Appenders that have been created under the `<Appenders>` section.
+5. Do **NOT** modify the logger with `<Root>`.
+
+By default the logger comes with two appenders, **LogToConsole** and **RollingFile**.
+
 The sensitive fields that are masked during logging are:
 * Card Number
 * Card Code
@@ -156,7 +168,7 @@ The sensitive fields that are masked during logging are:
 * Account Number
 * Name on Account
 
-There is also a list of regular expressions which the sensitive logger uses to mask credit card numbers while logging. 
+There is also a list of regular expressions which the sensitive logger uses to mask credit card numbers while logging.
 
 More information on the regular expressions used during sensitive data logging [can be found here](https://github.com/AuthorizeNet/sdk-java/blob/master/resources/AuthorizedNetSensitiveTagsConfig.json).
 

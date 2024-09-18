@@ -6,12 +6,12 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
@@ -21,8 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 
 /**
  * Helper methods for serializing and de-serializing to XML using JAXB
@@ -87,13 +85,11 @@ public final class XmlUtility {
 	 * @param classType Class Type of the object to be de-serialized into
 	 * @param <T> class that implements Serializable
 	 * @return T De-serialized object
-	 * @throws JAXBException if errors during de-serialization
 	 * @throws ParserConfigurationException 
 	 * @throws SAXException 
 	 */
 	@SuppressWarnings("unchecked")
-	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws JAXBException, ParserConfigurationException, SAXException
-	{
+	public static synchronized <T extends Serializable> T create(String xml, Class<T> classType) throws ParserConfigurationException, SAXException, JAXBException {
 		T entity = null;
 		
 		//Disable XXE

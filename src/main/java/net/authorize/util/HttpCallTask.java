@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.UnmarshalException;
 
 import net.authorize.Environment;
 import net.authorize.api.contract.v1.ANetApiRequest;
