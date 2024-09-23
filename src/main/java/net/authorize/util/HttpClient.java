@@ -185,7 +185,7 @@ public class HttpClient {
 
                 proxySet = true;
             } else {
-                if( UseProxy ) {LogHelper.warn(logger, "Defaulting to non-proxy environment");}
+               LogHelper.warn(logger, "Defaulting to non-proxy environment");
 
                 httpClient = HttpClientBuilder
                         .create()
