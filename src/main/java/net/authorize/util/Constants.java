@@ -36,4 +36,5 @@ public final class Constants {
 	public static final int HTTP_READ_TIME_OUT_DEFAULT_VALUE = 30000;
 	
 	public static final String CLIENT_ID = "sdk-java-2.0.3";
+	public static final String NULL_ENVIRONMENT_ERROR_MESSAGE = "Environment not set. Set environment using setter or use overloaded method to pass appropriate environment";
 }
