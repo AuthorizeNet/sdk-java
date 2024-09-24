@@ -121,12 +121,11 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		return this.getApiResponse();
 	}
 
-	final String nullEnvironmentErrorMessage = "Environment not set. Set environment using setter or use overloaded method to pass appropriate environment";
 
 	public void execute() {
 		if ( null == ApiOperationBase.getEnvironment())
 		{
-			throw new InvalidParameterException(nullEnvironmentErrorMessage);
+			throw new InvalidParameterException(Constants.NULL_ENVIRONMENT_ERROR_MESSAGE);
 		} 
 		else
 		{
@@ -139,7 +138,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 
 		logger.debug(String.format("Executing Request:'%s'", this.getApiRequest()));
 		
-		if ( null == environment) throw new InvalidParameterException(nullEnvironmentErrorMessage);
+		if ( null == environment) throw new InvalidParameterException(Constants.NULL_ENVIRONMENT_ERROR_MESSAGE);
 
 		ANetApiResponse httpApiResponse = HttpUtility.postData(environment, this.getApiRequest(), this.responseClass);
 		if ( null != httpApiResponse)
