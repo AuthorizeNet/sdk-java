@@ -1,0 +1,3978 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "Authorize.Net REST API",
+    "description" : "Authorize.Net REST API",
+    "contact" : {
+      "name" : "developer_feedback@authorize.net"
+    },
+    "version" : "1.0"
+  },
+  "servers" : [ {
+    "url" : "https://api.authorize.net/"
+  } ],
+  "paths" : {
+    "/v1/customers" : {
+      "get" : {
+        "tags" : [ "customers-profiles" ],
+        "summary" : "Get All Customer Profiles",
+        "description" : "Get a list of all customer profiles associated with this Authorize.Net account.",
+        "operationId" : "getAllCustomers",
+        "parameters" : [ {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "The number of the page to return results from. For example, if limit is set to 100, and offset is set to 2, the function will return 100 transactions, beginning with the transaction that would otherwise be the transaction numbered 101 in the result set. Accepted values are 1-100000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "The number of transactions per page. Accepted values are 1-1000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CustomerCollection"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "customers-profiles" ],
+        "summary" : "Create A Customer Profile",
+        "description" : "Create a new customer profile that contains a payment method.",
+        "operationId" : "CreateCustomerAndPaymentMethod",
+        "requestBody" : {
+          "description" : "Contains the information required to create a customer profile with an asociated payment method.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateCustomerAndPaymentMethod"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "CreateCustomerAndPaymentMethod"
+      }
+    },
+    "/v1/customers/{customerId}/addresses" : {
+      "get" : {
+        "tags" : [ "customers-addresses" ],
+        "summary" : "Get All Customer Addresses",
+        "description" : "Get a list of all addresses associated with one customer profile.",
+        "operationId" : "getAllCustomerAddresses",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, from the original profile creation response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "The number of the page to return results from. For example, if limit is set to 100, and offset is set to 2, the function will return 100 transactions starting with the transaction that would otherwise be the transaction numbered 101 in the result set. Accepted values are 1-100000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "The number of transactions per page. Accepted values are 1-1000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/addressCollection"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "customers-addresses" ],
+        "summary" : "Create A Customer Address",
+        "description" : "Create an address associated with a customer profile.",
+        "operationId" : "createCustomerAddress",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, which was returned in the original transaction response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Contains address information.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateCustomerAddress"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/address"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Address not created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "createCustomerAddress"
+      }
+    },
+    "/v1/customers/{customerId}/paymentmethods" : {
+      "get" : {
+        "tags" : [ "customers-payment_methods" ],
+        "summary" : "Get Customer Payment Methods",
+        "description" : "Get a list of payment methods associated with a customer profile.",
+        "operationId" : "getCustomerPaymentMethods",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, returned in the response to the request that created the profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "The number of the page to return results from. For example, if limit is set to 100, and offset is set to 2, the function will return 100 transactions starting with the transaction that would otherwise be the transaction numbered 101 in the result set. Accepted values are 1-100000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "The number of transactions per page. Accepted values are 1-1000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/paymentMethodCollection"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "customers-payment_methods" ],
+        "summary" : "Create A Payment Method",
+        "description" : "Create and payment method associated with a customer profile.",
+        "operationId" : "createPaymentMethod",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, from the original profile-creation response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "This object creates a payment method associated with a payment profile.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreatePaymentMethod"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/paymentMethod"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "PaymentMethod not created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "CreatePaymentMethod"
+      }
+    },
+    "/v1/customers/{customerId}" : {
+      "get" : {
+        "tags" : [ "customers-customers" ],
+        "summary" : "Get A Customer",
+        "description" : "Get the details of a single customer profile.",
+        "operationId" : "getCustomer",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, from the original profile-creation response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "customers-customers" ],
+        "summary" : "Update A Customer Profile",
+        "description" : "Updates a customer profile.",
+        "operationId" : "UpdateCustomer",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, from the original profile-creation response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Contains the updated information.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateCustomerAndPaymentMethod"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Customer not updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "CreateCustomerAndPaymentMethod"
+      },
+      "delete" : {
+        "tags" : [ "customers-customers" ],
+        "summary" : "Delete a Customer Profile",
+        "description" : "Deletes a customer profile.",
+        "operationId" : "DeleteCustomer",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile, from the original profile-creation response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/customers/{customerId}/addresses/{addressId}" : {
+      "get" : {
+        "tags" : [ "customers-addresses" ],
+        "summary" : "Get A Customer Address",
+        "description" : "Get a customer address.",
+        "operationId" : "getCustomerAddress",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "addressId",
+          "in" : "path",
+          "description" : "Unique identifier of the address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/address"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "customers-addresses" ],
+        "summary" : "Update A Customer Address",
+        "description" : "Update an address associated with a customer profile.",
+        "operationId" : "updateCustomerAddress",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "addressId",
+          "in" : "path",
+          "description" : "Unique identifier of the address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Contains the address information.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateCustomerAddress"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/address"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Address not updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "createCustomerAddress"
+      },
+      "delete" : {
+        "tags" : [ "customers-addresses" ],
+        "summary" : "Delete a Customer Address",
+        "description" : "Deletes an address associated with a customer profile.",
+        "operationId" : "DeleteAddress",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "addressId",
+          "in" : "path",
+          "description" : "Unique identifier of the address.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/customers/{customerId}/paymentmethods/{paymentMethodId}" : {
+      "get" : {
+        "tags" : [ "customers-payment_methods" ],
+        "summary" : "Get a Customer Payment Method",
+        "description" : "Get the payment method for a sinlge customer profile.",
+        "operationId" : "getCustomerPaymentMethod",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "description" : "Unique identifier of the payment method.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/paymentMethod"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "customers-payment_methods" ],
+        "summary" : "Update a Customer Payment Method",
+        "description" : "Update a payment method associated with a payment profile.",
+        "operationId" : "UpdatePaymentMethod",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "description" : "Unique identifier of the payment method.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Contains the updated payment method information.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreatePaymentMethod"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/paymentMethod"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Payment Method not updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "createPaymentMethod"
+      },
+      "delete" : {
+        "tags" : [ "customers-payment_methods" ],
+        "summary" : "Delete a Customer Payment Method",
+        "description" : "Deletes a payment method from a payment profile.",
+        "operationId" : "DeletePaymentmethod",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "Unique identifier of the customer profile.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "paymentMethodId",
+          "in" : "path",
+          "description" : "Unique identifier of the payment method.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/payments/" : {
+      "get" : {
+        "tags" : [ "payments-payments" ],
+        "summary" : "Get a List of Payments",
+        "description" : "Get a list of payment transactions.",
+        "operationId" : "Get all Payments_",
+        "parameters" : [ {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "1-100000. The number of the page to return results from. For example, if limit is set to 100, and offset is set to 2, the function will return 100 transactions starting with the transaction that would otherwise be the transaction numbered 101 in the result set.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "1-1000. The number of transactions per page.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "batchId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "customerId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "unsettled",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/paymentCollection"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "payments-payments" ],
+        "summary" : "Create a Payment Transaction",
+        "description" : "Create a payment transaction. By default, this operation **authorizes and captures** the transaction. To only **authorize** it, set `paymentRequest.processingInformation.capture` to `false`.",
+        "operationId" : "createPayment",
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/paymentRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/payment"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "PaymentRequest"
+      }
+    },
+    "/v1/payments/{paymentId}" : {
+      "get" : {
+        "tags" : [ "payments-payments" ],
+        "summary" : "Get the Details of a Payment Transaction",
+        "description" : "Get the details of a payment transaction.",
+        "operationId" : "getPayment",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "The unique identifier of the payment. Returned in the original transaction response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/payment"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Payment Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/payments/{paymentId}/captures" : {
+      "post" : {
+        "tags" : [ "payments-captures" ],
+        "summary" : "Cature a Payment Transaction",
+        "description" : "Capture an authorization that was processed through Authorize.Net.",
+        "operationId" : "capturePayment",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "The unique identifier of the authorization that you are capturing. The ID is returned in the original transaction response.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/captureRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/payment"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Payment Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "captureRequest"
+      }
+    },
+    "/v1/payments/{paymentId}/refunds" : {
+      "post" : {
+        "tags" : [ "payments-refunds" ],
+        "summary" : "Refund a Payment Transaction",
+        "description" : "Refund a previously captured payment transaction by referencing its ID. To credit your customer's account without referencing a previous transaction, use `/credits` instead",
+        "operationId" : "refundPayment",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "Unique identifier of the payment transaction that you are refunding. The ID is returned in the original transaction reponse.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/refundRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/payment"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Payment Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "refundRequest"
+      }
+    },
+    "/v1/credits/" : {
+      "post" : {
+        "tags" : [ "credits" ],
+        "summary" : "Process a Credit Transaction",
+        "description" : "Create a credit transaction that is not related to a previous transaction. To refund a previous transaction, use `/payments/{paymentId}/refunds` instead.",
+        "operationId" : "createCredit",
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The value to provide in the Authorization header of ANET API request",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/creditRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/payment"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "write" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "creditRequest"
+      }
+    },
+    "/v1/eventtypes" : {
+      "get" : {
+        "tags" : [ "webhooks-event_types" ],
+        "summary" : "Get a List of All Event Types",
+        "description" : "Returns a list of all Webhooks event types that you can enroll in.",
+        "operationId" : "getEventTypes",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/EventType"
+                  },
+                  "x-content-type" : "*/*"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/webhooks" : {
+      "get" : {
+        "tags" : [ "webhooks-webhooks" ],
+        "summary" : "List My Webhooks",
+        "description" : "Retrieve details of all existing Webhooks for this account.",
+        "operationId" : "getWebhooks",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/GetWebhookResponse"
+                  },
+                  "x-content-type" : "*/*"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "webhooks-webhooks" ],
+        "summary" : "Create A Webhook",
+        "description" : "Enroll in one or more type of event notification.",
+        "operationId" : "createWebhook",
+        "requestBody" : {
+          "description" : "The payload which contains the details for enrolling in one or more webhooks.",
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateWebhookBody"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GetWebhookResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid/Missing Data or Limit Reached",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "createWebhookBody"
+      }
+    },
+    "/v1/webhooks/{webhookId}" : {
+      "get" : {
+        "tags" : [ "webhooks-webhooks" ],
+        "summary" : "Get a Webhook",
+        "description" : "Retrieve THE details of an existing Webhook.",
+        "operationId" : "getWebhook",
+        "parameters" : [ {
+          "name" : "webhookId",
+          "in" : "path",
+          "description" : "Unique identifier of the webhook. The identifier was sent in the response to the webhook request.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GetWebhookResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "webhooks-webhooks" ],
+        "summary" : "Update A Webhook",
+        "description" : "Update the details of an existing webhook.",
+        "operationId" : "updateWebhook",
+        "parameters" : [ {
+          "name" : "webhookId",
+          "in" : "path",
+          "description" : "Unique identifier of the webhook. The identifier was sent in the response to the webhook request.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Contains the details to be updated.",
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateWebhookBody"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GetWebhookResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid/Missing Data or Limit Reached",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ],
+        "x-codegen-request-body-name" : "updateWebhookBody"
+      },
+      "delete" : {
+        "tags" : [ "webhooks-webhooks" ],
+        "summary" : "Delete A Webhook",
+        "description" : "Delete an existing Webhook.",
+        "operationId" : "deleteWebhook",
+        "parameters" : [ {
+          "name" : "webhookId",
+          "in" : "path",
+          "description" : "Unique identifier of the webhook. The identifier was sent in the response to the webhook request.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : { }
+          },
+          "400" : {
+            "description" : "Invalid Data ",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/webhooks/{webhookId}/pings" : {
+      "post" : {
+        "tags" : [ "webhooks-pings" ],
+        "summary" : "Ping A Webhook",
+        "description" : "A test event is sent to the Webhook endpoint, in an inactive state.",
+        "operationId" : "pingsWebhook",
+        "parameters" : [ {
+          "name" : "webhookId",
+          "in" : "path",
+          "description" : "Unique identifier of the webhook. The identifier was sent in the response to the webhook request.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : { }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/notifications" : {
+      "get" : {
+        "tags" : [ "webhooks-notifications" ],
+        "summary" : "Get Notification History",
+        "description" : "Retreives the history of notifications for this account.",
+        "operationId" : "getNotifications",
+        "parameters" : [ {
+          "name" : "deliveryStatus",
+          "in" : "query",
+          "description" : "Filter by delivery status. Status include the following./n/n* Delivered/n/n* Failed",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "from_date",
+          "in" : "query",
+          "description" : "Only includes notifications after the specified date, in YYYY-MM-DD format.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "to_date",
+          "in" : "query",
+          "description" : "Only includes notifications before specified date, in YYYY-MM-DD format.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "The number of the page to return results from. For example, if limit is set to 100, and offset is set to 2, the function will return 100 transactions, beginning with the transaction that would otherwise be the transaction numbered 101 in the result set. Accepted values are 1-100000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "The number of transactions per page. Accepted values are 1-1000.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GetNotificationsResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    },
+    "/v1/notifications/{notificationsId}" : {
+      "get" : {
+        "tags" : [ "webhooks-notifications" ],
+        "summary" : "Get a Notification",
+        "description" : "Retreives the details of a single notification.",
+        "operationId" : "getNotification",
+        "parameters" : [ {
+          "name" : "notificationsId",
+          "in" : "path",
+          "description" : "Unique identifier of the notification. The identifier was sent in the original notification.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GetNotificationResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "System Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Unexpected Error.",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/errorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "oauth" : [ "read" ]
+        }, {
+          "basic" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Identifier" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "reference" : {
+            "type" : "string"
+          }
+        },
+        "description" : "Model for Identifier",
+        "example" : {
+          "reference" : "reference",
+          "email" : "email"
+        }
+      },
+      "CustomerList" : {
+        "type" : "object",
+        "properties" : {
+          "customers" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Customer"
+            }
+          }
+        },
+        "example" : {
+          "customers" : [ {
+            "identifier" : {
+              "reference" : "reference",
+              "email" : "email"
+            },
+            "_links" : {
+              "addresses" : null,
+              "paymentMethods" : null,
+              "self" : null
+            },
+            "description" : "description",
+            "id" : "id"
+          }, {
+            "identifier" : {
+              "reference" : "reference",
+              "email" : "email"
+            },
+            "_links" : {
+              "addresses" : null,
+              "paymentMethods" : null,
+              "self" : null
+            },
+            "description" : "description",
+            "id" : "id"
+          } ]
+        }
+      },
+      "CustomerCollection" : {
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/collectionLinks"
+          },
+          "_embedded" : {
+            "$ref" : "#/components/schemas/CustomerList"
+          },
+          "totalCustomers" : {
+            "type" : "integer",
+            "description" : "Total number of customer profiles associated with tje Authorize.Net account that submitted the request."
+          }
+        },
+        "example" : {
+          "totalCustomers" : 0,
+          "_links" : {
+            "next" : null,
+            "previous" : null,
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "_embedded" : {
+            "customers" : [ {
+              "identifier" : {
+                "reference" : "reference",
+                "email" : "email"
+              },
+              "_links" : {
+                "addresses" : null,
+                "paymentMethods" : null,
+                "self" : null
+              },
+              "description" : "description",
+              "id" : "id"
+            }, {
+              "identifier" : {
+                "reference" : "reference",
+                "email" : "email"
+              },
+              "_links" : {
+                "addresses" : null,
+                "paymentMethods" : null,
+                "self" : null
+              },
+              "description" : "description",
+              "id" : "id"
+            } ]
+          }
+        }
+      },
+      "CreateCustomerAddress" : {
+        "required" : [ "address1" ],
+        "type" : "object",
+        "properties" : {
+          "address1" : {
+            "type" : "string",
+            "description" : "The customer's street address."
+          },
+          "administrativeArea" : {
+            "type" : "string",
+            "description" : "State or administrative area of the customer's address."
+          },
+          "company" : {
+            "type" : "string",
+            "description" : "Name of the company associated with the customer's address, if any."
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "Country associated with the customer's address."
+          },
+          "default" : {
+            "type" : "boolean",
+            "description" : "Setting this to `true` makes this address the customer's default address."
+          },
+          "firstName" : {
+            "type" : "string",
+            "description" : "First name associated with the customer's address."
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "Last name associated with the customer's address."
+          },
+          "locality" : {
+            "type" : "string",
+            "description" : "City or town name associated with the customer's address."
+          },
+          "phoneNumber" : {
+            "type" : "string",
+            "description" : "Phone number associated with the customer's address."
+          },
+          "postalCode" : {
+            "type" : "string",
+            "description" : "ZIP or postal code of the customer's address."
+          }
+        },
+        "description" : "Contains the information to create a customer address object."
+      },
+      "CreatePaymentMethod" : {
+        "type" : "object",
+        "properties" : {
+          "addressId" : {
+            "type" : "string",
+            "description" : "Unique identifier of the address associated with the payment method."
+          },
+          "billTo" : {
+            "$ref" : "#/components/schemas/baseAddress"
+          },
+          "default" : {
+            "type" : "boolean",
+            "description" : "Setting this to `true` sets this payment method as the default for this customer profile."
+          },
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          }
+        },
+        "description" : "Contains information about a customer's payment method."
+      },
+      "CreateCustomerAndPaymentMethod" : {
+        "required" : [ "identifier" ],
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the customer or customer profile. Required only when no values for `merchantCustomerId` and `email` are submitted. 255-character maximum."
+          },
+          "identifier" : {
+            "$ref" : "#/components/schemas/Identifier"
+          },
+          "paymentMethod" : {
+            "$ref" : "#/components/schemas/CreatePaymentMethod"
+          }
+        },
+        "description" : "Contains the information to create a profile and an associated payment method."
+      },
+      "Customer" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier of the customer profile."
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the customer."
+          },
+          "identifier" : {
+            "$ref" : "#/components/schemas/Identifier"
+          },
+          "_links" : {
+            "$ref" : "#/components/schemas/CustomerLinks"
+          }
+        },
+        "description" : "Response information returned after the creation of a customer profile.",
+        "example" : {
+          "identifier" : {
+            "reference" : "reference",
+            "email" : "email"
+          },
+          "_links" : {
+            "addresses" : null,
+            "paymentMethods" : null,
+            "self" : null
+          },
+          "description" : "description",
+          "id" : "id"
+        }
+      },
+      "CustomerLinks" : {
+        "type" : "object",
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "paymentMethods" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "addresses" : {
+            "$ref" : "#/components/schemas/link"
+          }
+        },
+        "example" : {
+          "addresses" : null,
+          "paymentMethods" : null,
+          "self" : null
+        }
+      },
+      "paymentRequest" : {
+        "title" : "paymentRequest",
+        "type" : "object",
+        "properties" : {
+          "clientReferenceInformation" : {
+            "$ref" : "#/components/schemas/clientReferenceInformation"
+          },
+          "processingInformation" : {
+            "$ref" : "#/components/schemas/processingInformation"
+          },
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          },
+          "orderInformation" : {
+            "$ref" : "#/components/schemas/orderInformation"
+          },
+          "buyerInformation" : {
+            "$ref" : "#/components/schemas/buyerInformation"
+          },
+          "deviceInformation" : {
+            "$ref" : "#/components/schemas/deviceInformation"
+          },
+          "consumerAuthenticationInformation" : {
+            "$ref" : "#/components/schemas/consumerAuthenticationInformation"
+          },
+          "pointOfSaleInformation" : {
+            "$ref" : "#/components/schemas/pointOfSaleInformation"
+          }
+        },
+        "description" : "Payment Request object. Contains information about the payment transaction."
+      },
+      "refundRequest" : {
+        "title" : "refundRequest",
+        "type" : "object",
+        "properties" : {
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          },
+          "orderInformation" : {
+            "$ref" : "#/components/schemas/orderInformation"
+          },
+          "buyerInformation" : {
+            "$ref" : "#/components/schemas/buyerInformation"
+          },
+          "deviceInformation" : {
+            "$ref" : "#/components/schemas/deviceInformation"
+          },
+          "pointOfSaleInformation" : {
+            "$ref" : "#/components/schemas/pointOfSaleInformation"
+          }
+        },
+        "description" : "Model for RefundRequest"
+      },
+      "captureRequest" : {
+        "title" : "captureRequest",
+        "type" : "object",
+        "properties" : {
+          "orderInformation" : {
+            "$ref" : "#/components/schemas/orderInformation"
+          },
+          "buyerInformation" : {
+            "$ref" : "#/components/schemas/buyerInformation"
+          },
+          "deviceInformation" : {
+            "$ref" : "#/components/schemas/deviceInformation"
+          },
+          "pointOfSaleInformation" : {
+            "$ref" : "#/components/schemas/pointOfSaleInformation"
+          }
+        },
+        "description" : "Model for CaptureRequest"
+      },
+      "creditRequest" : {
+        "title" : "creditRequest",
+        "type" : "object",
+        "properties" : {
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          },
+          "orderInformation" : {
+            "$ref" : "#/components/schemas/orderInformation"
+          },
+          "buyerInformation" : {
+            "$ref" : "#/components/schemas/buyerInformation"
+          },
+          "deviceInformation" : {
+            "$ref" : "#/components/schemas/deviceInformation"
+          },
+          "pointOfSaleInformation" : {
+            "$ref" : "#/components/schemas/pointOfSaleInformation"
+          }
+        },
+        "description" : "Model for CaptureRequest"
+      },
+      "clientReferenceInformation" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "Client-generated order reference or tracking number. CyberSource recommends that you send a unique value for each\ntransaction so that you can perform meaningful searches for the transaction.\n"
+          }
+        },
+        "example" : {
+          "code" : "code"
+        }
+      },
+      "processingInformation" : {
+        "type" : "object",
+        "properties" : {
+          "capture" : {
+            "type" : "boolean",
+            "description" : "Submit `true` to capture the the payment after it is successfully authorized.",
+            "default" : true
+          },
+          "paymentSolution" : {
+            "type" : "string",
+            "description" : "The solution ID is generated by Authorize.Net and provided to the solution provider. Alphanumeric. 50-character maximum."
+          },
+          "batch" : {
+            "$ref" : "#/components/schemas/batch"
+          },
+          "recurringBilling" : {
+            "type" : "boolean",
+            "description" : "Indicates whether the payment is part of a subscription."
+          },
+          "followUpAction" : {
+            "type" : "string",
+            "description" : "Follow up action to be taken once transaction is successful. Valid values are `CREATE_CUSTOMER_PROFILE` and `CREATE_CUSTOMER_PAYMENT_PROFILE`."
+          }
+        }
+      },
+      "orderInformation" : {
+        "required" : [ "amountDetails" ],
+        "type" : "object",
+        "properties" : {
+          "amountDetails" : {
+            "$ref" : "#/components/schemas/amountDetail"
+          },
+          "billTo" : {
+            "type" : "object",
+            "description" : "billto address definition",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/baseAddress"
+            } ]
+          },
+          "shipTo" : {
+            "type" : "object",
+            "description" : "shipTo address definition",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/baseAddress"
+            } ]
+          },
+          "lineItems" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/items"
+            }
+          },
+          "invoiceDetails" : {
+            "$ref" : "#/components/schemas/invoiceDetails"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Contains information about the order."
+          }
+        },
+        "example" : {
+          "lineItems" : [ {
+            "unitPrice" : "unitPrice",
+            "productCode" : "productCode",
+            "quantity" : 0.8008281904610115,
+            "productName" : "productName"
+          }, {
+            "unitPrice" : "unitPrice",
+            "productCode" : "productCode",
+            "quantity" : 0.8008281904610115,
+            "productName" : "productName"
+          } ],
+          "billTo" : "",
+          "description" : "description",
+          "invoiceDetails" : {
+            "taxable" : true,
+            "purchaseOrderNumber" : "purchaseOrderNumber"
+          },
+          "amountDetails" : {
+            "totalAmount" : "totalAmount",
+            "freightAmount" : "freightAmount",
+            "authorizedAmount" : "authorizedAmount",
+            "currency" : "currency",
+            "taxAmount" : "taxAmount",
+            "dutyAmount" : "dutyAmount"
+          },
+          "shipTo" : ""
+        }
+      },
+      "invoiceDetails" : {
+        "type" : "object",
+        "properties" : {
+          "purchaseOrderNumber" : {
+            "type" : "string",
+            "description" : "The merchant-assigned purchase order number. The purchase order number must be created dynamically on the merchant's server and provided on a per-transaction basis. Up to 25 characters (no symbols)."
+          },
+          "taxable" : {
+            "type" : "boolean",
+            "description" : "Indicates whether this payment is exempt from tax."
+          }
+        },
+        "example" : {
+          "taxable" : true,
+          "purchaseOrderNumber" : "purchaseOrderNumber"
+        }
+      },
+      "buyerInformation" : {
+        "type" : "object",
+        "properties" : {
+          "merchantCustomerId" : {
+            "type" : "string",
+            "description" : "The unique customer ID used to represent the customer associated with the transaction. If you use customer IDs, your solution should generate the customer ID and send it with your transaction requests. Authorize.Net does not generate customer IDs.Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          },
+          "customerType" : {
+            "type" : "string",
+            "description" : "Type of customer. Valid values are `individual` or `business`."
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "The customer's valid email address. For example, janedoe@example.com."
+          }
+        }
+      },
+      "deviceInformation" : {
+        "type" : "object",
+        "properties" : {
+          "ipAddress" : {
+            "type" : "string",
+            "description" : "IP address of customer initiating the transaction. If this value is not passed, it will default to 255.255.255.255. Required only when the merchant is using customer IP based AFDS filters. Up to 15 characters (no letters)."
+          }
+        }
+      },
+      "consumerAuthenticationInformation" : {
+        "type" : "object",
+        "properties" : {
+          "cavv" : {
+            "type" : "string",
+            "description" : "The Cardholder Authentication Verification Value (CAVV) for a Visa transaction, or Accountholder Authentication Value (AVV)/ Universal Cardholder Authentication Field indicator (UCAF) for a Mastercard transaction. The cardholder authentication process generates the CAVV, AAV, or UCAF value prior to submitting the transaction. Invalid values will result in Response Reason Code 117. This field is currently supported through Chase Paymentech, FDMS Nashville, Global Payments and TSYS."
+          },
+          "eciRaw" : {
+            "type" : "string",
+            "description" : "The Electronic Commerce Indicator (ECI) value for a Visa transaction, or the Universal Cardholder Authentication Field indicator (UCAF) for a Mastercard transaction. The cardholder authentication process generates the ECI or UCAF value prior to submitting the transaction.\n Required only for payment requests processed through 3D Secure cardholder authentication programs, such as Visa Secure or SecureCode.\n Invalid values will result in Response Reason Code 116.\n This field is currently supported through Chase Paymentech, FDMS Nashville, Global Payments and TSYS."
+          }
+        }
+      },
+      "pointOfSaleInformation" : {
+        "type" : "object",
+        "properties" : {
+          "terminalID" : {
+            "type" : "string",
+            "description" : "Unique identifier of the terminal that processed the transaction. Useful for reporting."
+          }
+        }
+      },
+      "payment" : {
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/paymentLinks"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier for the transaction, generated by Authorize.Net. Reference this identifier in follow-up requests, such as a refund or GET request."
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Brief description of the status of the transaction. One of the folloiwng&#58;\n   * `AUTHORIZED`\n   * `CAPTURED`\n   * `INTERNAL_ERROR`\n   * `REFUND_SETTLED`\n   * `REFUND_INITIATED`\n   * `approvedReview`\n   * `DECLINED`\n   * `FAILED`\n   * `EXPIRED`\n    * `failedReview`\n   * `SETTLED`\n   * `SETTLEMENT_ERROR`\n   * `PENDING_REVIEW`\n   * `VOIDED`\n   * `FDSPendingReview`\n   * `FDSAuthorizedPendingReview`\n   * `returnedItem`\n"
+          },
+          "clientReferenceInformation" : {
+            "$ref" : "#/components/schemas/clientReferenceInformation"
+          },
+          "processorInformation" : {
+            "$ref" : "#/components/schemas/processorInformation"
+          },
+          "submitTimeUTC" : {
+            "type" : "string",
+            "description" : "The time that the transaction was submitted, in Coordinated Universal Time."
+          },
+          "orderInformation" : {
+            "$ref" : "#/components/schemas/orderInformation"
+          },
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          },
+          "fraudInformation" : {
+            "$ref" : "#/components/schemas/fraudInformation"
+          },
+          "followUpResponse" : {
+            "$ref" : "#/components/schemas/followUpResponse"
+          }
+        },
+        "description" : "`Payment` is returned for a successful transaction.\n",
+        "example" : {
+          "submitTimeUTC" : "submitTimeUTC",
+          "clientReferenceInformation" : {
+            "code" : "code"
+          },
+          "processorInformation" : {
+            "approvalCode" : "approvalCode",
+            "cardVerification" : {
+              "resultCode" : "resultCode"
+            },
+            "consumerAuthenticationResponse" : {
+              "code" : "code"
+            },
+            "avs" : {
+              "code" : "code"
+            }
+          },
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            },
+            "capture" : null,
+            "refund" : null
+          },
+          "orderInformation" : {
+            "lineItems" : [ {
+              "unitPrice" : "unitPrice",
+              "productCode" : "productCode",
+              "quantity" : 0.8008281904610115,
+              "productName" : "productName"
+            }, {
+              "unitPrice" : "unitPrice",
+              "productCode" : "productCode",
+              "quantity" : 0.8008281904610115,
+              "productName" : "productName"
+            } ],
+            "billTo" : "",
+            "description" : "description",
+            "invoiceDetails" : {
+              "taxable" : true,
+              "purchaseOrderNumber" : "purchaseOrderNumber"
+            },
+            "amountDetails" : {
+              "totalAmount" : "totalAmount",
+              "freightAmount" : "freightAmount",
+              "authorizedAmount" : "authorizedAmount",
+              "currency" : "currency",
+              "taxAmount" : "taxAmount",
+              "dutyAmount" : "dutyAmount"
+            },
+            "shipTo" : ""
+          },
+          "id" : "id",
+          "fraudInformation" : {
+            "fraudFilterList" : [ {
+              "name" : "name",
+              "action" : "action"
+            }, {
+              "name" : "name",
+              "action" : "action"
+            } ],
+            "fraudAction" : "fraudAction"
+          },
+          "paymentInformation" : {
+            "bankAccount" : {
+              "eCheckType" : "eCheckType",
+              "routingNumber" : "routingNumber",
+              "nameOnAccount" : "nameOnAccount",
+              "checkNumber" : "checkNumber",
+              "accountType" : "accountType",
+              "bankName" : "bankName",
+              "accountNumber" : "accountNumber"
+            },
+            "tokenizedCard" : {
+              "expirationYear" : "expirationYear",
+              "number" : "number",
+              "expirationMonth" : "expirationMonth",
+              "cryptogram" : "cryptogram"
+            },
+            "card" : {
+              "expirationYear" : "expirationYear",
+              "number" : "number",
+              "securityCode" : "securityCode",
+              "expirationMonth" : "expirationMonth",
+              "type" : "type"
+            },
+            "fluidData" : {
+              "descriptor" : "descriptor",
+              "value" : "value",
+              "key" : "key"
+            },
+            "customer" : {
+              "paymentMethodId" : "paymentMethodId",
+              "customerId" : "customerId"
+            },
+            "validate" : true
+          },
+          "followUpResponse" : {
+            "errorMessage" : "errorMessage",
+            "customer" : {
+              "paymentMethodId" : "paymentMethodId",
+              "customerId" : "customerId"
+            }
+          },
+          "status" : "status"
+        }
+      },
+      "paymentCollection" : {
+        "type" : "object",
+        "properties" : {
+          "_link" : {
+            "$ref" : "#/components/schemas/collectionLinks"
+          },
+          "_embedded" : {
+            "$ref" : "#/components/schemas/paymentsList"
+          },
+          "totalTransactions" : {
+            "type" : "integer",
+            "description" : "Total number of transactions returned."
+          }
+        },
+        "description" : "Model for PaymentCollection",
+        "example" : {
+          "totalTransactions" : 0,
+          "_link" : {
+            "next" : null,
+            "previous" : null,
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "_embedded" : {
+            "payments" : [ {
+              "submitTimeUTC" : "submitTimeUTC",
+              "_links" : {
+                "self" : {
+                  "method" : "method",
+                  "href" : "href",
+                  "title" : "title"
+                }
+              },
+              "id" : "id",
+              "status" : "status"
+            }, {
+              "submitTimeUTC" : "submitTimeUTC",
+              "_links" : {
+                "self" : {
+                  "method" : "method",
+                  "href" : "href",
+                  "title" : "title"
+                }
+              },
+              "id" : "id",
+              "status" : "status"
+            } ]
+          }
+        }
+      },
+      "paymentLinks" : {
+        "type" : "object",
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "refund" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "capture" : {
+            "$ref" : "#/components/schemas/link"
+          }
+        },
+        "example" : {
+          "self" : {
+            "method" : "method",
+            "href" : "href",
+            "title" : "title"
+          },
+          "capture" : null,
+          "refund" : null
+        }
+      },
+      "batch" : {
+        "title" : "batch",
+        "type" : "object",
+        "properties" : {
+          "batchID" : {
+            "type" : "string",
+            "description" : "The unique identifier of the batch."
+          },
+          "settlementState" : {
+            "type" : "string",
+            "description" : "Status of the batch. One of the following\n* `settledSuccessfully`\n* `settlementError`\n* `pendingSettlement`"
+          },
+          "settlmentTimeUTC" : {
+            "type" : "string",
+            "description" : "Date and time when the batch was settled, expressed in Coordinated Universal Time. A T character separates the date from the time. For example, `YYYY-MM-DDThh:mm:ss`."
+          }
+        },
+        "description" : "Contains information about the batch that processed the transaction."
+      },
+      "fraudInformation" : {
+        "title" : "fraudInfromation",
+        "type" : "object",
+        "properties" : {
+          "fraudFilterList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/fraudFilter"
+            }
+          },
+          "fraudAction" : {
+            "type" : "string",
+            "description" : "The action applied to the transaction by the merchant's Advanced Fraud Detection Suite (AFDS) settings.<br />\nWhen multiple filters apply to a transaction, we will take the most restrictive action. For example, if a transaction triggers two AFDS filters, and one filter returns hold while the other filter returns reject, we will reject the transaction instead of holding it. <br />\nActions include &#58; <br />\n* `reject` '“ Ignores the transaction outright, except for AFDS reporting. <br /><br />\n* `decline` '“ Marks the transaction as declined but include it in the merchant's transaction reporting. <br /><br />\n* `hold` â€“ Holds the transaction for manual review, and do not authorize unless the merchant approves it. <br /><br />\n* `authAndHold` â€“ Submits the transaction for authorization, but hold it for manual review, and do not settle unless the merchant approves it. <br /><br />\n* `report` â€“ Records the filter action but take no other action.\n"
+          }
+        },
+        "description" : "Contains fraud information for a transaction.",
+        "example" : {
+          "fraudFilterList" : [ {
+            "name" : "name",
+            "action" : "action"
+          }, {
+            "name" : "name",
+            "action" : "action"
+          } ],
+          "fraudAction" : "fraudAction"
+        }
+      },
+      "paymentsList" : {
+        "type" : "object",
+        "properties" : {
+          "payments" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/payments"
+            }
+          }
+        },
+        "example" : {
+          "payments" : [ {
+            "submitTimeUTC" : "submitTimeUTC",
+            "_links" : {
+              "self" : {
+                "method" : "method",
+                "href" : "href",
+                "title" : "title"
+              }
+            },
+            "id" : "id",
+            "status" : "status"
+          }, {
+            "submitTimeUTC" : "submitTimeUTC",
+            "_links" : {
+              "self" : {
+                "method" : "method",
+                "href" : "href",
+                "title" : "title"
+              }
+            },
+            "id" : "id",
+            "status" : "status"
+          } ]
+        }
+      },
+      "fraudFilter" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Name of the fraud filter."
+          },
+          "action" : {
+            "type" : "string",
+            "description" : "Setting for the fraud filter. The `FDSFilterAction` setting is the most restrictive action setting. <br />\nOne of&#58;\n* `reject`\n * `decline`\n* `hold`\n * `authAndHold`\n * `report`\n"
+          }
+        },
+        "example" : {
+          "name" : "name",
+          "action" : "action"
+        }
+      },
+      "payments" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "The unique identifier of the transaction. This is returned in the orginal transaction response."
+          },
+          "submitTimeUTC" : {
+            "type" : "string",
+            "description" : "The time that the original transaction was submitted, in Coordinated Universal Time."
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Brief description of the status of the transaction. One of the folloiwng -\n   * `authorizedPendingCapture`\n   * `capturedPendingSettlement`\n   * `communicationError`\n   * `refundSettledSuccessfully`\n   * `refundPendingSettlement`\n   * `approvedReview`\n   * `declined`\n   * `couldNotVoid`\n   * `expired`\n   * `generalError`\n   * `failedReview`\n   * `settledSuccessfully`\n   * `settlementError`\n   * `underReview`\n   * `voided`\n   * `FDSPendingReview`\n   * `FDSAuthorizedPendingReview`\n   * `returnedItem`"
+          },
+          "_links" : {
+            "$ref" : "#/components/schemas/selfLink"
+          }
+        },
+        "example" : {
+          "submitTimeUTC" : "submitTimeUTC",
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "id" : "id",
+          "status" : "status"
+        }
+      },
+      "processorInformation" : {
+        "type" : "object",
+        "properties" : {
+          "approvalCode" : {
+            "type" : "string",
+            "description" : "Authorization or approval code."
+          },
+          "avs" : {
+            "$ref" : "#/components/schemas/processorInformation_avs"
+          },
+          "cardVerification" : {
+            "$ref" : "#/components/schemas/processorInformation_cardVerification"
+          },
+          "consumerAuthenticationResponse" : {
+            "$ref" : "#/components/schemas/processorInformation_consumerAuthenticationResponse"
+          }
+        },
+        "example" : {
+          "approvalCode" : "approvalCode",
+          "cardVerification" : {
+            "resultCode" : "resultCode"
+          },
+          "consumerAuthenticationResponse" : {
+            "code" : "code"
+          },
+          "avs" : {
+            "code" : "code"
+          }
+        }
+      },
+      "followUpResponse" : {
+        "type" : "object",
+        "properties" : {
+          "errorMessage" : {
+            "type" : "string",
+            "description" : "This field is returned only if the transaction processed succesfully, but the follow-up action of creating a customer and/or payment profile failed."
+          },
+          "customer" : {
+            "$ref" : "#/components/schemas/customerPayment"
+          }
+        },
+        "example" : {
+          "errorMessage" : "errorMessage",
+          "customer" : {
+            "paymentMethodId" : "paymentMethodId",
+            "customerId" : "customerId"
+          }
+        }
+      },
+      "paymentMethodLinks" : {
+        "type" : "object",
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "customer" : {
+            "$ref" : "#/components/schemas/link"
+          }
+        },
+        "example" : {
+          "self" : {
+            "method" : "method",
+            "href" : "href",
+            "title" : "title"
+          },
+          "customer" : null
+        }
+      },
+      "paymentMethod" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier for the `paymentMethod` object in this transaction."
+          },
+          "default" : {
+            "type" : "boolean",
+            "description" : "Setting this boolean to `true` marks this payment method as the default for this customer."
+          },
+          "billTo" : {
+            "$ref" : "#/components/schemas/baseAddress"
+          },
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          },
+          "_links" : {
+            "$ref" : "#/components/schemas/paymentMethodLinks"
+          }
+        },
+        "description" : "Contains information about the method of payment.",
+        "example" : {
+          "default" : true,
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            },
+            "customer" : null
+          },
+          "billTo" : {
+            "country" : "country",
+            "firstName" : "firstName",
+            "lastName" : "lastName",
+            "phoneNumber" : "phoneNumber",
+            "address1" : "address1",
+            "postalCode" : "postalCode",
+            "locality" : "locality",
+            "company" : "company",
+            "administrativeArea" : "administrativeArea"
+          },
+          "id" : "id",
+          "paymentInformation" : {
+            "bankAccount" : {
+              "eCheckType" : "eCheckType",
+              "routingNumber" : "routingNumber",
+              "nameOnAccount" : "nameOnAccount",
+              "checkNumber" : "checkNumber",
+              "accountType" : "accountType",
+              "bankName" : "bankName",
+              "accountNumber" : "accountNumber"
+            },
+            "tokenizedCard" : {
+              "expirationYear" : "expirationYear",
+              "number" : "number",
+              "expirationMonth" : "expirationMonth",
+              "cryptogram" : "cryptogram"
+            },
+            "card" : {
+              "expirationYear" : "expirationYear",
+              "number" : "number",
+              "securityCode" : "securityCode",
+              "expirationMonth" : "expirationMonth",
+              "type" : "type"
+            },
+            "fluidData" : {
+              "descriptor" : "descriptor",
+              "value" : "value",
+              "key" : "key"
+            },
+            "customer" : {
+              "paymentMethodId" : "paymentMethodId",
+              "customerId" : "customerId"
+            },
+            "validate" : true
+          }
+        }
+      },
+      "paymentMethodCollection" : {
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/collectionLinks"
+          },
+          "_embedded" : {
+            "$ref" : "#/components/schemas/paymentMethodList"
+          },
+          "totalPaymentMethods" : {
+            "type" : "integer",
+            "description" : "Total number of payment methods for this transaction."
+          }
+        },
+        "example" : {
+          "_links" : {
+            "next" : null,
+            "previous" : null,
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "_embedded" : {
+            "paymentMethods" : [ {
+              "default" : true,
+              "_links" : {
+                "self" : {
+                  "method" : "method",
+                  "href" : "href",
+                  "title" : "title"
+                },
+                "customer" : null
+              },
+              "id" : "id",
+              "paymentInformation" : {
+                "bankAccount" : {
+                  "eCheckType" : "eCheckType",
+                  "routingNumber" : "routingNumber",
+                  "nameOnAccount" : "nameOnAccount",
+                  "checkNumber" : "checkNumber",
+                  "accountType" : "accountType",
+                  "bankName" : "bankName",
+                  "accountNumber" : "accountNumber"
+                },
+                "tokenizedCard" : {
+                  "expirationYear" : "expirationYear",
+                  "number" : "number",
+                  "expirationMonth" : "expirationMonth",
+                  "cryptogram" : "cryptogram"
+                },
+                "card" : {
+                  "expirationYear" : "expirationYear",
+                  "number" : "number",
+                  "securityCode" : "securityCode",
+                  "expirationMonth" : "expirationMonth",
+                  "type" : "type"
+                },
+                "fluidData" : {
+                  "descriptor" : "descriptor",
+                  "value" : "value",
+                  "key" : "key"
+                },
+                "customer" : {
+                  "paymentMethodId" : "paymentMethodId",
+                  "customerId" : "customerId"
+                },
+                "validate" : true
+              }
+            }, {
+              "default" : true,
+              "_links" : {
+                "self" : {
+                  "method" : "method",
+                  "href" : "href",
+                  "title" : "title"
+                },
+                "customer" : null
+              },
+              "id" : "id",
+              "paymentInformation" : {
+                "bankAccount" : {
+                  "eCheckType" : "eCheckType",
+                  "routingNumber" : "routingNumber",
+                  "nameOnAccount" : "nameOnAccount",
+                  "checkNumber" : "checkNumber",
+                  "accountType" : "accountType",
+                  "bankName" : "bankName",
+                  "accountNumber" : "accountNumber"
+                },
+                "tokenizedCard" : {
+                  "expirationYear" : "expirationYear",
+                  "number" : "number",
+                  "expirationMonth" : "expirationMonth",
+                  "cryptogram" : "cryptogram"
+                },
+                "card" : {
+                  "expirationYear" : "expirationYear",
+                  "number" : "number",
+                  "securityCode" : "securityCode",
+                  "expirationMonth" : "expirationMonth",
+                  "type" : "type"
+                },
+                "fluidData" : {
+                  "descriptor" : "descriptor",
+                  "value" : "value",
+                  "key" : "key"
+                },
+                "customer" : {
+                  "paymentMethodId" : "paymentMethodId",
+                  "customerId" : "customerId"
+                },
+                "validate" : true
+              }
+            } ]
+          },
+          "totalPaymentMethods" : 0
+        }
+      },
+      "paymentMethodList" : {
+        "type" : "object",
+        "properties" : {
+          "paymentMethods" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/paymentMethods"
+            }
+          }
+        },
+        "example" : {
+          "paymentMethods" : [ {
+            "default" : true,
+            "_links" : {
+              "self" : {
+                "method" : "method",
+                "href" : "href",
+                "title" : "title"
+              },
+              "customer" : null
+            },
+            "id" : "id",
+            "paymentInformation" : {
+              "bankAccount" : {
+                "eCheckType" : "eCheckType",
+                "routingNumber" : "routingNumber",
+                "nameOnAccount" : "nameOnAccount",
+                "checkNumber" : "checkNumber",
+                "accountType" : "accountType",
+                "bankName" : "bankName",
+                "accountNumber" : "accountNumber"
+              },
+              "tokenizedCard" : {
+                "expirationYear" : "expirationYear",
+                "number" : "number",
+                "expirationMonth" : "expirationMonth",
+                "cryptogram" : "cryptogram"
+              },
+              "card" : {
+                "expirationYear" : "expirationYear",
+                "number" : "number",
+                "securityCode" : "securityCode",
+                "expirationMonth" : "expirationMonth",
+                "type" : "type"
+              },
+              "fluidData" : {
+                "descriptor" : "descriptor",
+                "value" : "value",
+                "key" : "key"
+              },
+              "customer" : {
+                "paymentMethodId" : "paymentMethodId",
+                "customerId" : "customerId"
+              },
+              "validate" : true
+            }
+          }, {
+            "default" : true,
+            "_links" : {
+              "self" : {
+                "method" : "method",
+                "href" : "href",
+                "title" : "title"
+              },
+              "customer" : null
+            },
+            "id" : "id",
+            "paymentInformation" : {
+              "bankAccount" : {
+                "eCheckType" : "eCheckType",
+                "routingNumber" : "routingNumber",
+                "nameOnAccount" : "nameOnAccount",
+                "checkNumber" : "checkNumber",
+                "accountType" : "accountType",
+                "bankName" : "bankName",
+                "accountNumber" : "accountNumber"
+              },
+              "tokenizedCard" : {
+                "expirationYear" : "expirationYear",
+                "number" : "number",
+                "expirationMonth" : "expirationMonth",
+                "cryptogram" : "cryptogram"
+              },
+              "card" : {
+                "expirationYear" : "expirationYear",
+                "number" : "number",
+                "securityCode" : "securityCode",
+                "expirationMonth" : "expirationMonth",
+                "type" : "type"
+              },
+              "fluidData" : {
+                "descriptor" : "descriptor",
+                "value" : "value",
+                "key" : "key"
+              },
+              "customer" : {
+                "paymentMethodId" : "paymentMethodId",
+                "customerId" : "customerId"
+              },
+              "validate" : true
+            }
+          } ]
+        }
+      },
+      "paymentMethods" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier for the `paymentMethods` object in this transaction."
+          },
+          "default" : {
+            "type" : "boolean"
+          },
+          "paymentInformation" : {
+            "$ref" : "#/components/schemas/paymentInformation"
+          },
+          "_links" : {
+            "$ref" : "#/components/schemas/paymentMethodLinks"
+          }
+        },
+        "example" : {
+          "default" : true,
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            },
+            "customer" : null
+          },
+          "id" : "id",
+          "paymentInformation" : {
+            "bankAccount" : {
+              "eCheckType" : "eCheckType",
+              "routingNumber" : "routingNumber",
+              "nameOnAccount" : "nameOnAccount",
+              "checkNumber" : "checkNumber",
+              "accountType" : "accountType",
+              "bankName" : "bankName",
+              "accountNumber" : "accountNumber"
+            },
+            "tokenizedCard" : {
+              "expirationYear" : "expirationYear",
+              "number" : "number",
+              "expirationMonth" : "expirationMonth",
+              "cryptogram" : "cryptogram"
+            },
+            "card" : {
+              "expirationYear" : "expirationYear",
+              "number" : "number",
+              "securityCode" : "securityCode",
+              "expirationMonth" : "expirationMonth",
+              "type" : "type"
+            },
+            "fluidData" : {
+              "descriptor" : "descriptor",
+              "value" : "value",
+              "key" : "key"
+            },
+            "customer" : {
+              "paymentMethodId" : "paymentMethodId",
+              "customerId" : "customerId"
+            },
+            "validate" : true
+          }
+        }
+      },
+      "CreateCustomer" : {
+        "required" : [ "identifier" ],
+        "type" : "object",
+        "properties" : {
+          "description" : {
+            "type" : "string"
+          },
+          "identifier" : {
+            "$ref" : "#/components/schemas/Identifier"
+          }
+        },
+        "description" : "Model for CreateCustomer"
+      },
+      "EventType" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          }
+        },
+        "description" : "Name of the event type. For a complete list of event types, see the [Webhooks API Documentation](https://developer.authorize.net/api/reference/features/webhooks.html#Event_Types_and_Payloads) page.",
+        "example" : {
+          "name" : "name"
+        }
+      },
+      "CreateWebhookBody" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Contains details for the creation or update of a webhook."
+          },
+          "url" : {
+            "type" : "string",
+            "description" : "Callback URL for the webhook."
+          },
+          "eventTypes" : {
+            "type" : "array",
+            "description" : "List of events that will trigger notifications for this webhook. For a complete list of event types, see the [Webhooks API Documentation](https://developer.authorize.net/api/reference/features/webhooks.html#Event_Types_and_Payloads) page.",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "New status of the Webhook."
+          }
+        },
+        "description" : "Model for Create Webhook"
+      },
+      "GetWebhookResponse" : {
+        "required" : [ "_links", "eventTypes", "status", "url", "webhookId" ],
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/selfLink"
+          },
+          "webhookId" : {
+            "type" : "string",
+            "description" : "Unique identifier of the notification. The identifier was sent in the original notification."
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Label of the new Webhook."
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Unique identifier of the webhook. The identifier was sent in the response to the webhook request."
+          },
+          "url" : {
+            "type" : "string",
+            "description" : "Callback Url for the webhook."
+          },
+          "eventTypes" : {
+            "type" : "array",
+            "description" : "List of events that will trigger notifications for this webhook. For a complete list of event types, see the [Webhooks API Documentation](https://developer.authorize.net/api/reference/features/webhooks.html#Event_Types_and_Payloads) page.",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "description" : "Response model for get a Webhook",
+        "example" : {
+          "webhookId" : "webhookId",
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "name" : "name",
+          "eventTypes" : [ "eventTypes", "eventTypes" ],
+          "url" : "url",
+          "status" : "status"
+        }
+      },
+      "Log" : {
+        "type" : "object",
+        "properties" : {
+          "statusCode" : {
+            "type" : "integer",
+            "description" : "HTTP status code of the notification attempt."
+          },
+          "retryStage" : {
+            "type" : "integer",
+            "description" : ""
+          },
+          "retryCountInStage" : {
+            "type" : "integer"
+          },
+          "retryDate" : {
+            "type" : "string",
+            "description" : "Date of the last retry."
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "A message about the status."
+          }
+        },
+        "description" : ""
+      },
+      "RetryLog" : {
+        "required" : [ "logs" ],
+        "type" : "object",
+        "properties" : {
+          "logs" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Log"
+            }
+          }
+        },
+        "description" : "Logging information about notification retries."
+      },
+      "Notification" : {
+        "required" : [ "_links", "deliveryStatus", "eventDate", "eventType", "notificationId", "webhookId" ],
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/selfLink"
+          },
+          "notificationId" : {
+            "type" : "string",
+            "description" : "Unique identifier of the notification"
+          },
+          "deliveryStatus" : {
+            "type" : "string",
+            "description" : "Current status of the notification."
+          },
+          "eventType" : {
+            "type" : "string",
+            "description" : "Type of event that triggered the notification."
+          },
+          "eventDate" : {
+            "type" : "string",
+            "description" : "Date and time of the notifications sent."
+          },
+          "webhookId" : {
+            "type" : "string",
+            "description" : "Label of the Webhook."
+          }
+        },
+        "description" : "Notification Model",
+        "example" : {
+          "webhookId" : "webhookId",
+          "_links" : null,
+          "notificationId" : "notificationId",
+          "eventType" : "eventType",
+          "deliveryStatus" : "deliveryStatus",
+          "eventDate" : "eventDate"
+        }
+      },
+      "GetNotificationResponse" : {
+        "description" : "Details of a single notification.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Notification"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "retryLog" : {
+              "$ref" : "#/components/schemas/RetryLog"
+            }
+          }
+        } ]
+      },
+      "GetNotificationsResponse" : {
+        "required" : [ "_links", "notifications" ],
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/selfLink"
+          },
+          "notifications" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Notification"
+            }
+          }
+        },
+        "description" : "List of notifications.",
+        "example" : {
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "notifications" : [ {
+            "webhookId" : "webhookId",
+            "_links" : null,
+            "notificationId" : "notificationId",
+            "eventType" : "eventType",
+            "deliveryStatus" : "deliveryStatus",
+            "eventDate" : "eventDate"
+          }, {
+            "webhookId" : "webhookId",
+            "_links" : null,
+            "notificationId" : "notificationId",
+            "eventType" : "eventType",
+            "deliveryStatus" : "deliveryStatus",
+            "eventDate" : "eventDate"
+          } ]
+        }
+      },
+      "address" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier for an address."
+          },
+          "default" : {
+            "type" : "boolean",
+            "description" : "Setting this to `true` marks the address as the customer's default address."
+          },
+          "baseAddress" : {
+            "$ref" : "#/components/schemas/baseAddress"
+          },
+          "_links" : {
+            "$ref" : "#/components/schemas/addressLinks"
+          }
+        },
+        "example" : {
+          "default" : true,
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            },
+            "customer" : null
+          },
+          "baseAddress" : {
+            "country" : "country",
+            "firstName" : "firstName",
+            "lastName" : "lastName",
+            "phoneNumber" : "phoneNumber",
+            "address1" : "address1",
+            "postalCode" : "postalCode",
+            "locality" : "locality",
+            "company" : "company",
+            "administrativeArea" : "administrativeArea"
+          },
+          "id" : "id"
+        }
+      },
+      "baseAddress" : {
+        "required" : [ "address1" ],
+        "type" : "object",
+        "properties" : {
+          "address1" : {
+            "type" : "string",
+            "description" : "Number/letter of the address, and the street name. Required if merchant would like to use the Address Verification Service security feature. Required when using GPN Canada or Worldpay Streamline Processing Platform. <br /><br />String, up to 60 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          },
+          "administrativeArea" : {
+            "type" : "string",
+            "description" : "The state or administrative area. Required only when using a European payment processor. <br /><br />String, up to 40 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols. For US states, use the USPS two-character abbreviation for the state."
+          },
+          "company" : {
+            "type" : "string",
+            "description" : "Name of the purchasing company, if any. <br /><br /> String, up to 50 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "Country associated with the address. Required only when using a European payment processor. <br /><br />String, up to 60 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols. For international payment processors, use the ISO 3166 alpha-3 code for the country."
+          },
+          "firstName" : {
+            "type" : "string",
+            "description" : "First name associated with customer's address. Required only when using a European payment processor. <br /><br />String, up to 50 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "Last name associated with customer's address. Required only when using a European payment processor. <br /><br />String, up to 50 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          },
+          "locality" : {
+            "type" : "string",
+            "description" : "City or town of the address. Required only when using a European payment processor. <br /><br />String, up to 40 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          },
+          "phoneNumber" : {
+            "type" : "string",
+            "description" : "Phone number associated with customer's address. <br /><br />String, up to 25 characters. For example, (123) 555-1234."
+          },
+          "postalCode" : {
+            "type" : "string",
+            "description" : "The postal or ZIP code of the customer's billing address. Required if merchant would like to use the Address Verification Service security feature. Required when using GPN Canada or Worldpay Streamline Processing Platform. String, up to 20 characters. Use alphanumeric characters only, without spaces, dashes, or other symbols."
+          }
+        },
+        "example" : {
+          "country" : "country",
+          "firstName" : "firstName",
+          "lastName" : "lastName",
+          "phoneNumber" : "phoneNumber",
+          "address1" : "address1",
+          "postalCode" : "postalCode",
+          "locality" : "locality",
+          "company" : "company",
+          "administrativeArea" : "administrativeArea"
+        }
+      },
+      "addressLinks" : {
+        "type" : "object",
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "customer" : {
+            "$ref" : "#/components/schemas/link"
+          }
+        },
+        "example" : {
+          "self" : {
+            "method" : "method",
+            "href" : "href",
+            "title" : "title"
+          },
+          "customer" : null
+        }
+      },
+      "addressList" : {
+        "type" : "object",
+        "properties" : {
+          "addresses" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/addresses"
+            }
+          }
+        },
+        "example" : {
+          "addresses" : [ {
+            "firstName" : "firstName",
+            "lastName" : "lastName",
+            "default" : true,
+            "_links" : {
+              "self" : {
+                "method" : "method",
+                "href" : "href",
+                "title" : "title"
+              },
+              "customer" : null
+            },
+            "id" : "id"
+          }, {
+            "firstName" : "firstName",
+            "lastName" : "lastName",
+            "default" : true,
+            "_links" : {
+              "self" : {
+                "method" : "method",
+                "href" : "href",
+                "title" : "title"
+              },
+              "customer" : null
+            },
+            "id" : "id"
+          } ]
+        }
+      },
+      "addressCollection" : {
+        "type" : "object",
+        "properties" : {
+          "_links" : {
+            "$ref" : "#/components/schemas/collectionLinks"
+          },
+          "_embedded" : {
+            "$ref" : "#/components/schemas/addressList"
+          },
+          "totalAddresses" : {
+            "type" : "integer",
+            "description" : "Total number of addresses."
+          }
+        },
+        "example" : {
+          "_links" : {
+            "next" : null,
+            "previous" : null,
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            }
+          },
+          "_embedded" : {
+            "addresses" : [ {
+              "firstName" : "firstName",
+              "lastName" : "lastName",
+              "default" : true,
+              "_links" : {
+                "self" : {
+                  "method" : "method",
+                  "href" : "href",
+                  "title" : "title"
+                },
+                "customer" : null
+              },
+              "id" : "id"
+            }, {
+              "firstName" : "firstName",
+              "lastName" : "lastName",
+              "default" : true,
+              "_links" : {
+                "self" : {
+                  "method" : "method",
+                  "href" : "href",
+                  "title" : "title"
+                },
+                "customer" : null
+              },
+              "id" : "id"
+            } ]
+          },
+          "totalAddresses" : 0
+        }
+      },
+      "addresses" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier of the address."
+          },
+          "default" : {
+            "type" : "boolean",
+            "description" : "If the address is set as the default address for the profile, the value of this element is `true`."
+          },
+          "firstName" : {
+            "type" : "string",
+            "description" : "First name of the customer associated with the address."
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "Last name of the customer associated with the address."
+          },
+          "_links" : {
+            "$ref" : "#/components/schemas/addressLinks"
+          }
+        },
+        "example" : {
+          "firstName" : "firstName",
+          "lastName" : "lastName",
+          "default" : true,
+          "_links" : {
+            "self" : {
+              "method" : "method",
+              "href" : "href",
+              "title" : "title"
+            },
+            "customer" : null
+          },
+          "id" : "id"
+        }
+      },
+      "amountDetail" : {
+        "required" : [ "totalAmount" ],
+        "type" : "object",
+        "properties" : {
+          "totalAmount" : {
+            "type" : "string",
+            "description" : "This is the total amount of the payment and must include tax, shipping, tips, and any other charges. <br /><br /> Decimal, up to 15 digits with a decimal point. Do not use currency symbols. For example, 8.95.\n"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "Currency of the transaction."
+          },
+          "dutyAmount" : {
+            "type" : "string",
+            "description" : "Amount of duty. The total transaction amount must include this value."
+          },
+          "taxAmount" : {
+            "type" : "string",
+            "description" : "Amount of tax. The total transaction amount must include this value."
+          },
+          "freightAmount" : {
+            "type" : "string",
+            "description" : "Amount of the shipping charges. The total transaction amount must include this value."
+          },
+          "authorizedAmount" : {
+            "type" : "string",
+            "description" : ""
+          }
+        },
+        "example" : {
+          "totalAmount" : "totalAmount",
+          "freightAmount" : "freightAmount",
+          "authorizedAmount" : "authorizedAmount",
+          "currency" : "currency",
+          "taxAmount" : "taxAmount",
+          "dutyAmount" : "dutyAmount"
+        }
+      },
+      "bankAccount" : {
+        "required" : [ "accountNumber", "nameOnAccount", "routingNumber" ],
+        "type" : "object",
+        "properties" : {
+          "accountType" : {
+            "type" : "string",
+            "description" : "The type of bank account used for the eCheck.Net transaction. The value of `accountType` must be valid for the `echeckType` value submitted. Valid values include&#58;\n* `checking`\n* `savings`\n* `businessChecking`"
+          },
+          "routingNumber" : {
+            "type" : "string",
+            "description" : "The ABA routing number. Masked except for the last four digits. For example, XXXX0101. <br /><br /> Numeric, up to 9 digits."
+          },
+          "accountNumber" : {
+            "type" : "string",
+            "description" : "The bank account number. Masked except for the last four digits. For example, XXXX0101. <br /><br /> Numeric, up to 17 digits."
+          },
+          "nameOnAccount" : {
+            "type" : "string",
+            "description" : "Name of the person who holds the bank account. <br /><br /> String, up to 22 characters."
+          },
+          "eCheckType" : {
+            "type" : "string",
+            "description" : "The type of eCheck transaction.  Valid values include\n* `PPD`\n* `WEB`\n* `CCD`\n* `TEL`\n* `ARC`\n* `BOC`"
+          },
+          "bankName" : {
+            "type" : "string",
+            "description" : "Name of the bank to which the account belongs."
+          },
+          "checkNumber" : {
+            "type" : "string",
+            "description" : "The number of the check. Do not send `checkNumber` unless `echeckType` is either `ARC` or `BOC`. <br /><br /> Numeric, up to 15 digits."
+          }
+        },
+        "description" : "This object contains the customer's bank account payment information.",
+        "example" : {
+          "eCheckType" : "eCheckType",
+          "routingNumber" : "routingNumber",
+          "nameOnAccount" : "nameOnAccount",
+          "checkNumber" : "checkNumber",
+          "accountType" : "accountType",
+          "bankName" : "bankName",
+          "accountNumber" : "accountNumber"
+        }
+      },
+      "card" : {
+        "required" : [ "expirationMonth", "expirationYear", "number" ],
+        "type" : "object",
+        "properties" : {
+          "number" : {
+            "type" : "string",
+            "description" : "The customer's credit card number. <br /><br /> Numeric, 13-16 digits."
+          },
+          "expirationMonth" : {
+            "type" : "string",
+            "description" : "Month that the card expires, in MM format."
+          },
+          "expirationYear" : {
+            "type" : "string",
+            "description" : "Year that the card expires in YYYY format."
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "Type of credit card. Valid values include&#58;\n* `Visa`\n* `MasterCard`\n* `Discover`\n* `JCB`\n* `DinersClub`"
+          },
+          "securityCode" : {
+            "type" : "string",
+            "description" : "The three or four digit code on the front or back of the card. <br /><br /> This field is required if the merchant would like to use the Card Code Verification (CCV) security feature.<br /><br /> Cardholder information must be stored securely and in accordance with the Payment Card Industry (PCI) Data Security Standard."
+          }
+        },
+        "description" : "This object contains the customer's credit card payment information.",
+        "example" : {
+          "expirationYear" : "expirationYear",
+          "number" : "number",
+          "securityCode" : "securityCode",
+          "expirationMonth" : "expirationMonth",
+          "type" : "type"
+        }
+      },
+      "customerPayment" : {
+        "required" : [ "customerId" ],
+        "type" : "object",
+        "properties" : {
+          "customerId" : {
+            "type" : "string",
+            "description" : "The ID of the customer profile. Required if you are using a customer profile as the source for payment or shipping information. <br /><br /> 20-character maximum."
+          },
+          "paymentMethodId" : {
+            "type" : "string",
+            "description" : "The payment profile ID of the customer profile. Designates the payment profile to use for payment and billing information."
+          }
+        },
+        "example" : {
+          "paymentMethodId" : "paymentMethodId",
+          "customerId" : "customerId"
+        }
+      },
+      "errorResponse" : {
+        "title" : "errorResponse",
+        "required" : [ "message", "reason" ],
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "Describes the error condition."
+          },
+          "reason" : {
+            "type" : "string",
+            "description" : "This is an enum field that describes the business errors returned by the server. The client can use this field to interpret errors returned by the server. "
+          },
+          "informationLink" : {
+            "type" : "string",
+            "description" : "Contains a URL link to general online documentation for this error."
+          },
+          "correlationId" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "details" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/errorDetails"
+            }
+          }
+        },
+        "description" : "Model for Error Response"
+      },
+      "errorDetails" : {
+        "title" : "errorDetails",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "Describes the error condition."
+          },
+          "location" : {
+            "type" : "string",
+            "description" : "Indicates the name of a parameter."
+          }
+        },
+        "description" : "Error details object."
+      },
+      "fluidData" : {
+        "required" : [ "descriptor", "value" ],
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string",
+            "description" : "Only for Visa Checkout payments. This data is received from the JavaScript Visa Checkout integration's `encKey` field. <br /><br /> 128-character maximum."
+          },
+          "descriptor" : {
+            "type" : "string",
+            "description" : "Specifies how the request should be processed. The value of `dataDescriptor` is based on the source of the value of `dataValue`. For example, for Accept, the value is `COMMON.ACCEPT.INAPP.PAYMENT`. <br /><br /> 128 characters."
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "Base64 encoded data that contains encrypted payment data. The payment gateway expects the encrypted payment data and meta data for the encryption keys. <br /><br /> 8192 characters."
+          }
+        },
+        "description" : "This object contains encrypted payment data that can be submitted in the following types of payments&#58;\n* Authorize.Net Accept\n* Visa Checkout\n* Apple Pay\n* Android Pay",
+        "example" : {
+          "descriptor" : "descriptor",
+          "value" : "value",
+          "key" : "key"
+        }
+      },
+      "items" : {
+        "required" : [ "productCode", "productName" ],
+        "type" : "object",
+        "properties" : {
+          "productCode" : {
+            "type" : "string",
+            "description" : "Item identification. 31-character maximum."
+          },
+          "productName" : {
+            "type" : "string",
+            "description" : "A short description of the item. 31-character maximum."
+          },
+          "quantity" : {
+            "type" : "number",
+            "description" : "The number of items sold. Up to a maximum of four decimal places."
+          },
+          "unitPrice" : {
+            "type" : "string",
+            "description" : "Cost of an item per unit, excluding tax, freight, and duty. Up to a maximum of 2 decimal places."
+          }
+        },
+        "example" : {
+          "unitPrice" : "unitPrice",
+          "productCode" : "productCode",
+          "quantity" : 0.8008281904610115,
+          "productName" : "productName"
+        }
+      },
+      "collectionLinks" : {
+        "type" : "object",
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/link"
+          },
+          "previous" : {
+            "$ref" : "#/components/schemas/link"
+          }
+        },
+        "example" : {
+          "next" : null,
+          "previous" : null,
+          "self" : {
+            "method" : "method",
+            "href" : "href",
+            "title" : "title"
+          }
+        }
+      },
+      "link" : {
+        "type" : "object",
+        "properties" : {
+          "href" : {
+            "type" : "string",
+            "description" : "URI of the linked resource."
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "Label of the linked resource."
+          },
+          "method" : {
+            "type" : "string",
+            "description" : "HTTP method of the linked resource."
+          }
+        },
+        "example" : {
+          "method" : "method",
+          "href" : "href",
+          "title" : "title"
+        }
+      },
+      "merchantDefinedInformation" : {
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string",
+            "description" : "Item identification. 50-character maximum."
+          },
+          "value" : {
+            "type" : "string",
+            "description" : "A short description of the item. 50-character maximum."
+          }
+        }
+      },
+      "paymentInformation" : {
+        "type" : "object",
+        "properties" : {
+          "card" : {
+            "$ref" : "#/components/schemas/card"
+          },
+          "bankAccount" : {
+            "$ref" : "#/components/schemas/bankAccount"
+          },
+          "fluidData" : {
+            "$ref" : "#/components/schemas/fluidData"
+          },
+          "customer" : {
+            "$ref" : "#/components/schemas/customerPayment"
+          },
+          "tokenizedCard" : {
+            "$ref" : "#/components/schemas/tokenizedCard"
+          },
+          "validate" : {
+            "type" : "boolean",
+            "description" : "If the customer profile contains no payment data, this field should not be sent.\n Submitting this field with a value of `true` sends a $0 or $0.01 (depending on card type and processor) live transaction is processed for the card and then immediately voided. Address is required for cards that support $0 authorizations and will be validated along with card code if submitted.\n Submitting this field with a value of false, the card data is validated using simple mathematical checks to confirm that it appears to be valid. It is not a guarantee that the card is legitimate and customer data is not validated."
+          }
+        },
+        "description" : "This object sets the method of payment for a transaction. There are four available payment instruments, shown below.\n|Payment Instrument  | Description  |\n|-----|-----|\n| `creditCard` | Contains the customer's credit card payment data. |\n| `BankAccount`  | Contains the customer's banking information.   |\n| `FluidData` |  Contains enrypted payment data for use with the following tpyes of transactions -\n| | * Visa Checkout |\n| | * Authorize.Net Accept |\n| | * Apple Pay |\n| | * Android Pay |\n| `CustomerPayment` | Contains the Authorize.Net customer profile information necessary to create a payment transaction from stored payment data. |\n",
+        "example" : {
+          "bankAccount" : {
+            "eCheckType" : "eCheckType",
+            "routingNumber" : "routingNumber",
+            "nameOnAccount" : "nameOnAccount",
+            "checkNumber" : "checkNumber",
+            "accountType" : "accountType",
+            "bankName" : "bankName",
+            "accountNumber" : "accountNumber"
+          },
+          "tokenizedCard" : {
+            "expirationYear" : "expirationYear",
+            "number" : "number",
+            "expirationMonth" : "expirationMonth",
+            "cryptogram" : "cryptogram"
+          },
+          "card" : {
+            "expirationYear" : "expirationYear",
+            "number" : "number",
+            "securityCode" : "securityCode",
+            "expirationMonth" : "expirationMonth",
+            "type" : "type"
+          },
+          "fluidData" : {
+            "descriptor" : "descriptor",
+            "value" : "value",
+            "key" : "key"
+          },
+          "customer" : {
+            "paymentMethodId" : "paymentMethodId",
+            "customerId" : "customerId"
+          },
+          "validate" : true
+        }
+      },
+      "selfLink" : {
+        "type" : "object",
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/link"
+          }
+        },
+        "example" : {
+          "self" : {
+            "method" : "method",
+            "href" : "href",
+            "title" : "title"
+          }
+        }
+      },
+      "tokenizedCard" : {
+        "required" : [ "cryptogram", "expirationMonth", "expirationYear", "number" ],
+        "type" : "object",
+        "properties" : {
+          "number" : {
+            "type" : "string",
+            "description" : "The credit card token."
+          },
+          "expirationMonth" : {
+            "type" : "string",
+            "description" : "The token's expiration month in MM format. Use the value of the token's expiration date, not the card's expiration date."
+          },
+          "expirationYear" : {
+            "type" : "string",
+            "description" : "The token's expiration year in YYYY format. Use the value of the token's expiration date, not the card's expiration date."
+          },
+          "cryptogram" : {
+            "type" : "string",
+            "description" : "Set this to the value of the cryptogram received from the token provider. This field confirms that the payment data is tokenized, and it must be submitted when the credit card number is a tokenized credit card."
+          }
+        },
+        "example" : {
+          "expirationYear" : "expirationYear",
+          "number" : "number",
+          "expirationMonth" : "expirationMonth",
+          "cryptogram" : "cryptogram"
+        }
+      },
+      "processorInformation_avs" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "Address Verification Service (AVS) response code. Indicates the result of the AVS filter.\n *  `A` = Address (Street) matches, ZIP does not.\n*  `B` = Address information not provided for AVS check.\n*  `E` = AVS error.\n*  `G` = Non-U.S. Card Issuing Bank.\n*  `N` = No Match on Address (Street) or ZIP.\n*  `P` = AVS not applicable for this transaction.\n*  `R` = Retry â€” System unavailable or timed out.\n*  `S` = Service not supported by issuer.\n*  `U` = Address information is unavailable.\n*  `W` = Nine digit ZIP matches, Address (Street) does not.\n*  `X` = Address (Street) and nine digit ZIP match.\n*  `Y` = Address (Street) and five digit ZIP match.\n*  `Z` = Five digit ZIP matches, Address (Street) does not."
+          }
+        },
+        "example" : {
+          "code" : "code"
+        }
+      },
+      "processorInformation_cardVerification" : {
+        "type" : "object",
+        "properties" : {
+          "resultCode" : {
+            "type" : "string",
+            "description" : "Card code verification (CCV) response code. String, 1 character. Valid values include:\n * `M` -- CVV matched.\n * `N` -- CVV did not match.\n * `P` -- CVV was not processed.\n * `S` -- CVV should have been present but was not indicated.\n * `U` -- The issuer was unable to process the CVV check."
+          }
+        },
+        "example" : {
+          "resultCode" : "resultCode"
+        }
+      },
+      "processorInformation_consumerAuthenticationResponse" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "Cardholder authentication verification response code.\n **Note:** Mastercard transactions always return a null result for this element. Consequently, transaction details for Mastercard transactions do not contain CAVV results.\n String, 1 character. Valid values include:\n * Blank or not present -- CAVV not validated.\n * `0` -- CAVV was not validated because erroneous data was submitted.\n * `1` -- CAVV failed validation.\n * `2` -- CAVV passed validation.\n * `3` -- CAVV validation could not be performed; issuer attempt incomplete.\n * `4` -- CAVV validation could not be performed; issuer system error.\n * `5` -- Reserved for future use.\n * `6` -- Reserved for future use.\n * `7` -- CAVV failed validation, but the issuer is available. Valid for U.S.-issued card submitted to non-U.S acquirer.\n * `8` -- CAVV passed validation and the issuer is available. Valid for U.S.-issued card submitted to non-U.S. acquirer.\n * `9` -- CAVV failed validation and the issuer is unavailable. Valid for U.S.-issued card submitted to non-U.S acquirer.\n * `A` -- CAVV passed validation but the issuer unavailable. Valid for U.S.-issued card submitted to non-U.S acquirer.\n * `B` -- CAVV passed validation, information only, no liability shift."
+          }
+        },
+        "example" : {
+          "code" : "code"
+        }
+      }
+    },
+    "securitySchemes" : {
+      "basic" : {
+        "type" : "http",
+        "scheme" : "basic"
+      },
+      "oauth" : {
+        "type" : "oauth2",
+        "flows" : {
+          "implicit" : {
+            "authorizationUrl" : "https://account.authorize.net/oauth/authorize",
+            "scopes" : {
+              "read" : "List and view details",
+              "write" : "Create, list, and view details"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-original-swagger-version" : "2.0"
+}

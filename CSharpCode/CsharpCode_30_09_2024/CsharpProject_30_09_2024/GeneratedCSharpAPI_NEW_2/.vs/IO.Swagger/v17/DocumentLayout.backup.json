@@ -1,0 +1,251 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\models\\xsd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\models\\xsd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\controllers\\customersaddressesapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\controllers\\customersaddressesapi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\models\\xsdhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\models\\xsdhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\startup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\models\\example.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\models\\example.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\attributes\\validatemodelstateattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\attributes\\validatemodelstateattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\models\\createcustomeraddressnew.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\models\\createcustomeraddressnew.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\models\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\models\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\filters\\generatepathparamsvalidationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\filters\\generatepathparamsvalidationfilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|c:\\users\\saikhat\\downloads\\generatedcsharpapi_new_2\\src\\io.swagger\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5E6CDAC7-C448-415A-A8F2-2BC36E6A57BB}|src\\IO.Swagger\\IO.Swagger.csproj|solutionrelative:src\\io.swagger\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "xsd.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\xsd.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Models\\xsd.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\xsd.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Models\\xsd.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAA9wIMAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-29T10:52:08.916Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Startup.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Startup.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Startup.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Startup.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Startup.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAEwDwAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T15:03:07.191Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "XsdHelper.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\XsdHelper.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Models\\XsdHelper.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\XsdHelper.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Models\\XsdHelper.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAEwDoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T13:22:44.838Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Dockerfile",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Dockerfile",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Dockerfile",
+              "RelativeToolTip": "src\\IO.Swagger\\Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-09-27T09:50:04.551Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\appsettings.json",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\appsettings.json",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\appsettings.json",
+              "RelativeToolTip": "src\\IO.Swagger\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-27T09:49:14.096Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\.gitignore",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\.gitignore",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\.gitignore",
+              "RelativeToolTip": "src\\IO.Swagger\\.gitignore",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-09-27T09:48:47.753Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GeneratePathParamsValidationFilter.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Filters\\GeneratePathParamsValidationFilter.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Filters\\GeneratePathParamsValidationFilter.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Filters\\GeneratePathParamsValidationFilter.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Filters\\GeneratePathParamsValidationFilter.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAewBoAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T08:25:13.914Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ValidateModelStateAttribute.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Attributes\\ValidateModelStateAttribute.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Attributes\\ValidateModelStateAttribute.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Attributes\\ValidateModelStateAttribute.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Attributes\\ValidateModelStateAttribute.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAApwBMAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T09:46:09.291Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Properties\\launchSettings.json",
+              "RelativeToolTip": "src\\IO.Swagger\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-27T09:25:35.079Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Class.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\Class.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Models\\Class.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\Class.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Models\\Class.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T08:19:24.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Address.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\Address.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Models\\Address.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\Address.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Models\\Address.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAkwCMAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T06:59:58.458Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CreateCustomerAddressNEW.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\CreateCustomerAddressNEW.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Models\\CreateCustomerAddressNEW.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\CreateCustomerAddressNEW.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Models\\CreateCustomerAddressNEW.cs",
+              "ViewState": "AgIAANIAAAAAAAAAAAAUwNwAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-27T04:30:10.373Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Example.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\Example.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Models\\Example.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Models\\Example.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Models\\Example.cs",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAEwHcAAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-26T10:01:14.975Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CustomersAddressesApi.cs",
+              "DocumentMoniker": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Controllers\\CustomersAddressesApi.cs",
+              "RelativeDocumentMoniker": "src\\IO.Swagger\\Controllers\\CustomersAddressesApi.cs",
+              "ToolTip": "C:\\Users\\saikhat\\Downloads\\GeneratedCSharpAPI_NEW_2\\src\\IO.Swagger\\Controllers\\CustomersAddressesApi.cs",
+              "RelativeToolTip": "src\\IO.Swagger\\Controllers\\CustomersAddressesApi.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAAvwF8AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-26T03:26:59.471Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
