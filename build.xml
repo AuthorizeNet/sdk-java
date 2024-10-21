@@ -57,10 +57,16 @@
 				<include name="**/*.class" />
 				<exclude name="**/*Test*.class" />
 			</fileset>
+			<fileset dir="${resources.dir}">
+				<include name="**/AuthorizedNetSensitiveTagsConfig.json" />
+			</fileset>
 		</jar>
 		<jar jarfile="${build.dir}/${ant.project.name}-test-${version}.jar">
 			<fileset dir="${classes.dir}">
 				<include name="**/*Test*.class" />
+			</fileset>
+			<fileset dir="${resources.dir}">
+				<include name="**/AuthorizedNetSensitiveTagsConfig.json" />
 			</fileset>
 		</jar>
 
