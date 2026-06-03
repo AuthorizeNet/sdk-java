@@ -60,8 +60,7 @@ public abstract class ApiOperationBase<Q extends ANetApiRequest, S extends ANetA
 		this.requestClass = (Class<Q>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		this.responseClass = this.getResponseType();
 		this.setApiRequest(apiRequest);
-		this.setClientId();
-		
+
 		logger.debug(String.format("Creating instance for request:'%s' and response:'%s'", requestClass, responseClass));
 		logger.debug(String.format("Request:'%s'", apiRequest));
 		validate();
