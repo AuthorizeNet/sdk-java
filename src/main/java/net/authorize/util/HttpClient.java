@@ -14,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.http.ssl.TLS;
@@ -62,8 +61,8 @@ public class HttpClient {
                 : httpConnectionTimeout);
         httpReadTimeout = (httpReadTimeout == 0 ? Constants.HTTP_READ_TIME_OUT_DEFAULT_VALUE : httpReadTimeout);
 
-        newHttpConnectionTimeout = Timeout.ofSeconds(httpConnectionTimeout);
-        newHttpReadTimeout = Timeout.ofSeconds(httpReadTimeout);
+        newHttpConnectionTimeout = Timeout.ofMilliseconds(httpConnectionTimeout);
+        newHttpReadTimeout = Timeout.ofMilliseconds(httpReadTimeout);
     }
 
     /**
@@ -139,7 +138,6 @@ public class HttpClient {
                     .setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
                             .setSslContext(SSLContexts.createSystemDefault())
                             .setTlsVersions(TLS.V_1_2)
-                            .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
                             .build())
                     .setPoolConcurrencyPolicy(PoolConcurrencyPolicy.STRICT)
                     .setConnPoolPolicy(PoolReusePolicy.LIFO)
